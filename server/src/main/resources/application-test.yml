@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 500
+
+auth:
+  secretKey: nUf2YHEPujjBiFuQj8PhOW3f9LkyC5dkfQJrSyjgHNcVffWvZ1SeI37gIgNt4e7C
+  tokenExpiry: 3000000
+  refreshTokenExpiry: 3000000
+  redirect-url: http://localhost:8080

@@ -5,6 +5,7 @@ import com.ssafy.withme.domain.user.constant.RoleType;
 import com.ssafy.withme.domain.user.constant.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,10 @@ public class User extends BaseEntity {
     private Long id;
 
     private String name;
+
+    private String oauthId;
+
+    private String loginType;
 
     private String nickname;
 
@@ -40,4 +45,12 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+
+
+    @Builder
+    private User(String oauthId, String email, String loginType) {
+        this.oauthId = oauthId;
+        this.email = email;
+        this.loginType = loginType;
+    }
 }

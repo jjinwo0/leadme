@@ -17,9 +17,23 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: 1234
+    password: ssafy
 
 logging:
   level:
     org.hibernate.type: trace
     com.ssafy.withme: debug
+
+auth:
+  secretKey : nUf2YHEPujjBiFuQj8PhOW3f9LkyC5dkfQJrSyjgHNcVffWvZ1SeI37gIgNt4e7C
+  tokenExpiry : 3000000
+  refreshTokenExpiry : 3000000
+  redirect-url : http://localhost:8080
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: application-test.yml

@@ -12,7 +12,7 @@ const FixedDOMWrapper = styled.div`
   text-align: right;
   flex-direction: column;
   justify-content: center;
-  width: 500px;
+  width: 600px;
   height: 400px;
   position: fixed;
   font-size: 24px;
@@ -25,14 +25,14 @@ const FixedDOMWrapper = styled.div`
   pointer-events: none;
   & > h2 {
     color: #fffaec;
-    font-size: 32px;
+    font-size: 54px;
     font-weight: 600;
     margin-bottom: 32px;
   }
 
   & > p {
     color: #c9c9c9;
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 400;
   }
 `;

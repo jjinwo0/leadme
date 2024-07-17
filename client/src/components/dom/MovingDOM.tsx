@@ -107,14 +107,14 @@ const H1 = styled.h1`
 
 const H2 = styled.h2`
   color: #fffaec;
-  font-size: 32px;
+  font-size: 54px;
   font-weight: 600;
   margin-bottom: 32px;
 `;
 
 const P = styled.p`
   color: #c9c9c9;
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 400;
 `;
 

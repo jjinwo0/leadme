@@ -48,7 +48,7 @@ export const MovingDOM = () => {
     <Scroll html>
       <ArticleWrapper ref={article01Ref}>
         <TitleBox>
-          <h1>LeadMe</h1>
+          <h1 className="rajdhani-semibold">LeadMe</h1>
         </TitleBox>
       </ArticleWrapper>
       <ArticleWrapper ref={article02Ref}>
@@ -140,6 +140,10 @@ const RightBox = styled.div`
 `;
 
 const EnterBtn = styled.button`
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+
   flex-direction: column;
   justify-content: center;
   color: #fff;

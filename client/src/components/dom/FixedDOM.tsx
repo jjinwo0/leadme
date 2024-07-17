@@ -4,13 +4,15 @@ export const FixedDOM = () => {
     <FixedDOMWrapper id="fixed">
       <h1>SNS 업로드 기능까지</h1>
       <div>
-        <p>인스타와 유튜브 등의 SNS에 바로 업로드 할 수 있는 기능까지!</p>
+        <p>인스타와 유튜브 등의 SNS에 바로</p>
+        <p>업로드 할 수 있는 기능까지</p>
       </div>
     </FixedDOMWrapper>
   );
 };
 
 const FixedDOMWrapper = styled.div`
+  text-align: right;
   flex-direction: column;
   justify-content: center;
   width: 445px;
@@ -26,7 +28,7 @@ const FixedDOMWrapper = styled.div`
   pointer-events: none;
   & > h1 {
     margin-bottom: 30px;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: bold;
   }
   & > div {

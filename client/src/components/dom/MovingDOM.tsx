@@ -61,9 +61,7 @@ export const MovingDOM = () => {
         <LeftBox>
           <h1>AI 기반 분석 레포트</h1>
           <div>
-            <p>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로!</p>
-            <p>백분율과 그래프로 자세한 분석을 제공하는</p>
-            <p>Lead Me의 혁신적인 서비스입니다.</p>
+            <p>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로</p>
           </div>
         </LeftBox>
       </ArticleWrapper>
@@ -117,7 +115,7 @@ const LeftBox = styled.div`
   height: 400px;
   & > h1 {
     margin-bottom: 30px;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: bold;
   }
   & > div {
@@ -126,6 +124,7 @@ const LeftBox = styled.div`
 `;
 
 const RightBox = styled.div`
+  text-align: right;
   padding: 150px;
   display: flex;
   flex-direction: column;
@@ -135,7 +134,7 @@ const RightBox = styled.div`
   height: 400px;
   & > h1 {
     margin-bottom: 30px;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: bold;
   }
 `;
@@ -144,11 +143,17 @@ const EnterBtn = styled.button`
   flex-direction: column;
   justify-content: center;
   color: #fff;
-  background-color: #1c0d08;
-  opacity: 0.8;
+  background-color: rgba(0.2, 0.2, 0.2, 0.8);
   border: 2px solid #fff;
   width: 300px;
   height: 100px;
   font-size: 35px;
   border-radius: 8px;
+  margin-bottom: 260px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgba(0.2, 0.2, 0.2, 1);
+  }
 `;

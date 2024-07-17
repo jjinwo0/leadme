@@ -5,6 +5,7 @@ import com.ssafy.withme.domain.user.constant.RoleType;
 import com.ssafy.withme.domain.user.constant.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,15 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+
+    @Builder
+    public User(String email, String name) {
+        this.email = email;
+        this.name  = name;
+    }
+
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -32,12 +33,12 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers("");
+                .requestMatchers("/img/**", "/css/**", "/js/**");
 
     }
 
     @Bean
-    public SecurityFilterChain fiterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -51,14 +52,18 @@ public class WebOAuthSecurityConfig {
                         // /api/~ 권한 요규
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                         // 이외에는 모두 허가
-                        .anyRequest().permitAll())
+                        //.anyRequest().permitAll()
+                )
 
-
+                // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
+                        .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.baseUri("/oauth2/authorization")
+                                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
+                        //.redirectionEndpoint(endpoint -> endpoint.baseUri("/*/oauth2/code/*"))
                         .userInfoEndpoint(userInfoEndPoint -> userInfoEndPoint.userService(oAuth2UserCustomService))
                         .successHandler(oAuth2SuccessHandler())
+                        .failureHandler(oAuth2FailureHandler())
 
                 )
 
@@ -69,6 +74,13 @@ public class WebOAuthSecurityConfig {
                                 new AntPathRequestMatcher("/api/**")
                         ))
                 .build();
+    }
+
+    // 실패 핸들러 예제
+    private AuthenticationFailureHandler oAuth2FailureHandler() {
+        return (request, response, exception) -> {
+            response.sendRedirect("/login?error=" + exception.getStackTrace());
+        };
     }
 
     @Bean

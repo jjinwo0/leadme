@@ -13,6 +13,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User findByEmail(String email) {
+        System.out.println(email);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }

@@ -48,21 +48,19 @@ export const MovingDOM = () => {
     <Scroll html>
       <ArticleWrapper ref={articleRef1}>
         <TitleBox>
-          <h1 className="rajdhani-semibold">LeadMe</h1>
+          <H1 className="rajdhani-semibold">LeadMe</H1>
         </TitleBox>
       </ArticleWrapper>
       <ArticleWrapper ref={articleRef2}>
         <RightBox>
-          <h1>모든 플랫폼 검색을 한 번에</h1>
-          <p>유튜브, 인스타, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</p>
+          <H2>모든 플랫폼 검색을 한 번에</H2>
+          <P>유튜브, 인스타, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</P>
         </RightBox>
       </ArticleWrapper>
       <ArticleWrapper ref={articleRef3}>
         <LeftBox>
-          <h1>AI 기반 분석 레포트</h1>
-          <div>
-            <p>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로</p>
-          </div>
+          <H2>AI 기반 분석 레포트 제공</H2>
+          <P>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로</P>
         </LeftBox>
       </ArticleWrapper>
       <ArticleWrapper className="height-4" ref={articleRef4}></ArticleWrapper>
@@ -87,7 +85,6 @@ const ArticleWrapper = styled.div`
     height: 400vh;
   }
   background-color: transparent;
-  color: #ffffff;
   font-size: 24px;
   padding: 40px;
 `;
@@ -101,10 +98,24 @@ const TitleBox = styled.div`
   align-self: flex-start;
   min-width: fit-content;
   height: 400px;
-  & h1 {
-    font-size: 140px;
-    font-weight: bold;
-  }
+`;
+
+const H1 = styled.h1`
+  color: #fffaec;
+  font-size: 140px;
+`;
+
+const H2 = styled.h2`
+  color: #fffaec;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 32px;
+`;
+
+const P = styled.p`
+  color: #c9c9c9;
+  font-size: 22px;
+  font-weight: 400;
 `;
 
 const LeftBox = styled.div`
@@ -115,14 +126,6 @@ const LeftBox = styled.div`
   align-self: flex-start;
   min-width: fit-content;
   height: 400px;
-  & > h1 {
-    margin-bottom: 30px;
-    font-size: 40px;
-    font-weight: bold;
-  }
-  & > div {
-    line-height: 35px;
-  }
 `;
 
 const RightBox = styled.div`
@@ -142,22 +145,21 @@ const RightBox = styled.div`
 `;
 
 const EnterBtn = styled.button`
-  font-family: "Rajdhani", sans-serif;
+  color: #fffaec;
+  font-size: 40px;
   font-weight: 600;
+  font-family: "Rajdhani", sans-serif;
   flex-direction: column;
   justify-content: center;
-  color: #fff;
-  background-color: rgba(0.2, 0.2, 0.2, 0.8);
-  border: 2px solid #fff;
-  width: 300px;
-  height: 100px;
-  font-size: 35px;
+  background-color: rgba(234, 234, 234, 0.4);
+  border: none;
   border-radius: 8px;
-  margin-bottom: 260px;
+  padding: 12px 80px;
+  margin-bottom: 220px;
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
-    transform: scale(1.05);
-    background-color: rgba(0.2, 0.2, 0.2, 1);
+    transform: scale(1.1);
+    background-color: rgba(234, 234, 234, 0.8);
   }
 `;

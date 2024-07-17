@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { MainCanvas } from "./components/MainCanvas";
+import { FixedDOM } from "./components/dom/FixedDOM";
 import styled from "styled-components";
 import Home from "./pages/Home";
 import Rank from "./pages/Rank";
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           element={
             <Wrapper>
               <MainCanvas />
+              <FixedDOM />
             </Wrapper>
           }
         ></Route>

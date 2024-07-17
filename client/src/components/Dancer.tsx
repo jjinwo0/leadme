@@ -138,7 +138,7 @@ export const Dancer = () => {
 
     timeline
       //타임라인상 0.5 위치에서 rotation 조절 애니메이션 실행
-      .from(dancerRef.current.rotation, { duration: 4, y: -4 * Math.PI }, 0.5)
+      .from(dancerRef.current.rotation, { duration: 4, y: Math.PI }, 0.5)
       // 위 애니메이션과 같이 실행 x :3 좌표에서 0의 위치로 돌아옴
       .from(dancerRef.current.position, { duration: 4, x: 3 }, "<")
       // 위 애니메이션들과 같이 초기위치에서 x:2 z:8 위치로 이동
@@ -225,7 +225,7 @@ export const Dancer = () => {
         />
         {/* 배경 */}
         <Box ref={boxRef} position={[0, 0, 0]} args={[100, 100, 100]}>
-          <meshStandardMaterial color={"#DCFF00"} side={THREE.DoubleSide} />
+          <meshStandardMaterial color={"#DC4F00"} side={THREE.DoubleSide} />
         </Box>
         {/* 댄서가 밟고있는 땅 */}
         <Circle
@@ -235,7 +235,7 @@ export const Dancer = () => {
           rotation-x={-Math.PI / 2}
           position-y={-4.4}
         >
-          <meshStandardMaterial color={"#DCFF00"} side={THREE.DoubleSide} />
+          <meshStandardMaterial color={"#DC4F00"} side={THREE.DoubleSide} />
         </Circle>
         {/* 별찍기 */}
 
@@ -243,7 +243,7 @@ export const Dancer = () => {
           <pointsMaterial
             ref={starRef}
             size={0.5}
-            color={new THREE.Color("#DCFF00")}
+            color={new THREE.Color("#d4d13a")}
             sizeAttenuation
             depthWrite={false}
             alphaMap={texture}

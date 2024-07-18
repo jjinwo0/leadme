@@ -20,7 +20,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <Container>
+    <>
       <Top>
         <TopLeft>
           Let's dance with
@@ -39,30 +39,31 @@ const Header: React.FC = () => {
           <LoginBtn>Login</LoginBtn>
         </TopRight>
       </Top>
-      <Bottom>
-        <StyledLink to="/home">home</StyledLink>
-        <StyledLink to="/search">search</StyledLink>
-        <StyledLink to="/challenge">challenge</StyledLink>
-        <StyledLink to="/rank">rank</StyledLink>
-      </Bottom>
-    </Container>
+      <StickyNav>
+        <Bottom>
+          <StyledLink to="/home">home</StyledLink>
+          <StyledLink to="/search">search</StyledLink>
+          <StyledLink to="/challenge">challenge</StyledLink>
+          <StyledLink to="/rank">rank</StyledLink>
+        </Bottom>
+      </StickyNav>
+    </>
   );
 };
 
-const Container = styled.div`
-  color: #ee5050;
-  font-family: "Rajdhani", sans-serif;
-`;
-
 const Top = styled.div`
   width: 100%;
-  padding: 20px 30px 10px;
-  font-size: 18px;
+  padding: 18px 30px 8px;
+  color: #ee5050;
+  font-size: 19px;
+  font-family: "Rajdhani", sans-serif;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-between;
   border-bottom: 1px solid #ee5050;
+  background-color: #f6efed;
+  position: relative;
 `;
 
 const TopLeft = styled.div`
@@ -80,7 +81,7 @@ const TopRight = styled.div`
   width: 200px;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   text-align: right;
   font-weight: 600;
 `;
@@ -89,14 +90,21 @@ const LoginBtn = styled.button`
   width: 72px;
   padding: 1px 0;
   color: #ee5050;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 600;
   font-family: "Rajdhani", sans-serif;
   border: 1px solid #ee5050;
   border-radius: 4px;
   background-color: #ffffff;
-  margin-top: 10px;
+  margin-top: 8px;
   cursor: pointer;
+`;
+
+const StickyNav = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 5000;
+  background-color: #f6efed;
 `;
 
 const Bottom = styled.div`
@@ -108,7 +116,7 @@ const Bottom = styled.div`
 
 const StyledLink = styled(Link)`
   color: #ee5050;
-  font-size: 16px;
+  font-size: 18px;
   font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   padding: 9px 14px;

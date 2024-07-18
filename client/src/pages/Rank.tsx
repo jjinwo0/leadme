@@ -1,5 +1,12 @@
+import Header from "./../components/Header";
+
 const Rank = () => {
-  return <div>rank</div>;
+  return (
+    <>
+      <Header />
+      <div>rank</div>
+    </>
+  );
 };
 
 export default Rank;

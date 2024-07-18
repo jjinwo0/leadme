@@ -8,14 +8,10 @@ import Home from "./pages/Home";
 import Rank from "./pages/Rank";
 import Search from "./pages/Search";
 import Challenge from "./pages/Challenge";
-import Header from "./components/Header";
 
 const App: React.FC = () => {
   return (
     <RecoilRoot>
-      {/* 임시 */}
-      <Header />
-
       <Routes>
         <Route
           path="/"

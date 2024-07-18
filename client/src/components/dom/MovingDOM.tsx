@@ -101,12 +101,12 @@ const TitleBox = styled.div`
 `;
 
 const H1 = styled.h1`
-  color: #fffaec;
+  color: #f6efed;
   font-size: 140px;
 `;
 
 const H2 = styled.h2`
-  color: #fffaec;
+  color: #f6efed;
   font-size: 54px;
   font-weight: 600;
   margin-bottom: 32px;

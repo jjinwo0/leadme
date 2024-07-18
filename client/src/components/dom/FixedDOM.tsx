@@ -24,7 +24,7 @@ const FixedDOMWrapper = styled.div`
   z-index: 0;
   pointer-events: none;
   & > h2 {
-    color: #fffaec;
+    color: #f6efed;
     font-size: 54px;
     font-weight: 600;
     margin-bottom: 32px;

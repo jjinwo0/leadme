@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil";
 import { IsEnteredAtom } from "../stores";
 import { Html, useProgress } from "@react-three/drei";
 import styled, { keyframes } from "styled-components";
+import { useEffect } from "react";
 
 interface LoaderProps {
   isCompleted?: boolean;
@@ -10,6 +11,19 @@ interface LoaderProps {
 export const Loader: React.FC<LoaderProps> = ({ isCompleted = false }) => {
   const [isEntered, setIsEntered] = useRecoilState(IsEnteredAtom);
   const progress = useProgress();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && progress.progress === 100) {
+        setIsEntered(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setIsEntered]);
 
   if (isEntered) return null;
   return (
@@ -44,9 +58,9 @@ const blink = keyframes`
 const BlurredBackground = styled.div`
   width: 400px;
   height: 400px;
-  background-color: red;
+  background-color: #ee5050;
   border-radius: 50%;
-  filter: blur(300px);
+  filter: blur(200px);
 `;
 const Container = styled.div`
   position: fixed;
@@ -76,6 +90,7 @@ const EnterBtn = styled.button`
   cursor: pointer;
   &:hover {
     background-color: #ccc;
-    color: #dc4f00;
+    color: #ee5050;
+    animation: none;
   }
 `;

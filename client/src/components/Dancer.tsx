@@ -17,7 +17,7 @@ import * as THREE from "three";
 import { Group } from "three";
 let timeline: gsap.core.Timeline | null = null;
 const colors = {
-  boxMaterialColor: "#DC4F00",
+  boxMaterialColor: "#ee5050",
 };
 export const Dancer = () => {
   const three = useThree(); // 카메라 이동시키려고 씀
@@ -107,7 +107,7 @@ export const Dancer = () => {
     gsap.fromTo(
       colors,
       { boxMaterialColor: "#0c0400" },
-      { duration: 2.5, boxMaterialColor: "#DC4F00" }
+      { duration: 2.5, boxMaterialColor: "#ee5050" }
     );
 
     // 배경에 있는 별 반짝거리게 yoyo랑 repeat -1으로 무한반복되도록
@@ -225,7 +225,7 @@ export const Dancer = () => {
         />
         {/* 배경 */}
         <Box ref={boxRef} position={[0, 0, 0]} args={[100, 100, 100]}>
-          <meshStandardMaterial color={"#DC4F00"} side={THREE.DoubleSide} />
+          <meshStandardMaterial color={"#ee5050"} side={THREE.DoubleSide} />
         </Box>
         {/* 댄서가 밟고있는 땅 */}
         <Circle

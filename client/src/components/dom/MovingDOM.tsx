@@ -11,27 +11,27 @@ export const MovingDOM = () => {
   const fixed = document.getElementById("fixed"); // FixedDOM에서 아이디가 fixed인거 찾아옴
   const scroll = useScroll();
   const nav = useNavigate();
-  const articleRef1 = useRef<HTMLDivElement>(null);
-  const articleRef2 = useRef<HTMLDivElement>(null);
-  const articleRef3 = useRef<HTMLDivElement>(null);
-  const articleRef4 = useRef<HTMLDivElement>(null);
-  const articleRef8 = useRef<HTMLDivElement>(null);
+  const article01Ref = useRef<HTMLDivElement>(null);
+  const article02Ref = useRef<HTMLDivElement>(null);
+  const article03Ref = useRef<HTMLDivElement>(null);
+  const article04Ref = useRef<HTMLDivElement>(null);
+  const article08Ref = useRef<HTMLDivElement>(null);
 
   useFrame(() => {
     if (
       !isEntered ||
       !fixed ||
-      !articleRef1.current ||
-      !articleRef2.current ||
-      !articleRef3.current ||
-      !articleRef4.current ||
-      !articleRef8.current
+      !article01Ref.current ||
+      !article02Ref.current ||
+      !article03Ref.current ||
+      !article04Ref.current ||
+      !article08Ref.current
     )
       return;
-    articleRef1.current.style.opacity = `${1 - scroll.range(0, 1 / 8)}`;
-    articleRef2.current.style.opacity = `${1 - scroll.range(1 / 8, 1 / 8)}`; // 1/8에서 1/8 스크롤 할동안 사용
-    articleRef3.current.style.opacity = `${scroll.curve(2 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
-    articleRef4.current.style.opacity = `${scroll.curve(3 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
+    article01Ref.current.style.opacity = `${1 - scroll.range(0, 1 / 8)}`;
+    article02Ref.current.style.opacity = `${1 - scroll.range(1 / 8, 1 / 8)}`; // 1/8에서 1/8 스크롤 할동안 사용
+    article03Ref.current.style.opacity = `${scroll.curve(2 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
+    article04Ref.current.style.opacity = `${scroll.curve(3 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
 
     if (scroll.visible(4 / 8, 3 / 8)) {
       fixed.style.display = "flex";
@@ -39,32 +39,34 @@ export const MovingDOM = () => {
     } else {
       fixed.style.display = "none";
     }
-    articleRef8.current.style.opacity = `${scroll.range(7 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
+    article08Ref.current.style.opacity = `${scroll.range(7 / 8, 1 / 8)}`; // 2/8에서 1/8 스크롤 할동안 사용
   });
 
   if (!isEntered) return null;
 
   return (
     <Scroll html>
-      <ArticleWrapper ref={articleRef1}>
+      <ArticleWrapper ref={article01Ref}>
         <TitleBox>
-          <H1 className="rajdhani-semibold">LeadMe</H1>
+          <h1 className="rajdhani-semibold">LeadMe</h1>
         </TitleBox>
       </ArticleWrapper>
-      <ArticleWrapper ref={articleRef2}>
+      <ArticleWrapper ref={article02Ref}>
         <RightBox>
-          <H2>모든 플랫폼 검색을 한 번에</H2>
-          <P>유튜브, 인스타, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</P>
+          <h1>모든 플랫폼 검색을 한 번에</h1>
+          <p>유튜브, 인스타, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</p>
         </RightBox>
       </ArticleWrapper>
-      <ArticleWrapper ref={articleRef3}>
+      <ArticleWrapper ref={article03Ref}>
         <LeftBox>
-          <H2>AI 기반 분석 레포트 제공</H2>
-          <P>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로</P>
+          <h1>AI 기반 분석 레포트</h1>
+          <div>
+            <p>AI 기술을 활용한 분석 보고서로 춤 연습을 더욱 효율적으로</p>
+          </div>
         </LeftBox>
       </ArticleWrapper>
-      <ArticleWrapper className="height-4" ref={articleRef4}></ArticleWrapper>
-      <ArticleWrapper ref={articleRef8}>
+      <ArticleWrapper className="height-4" ref={article04Ref}></ArticleWrapper>
+      <ArticleWrapper ref={article08Ref}>
         <EnterBtn onClick={() => nav("/home")}>START</EnterBtn>
       </ArticleWrapper>
     </Scroll>
@@ -72,8 +74,6 @@ export const MovingDOM = () => {
 };
 
 const ArticleWrapper = styled.div`
-  font-family: "Rajdhani", sans-serif;
-  font-weight: 600;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -85,6 +85,7 @@ const ArticleWrapper = styled.div`
     height: 400vh;
   }
   background-color: transparent;
+  color: #ffffff;
   font-size: 24px;
   padding: 40px;
 `;
@@ -98,24 +99,10 @@ const TitleBox = styled.div`
   align-self: flex-start;
   min-width: fit-content;
   height: 400px;
-`;
-
-const H1 = styled.h1`
-  color: #fffaec;
-  font-size: 140px;
-`;
-
-const H2 = styled.h2`
-  color: #fffaec;
-  font-size: 54px;
-  font-weight: 600;
-  margin-bottom: 32px;
-`;
-
-const P = styled.p`
-  color: #c9c9c9;
-  font-size: 30px;
-  font-weight: 400;
+  & h1 {
+    font-size: 140px;
+    font-weight: bold;
+  }
 `;
 
 const LeftBox = styled.div`
@@ -126,6 +113,14 @@ const LeftBox = styled.div`
   align-self: flex-start;
   min-width: fit-content;
   height: 400px;
+  & > h1 {
+    margin-bottom: 30px;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  & > div {
+    line-height: 35px;
+  }
 `;
 
 const RightBox = styled.div`
@@ -145,21 +140,24 @@ const RightBox = styled.div`
 `;
 
 const EnterBtn = styled.button`
-  color: #fffaec;
-  font-size: 40px;
-  font-weight: 600;
   font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+
   flex-direction: column;
   justify-content: center;
-  background-color: rgba(234, 234, 234, 0.4);
-  border: none;
+  color: #fff;
+  background-color: rgba(0.2, 0.2, 0.2, 0.8);
+  border: 2px solid #fff;
+  width: 300px;
+  height: 100px;
+  font-size: 35px;
   border-radius: 8px;
-  padding: 12px 80px;
-  margin-bottom: 220px;
+  margin-bottom: 260px;
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
-    transform: scale(1.1);
-    background-color: rgba(234, 234, 234, 0.8);
+    transform: scale(1.05);
+    background-color: rgba(0.2, 0.2, 0.2, 1);
   }
 `;

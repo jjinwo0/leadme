@@ -1,5 +1,9 @@
+import PoseLandmarkerComponent from "../components/PoseLandMarker";
+
 const Home = () => {
-  return <div>home</div>;
+  return <div>
+    <PoseLandmarkerComponent/>
+  </div>;
 };
 
 export default Home;

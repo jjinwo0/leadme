@@ -2,8 +2,11 @@ import styled from "styled-components";
 export const FixedDOM = () => {
   return (
     <FixedDOMWrapper id="fixed">
-      <h2>SNS 업로드 기능까지</h2>
-      <p>인스타와 유튜브에 바로 업로드 가능</p>
+      <h1>SNS 업로드 기능까지</h1>
+      <div>
+        <p>인스타와 유튜브 등의 SNS에 바로</p>
+        <p>업로드 할 수 있는 기능까지</p>
+      </div>
     </FixedDOMWrapper>
   );
 };
@@ -12,7 +15,7 @@ const FixedDOMWrapper = styled.div`
   text-align: right;
   flex-direction: column;
   justify-content: center;
-  width: 600px;
+  width: 445px;
   height: 400px;
   position: fixed;
   font-size: 24px;
@@ -23,16 +26,12 @@ const FixedDOMWrapper = styled.div`
   color: #fff;
   z-index: 0;
   pointer-events: none;
-  & > h2 {
-    color: #fffaec;
-    font-size: 54px;
-    font-weight: 600;
-    margin-bottom: 32px;
+  & > h1 {
+    margin-bottom: 30px;
+    font-size: 40px;
+    font-weight: bold;
   }
-
-  & > p {
-    color: #c9c9c9;
-    font-size: 30px;
-    font-weight: 400;
+  & > div {
+    line-height: 35px;
   }
 `;

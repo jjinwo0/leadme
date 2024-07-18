@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     // 스프링 시큐리티에서 별도의 authenticationSuccessHandler를 지정하지 않으면

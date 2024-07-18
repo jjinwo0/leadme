@@ -160,7 +160,6 @@ export const Dancer = () => {
           setRotateFinished(false);
         },
       })
-      .to(hemisphereLightRef.current, { duration: 5, intensity: 30 })
       .to(
         pivot.rotation,
         {
@@ -173,7 +172,7 @@ export const Dancer = () => {
         "<"
       )
       .to(colors, {
-        boxMaterialColor: "#DC4F00",
+        boxMaterialColor: "#ee5050",
       });
     return () => {
       three.scene.remove(pivot);

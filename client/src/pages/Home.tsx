@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LoginModal } from "./LoginModal";
+import Header from "./../components/Header";
 
 const Home = () => {
   const [loginModalState, setLoginModalState] = useState<boolean>(false);
@@ -7,11 +8,12 @@ const Home = () => {
     setLoginModalState(!loginModalState);
   };
   return (
-    <div>
+    <>
+      <Header />
       <div>home</div>
       <button onClick={handleModalOnClick}>로그인</button>
       {loginModalState ? <LoginModal /> : null}
-    </div>
+    </>
   );
 };
 

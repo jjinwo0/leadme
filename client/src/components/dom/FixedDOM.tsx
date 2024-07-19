@@ -18,7 +18,7 @@ const FixedDOMWrapper = styled.div`
   font-size: 24px;
   top: 50%;
   right: 10px;
-  transform: translate(-50%, -50%);
+  transform: translate(-20%, -50%);
   display: none;
   color: #fff;
   z-index: 0;

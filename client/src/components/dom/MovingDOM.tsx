@@ -130,7 +130,7 @@ const LeftBox = styled.div`
 
 const RightBox = styled.div`
   text-align: right;
-  padding: 150px;
+  padding: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,6 +146,8 @@ const RightBox = styled.div`
 
 const EnterBtn = styled.button`
   color: #fffaec;
+  position: relative;
+  bottom: -200px;
   font-size: 40px;
   font-weight: 600;
   font-family: "Rajdhani", sans-serif;
@@ -155,11 +157,10 @@ const EnterBtn = styled.button`
   border: none;
   border-radius: 8px;
   padding: 12px 80px;
-  margin-bottom: 220px;
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
     transform: scale(1.1);
-    background-color: rgba(234, 234, 234, 0.8);
+    background-color: rgba(246, 239, 237, 0.8);
   }
 `;

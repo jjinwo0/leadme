@@ -29,6 +29,4 @@ public class LandmarkController {
     public void deleteLandMark(@PathVariable String id) {
         landmarkService.deleteLandMark(id);
     }
-
-
 }

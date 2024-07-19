@@ -1,5 +1,9 @@
+import PoseLandMarkerComponent from "../components/PoseLandMarkComponent";
+
 const Challenge = () => {
-  return <div>challenge</div>;
+  return <div>
+    <PoseLandMarkerComponent/>
+  </div>;
 };
 
 export default Challenge;

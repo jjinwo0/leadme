@@ -10,7 +10,7 @@ export const LoginModal = () => {
           <SiKakaotalk style={{ color: "black" }} />
         </IconWrapper>
         <span>
-          <a href="#">카카오 로그인</a>
+          <a href="http://localhost:8080/oauth2/authorization/kakao">카카오 로그인</a>
         </span>
       </SNSBox>
       <SNSBox>
@@ -18,7 +18,7 @@ export const LoginModal = () => {
           <SiGoogle style={{ color: "white" }} />
         </IconWrapper>
         <span>
-          <a href="#">구글 로그인</a>
+          <a href="http://localhost:8080/oauth2/authorization/google">구글 로그인</a>
         </span>
       </SNSBox>
 
@@ -27,7 +27,7 @@ export const LoginModal = () => {
           <SiNaver style={{ color: "white" }} />
         </IconWrapper>
         <span>
-          <a href="#">네이버 로그인</a>
+          <a href="http://localhost:8080/oauth2/authorization/naver">네이버 로그인</a>
         </span>
       </SNSBox>
     </Container>

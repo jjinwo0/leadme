@@ -17,7 +17,7 @@ import java.util.List;
 public class LandMark {
 
     @Id
-    private String id;
+    private String videoName;
 
     private List<List<Point>> landmarks;
 

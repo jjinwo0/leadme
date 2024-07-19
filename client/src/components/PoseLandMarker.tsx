@@ -12,6 +12,7 @@ const PoseLandmarkerComponent: React.FC = () => {
   const [webcamRunning, setWebcamRunning] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [landmarkData, setLandmarkData] = useState<any[]>([]);
+  const [videoName, setVideoName] = useState<string>("");
 
   useEffect(() => {
     const initializePoseLandmarker = async () => {
@@ -20,7 +21,8 @@ const PoseLandmarkerComponent: React.FC = () => {
       );
       const poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
           delegate: "GPU",
         },
         runningMode: "VIDEO",
@@ -61,14 +63,14 @@ const PoseLandmarkerComponent: React.FC = () => {
   };
 
   const sendDataToBackend = async () => {
-    console.log(landmarkData)
+    console.log(landmarkData);
     try {
       const response = await fetch("http://localhost:8080/api/v1/landmarks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ landmarks: landmarkData }),
+        body: JSON.stringify({ videoName, landmarks: landmarkData }),
       });
       if (response.ok) {
         console.log("Data sent successfully");
@@ -117,11 +119,17 @@ const PoseLandmarkerComponent: React.FC = () => {
         // 유효한 랜드마크 데이터를 수집
         setLandmarkData((prevData) => [...prevData, visibleLandmarks]);
 
-        drawingUtils.drawLandmarks(visibleLandmarks.filter(lm => lm !== null), {
-          radius: (data: any) =>
-            DrawingUtils.lerp(data.from!.z, -0.15, 0.1, 5, 1),
-        });
-        drawingUtils.drawConnectors(visibleLandmarks.filter(lm => lm !== null), PoseLandmarker.POSE_CONNECTIONS);
+        drawingUtils.drawLandmarks(
+          visibleLandmarks.filter((lm) => lm !== null),
+          {
+            radius: (data: any) =>
+              DrawingUtils.lerp(data.from!.z, -0.15, 0.1, 5, 1),
+          }
+        );
+        drawingUtils.drawConnectors(
+          visibleLandmarks.filter((lm) => lm !== null),
+          PoseLandmarker.POSE_CONNECTIONS
+        );
       }
 
       canvasCtx.restore();
@@ -146,6 +154,12 @@ const PoseLandmarkerComponent: React.FC = () => {
 
   return (
     <div>
+      <input
+        type="text"
+        placeholder="비디오 제목을 입력하세요"
+        value={videoName}
+        onChange={(e) => setVideoName(e.target.value)}
+      />
       <button onClick={enableCam}>
         {webcamRunning ? "종료하기" : "연습하기"}
       </button>

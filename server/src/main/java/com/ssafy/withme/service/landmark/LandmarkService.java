@@ -13,6 +13,9 @@ public class LandmarkService {
 
     private final LandmarkRepository landmarkRepository;
 
+    public List<LandMark> getLandMarkByVideoName(String videoName){
+        return landmarkRepository.findByVideoName(videoName);
+    }
     public List<LandMark> getAllLandMarks() {
         return landmarkRepository.findAll();
     }

@@ -1,5 +1,12 @@
+import Header from "./../components/Header";
+
 const Search = () => {
-  return <div>search</div>;
+  return (
+    <>
+      <Header />
+      <div>search</div>
+    </>
+  );
 };
 
 export default Search;

@@ -13,6 +13,8 @@ const PoseLandmarkerComponent: React.FC = () => {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [landmarkData, setLandmarkData] = useState<any[]>([]);
   const [videoName, setVideoName] = useState<string>("");
+  const [youtubeUrl, setYoutubeUrl] = useState<string>("");
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
     const initializePoseLandmarker = async () => {
@@ -23,7 +25,7 @@ const PoseLandmarkerComponent: React.FC = () => {
         baseOptions: {
           modelAssetPath:
             "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
-          delegate: "GPU",
+          delegate: "CPU",
         },
         runningMode: "VIDEO",
         numPoses: 2,
@@ -152,6 +154,21 @@ const PoseLandmarkerComponent: React.FC = () => {
     };
   }, [webcamRunning]);
 
+  const extractVideoId = (url: string): string | null => {
+    const pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([^\?&\/]+)/;
+    const match = url.match(pattern);
+    return match ? match[1] : null;
+  };
+
+  const playYoutube = () => {
+    const id = extractVideoId(youtubeUrl);
+    if (id) {
+      setVideoId(id);
+    } else {
+      alert('유효한 유튜브 URL을 입력하세요.');
+    }
+  };
+
   return (
     <div>
       <input
@@ -180,6 +197,28 @@ const PoseLandmarkerComponent: React.FC = () => {
           style={{ position: "absolute", left: 0, top: 0 }}
         />
       </div>
+
+
+      <input type="text" placeholder="유튜브 URL을 입력하세요" value={youtubeUrl}
+      onChange={(e) => setYoutubeUrl(e.target.value)}></input>
+
+      <button onClick={playYoutube}>유트브 영상 조회</button>
+      
+      {videoId && (
+          <div className="video-container">
+            <iframe
+              width="360"
+              height="640"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="video-iframe"
+            ></iframe>
+          </div>
+        )}
+
+
     </div>
   );
 };

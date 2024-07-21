@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import React, { ChangeEvent, useState } from "react";
 
-export const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  width?: number;
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({ width }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -9,16 +13,20 @@ export const SearchBar: React.FC = () => {
   };
 
   return (
-    <SearchForm>
+    <SearchForm width={width}>
       <SearchField type="text" value={searchTerm} onChange={handleChange} />
       <SearchButton type="submit">search</SearchButton>
     </SearchForm>
   );
 };
 
-const SearchForm = styled.form`
-  width: 100%;
-  height: 53px;
+interface SearchFormPsops {
+  width?: number;
+}
+
+const SearchForm = styled.form<SearchFormPsops>`
+  width: ${(props) => (props.width ? `${props.width}px` : "100%")};
+  height: 43px;
   display: flex;
   justify-content: flex-end;
   align-items: center;

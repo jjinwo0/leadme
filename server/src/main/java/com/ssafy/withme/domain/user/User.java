@@ -52,4 +52,9 @@ public class User extends BaseEntity {
         this.name = name;
         return this;
     }
+
+    public void updateStatus(UserStatus status) {
+
+        this.userStatus = status;
+    }
 }

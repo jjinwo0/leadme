@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-
+import { FaInstagram } from "react-icons/fa6";
+import { FaTiktok } from "react-icons/fa6";
+import { FaYoutube } from "react-icons/fa";
 const Header: React.FC = () => {
   const location = useLocation();
 
@@ -21,51 +23,66 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Top>
-        <TopLeft>
-          Let's dance with
-          <br />
-          LeadMe
-        </TopLeft>
-        <TopCenter>{getPageTitle(location.pathname)}</TopCenter>
-        <TopRight>
-          <div>
-            feat. Instagram
+      <HeaderWrapper>
+        <Top>
+          <TopLeft>
+            Let's dance with
             <br />
-            TikTok
-            <br />
-            YouTube
-          </div>
-          <LoginBtn>Login</LoginBtn>
-        </TopRight>
-      </Top>
+            LeadMe
+          </TopLeft>
+          <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
+          <TopRight>
+            <div>
+              <SnsBox>
+                Instagram
+                <FaInstagram />
+              </SnsBox>
+              <SnsBox>
+                TikTok
+                <FaTiktok />
+              </SnsBox>
+              <SnsBox>
+                YouTube
+                <FaYoutube />
+              </SnsBox>
+            </div>
+            <LoginBtn>Login</LoginBtn>
+          </TopRight>
+        </Top>
+      </HeaderWrapper>
       <StickyNav>
-        <Bottom>
+        <NavContent>
           <StyledLink to="/home">home</StyledLink>
           <StyledLink to="/search">search</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
-        </Bottom>
+        </NavContent>
       </StickyNav>
     </>
   );
 };
 
+const HeaderWrapper = styled.header`
+  margin: 20px 20px -5px;
+`;
+
 const Top = styled.div`
-  width: 100%;
   padding: 18px 30px 8px;
   color: #ee5050;
   font-size: 19px;
   font-family: "Rajdhani", sans-serif;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   justify-content: space-between;
-  border-bottom: 1px solid #ee5050;
-  background-color: #f6efed;
-  position: relative;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(
+    108deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.07) 100%
+  );
+  box-shadow: -4px 0 4px -4px rgba(0, 0, 0, 0.15),
+    4px 0 4px -4px rgba(0, 0, 0, 0.15), 0 -4px 4px -4px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 `;
-
 const TopLeft = styled.div`
   width: 200px;
   text-align: left;
@@ -74,7 +91,7 @@ const TopLeft = styled.div`
 
 const TopCenter = styled.div`
   font-weight: 700;
-  font-size: 108px;
+  font-size: 80px;
 `;
 
 const TopRight = styled.div`
@@ -84,6 +101,14 @@ const TopRight = styled.div`
   align-items: flex-end;
   text-align: right;
   font-weight: 600;
+`;
+
+const SnsBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  gap: 10px;
 `;
 
 const LoginBtn = styled.button`
@@ -100,18 +125,25 @@ const LoginBtn = styled.button`
   cursor: pointer;
 `;
 
-const StickyNav = styled.div`
+const StickyNav = styled.nav`
   position: sticky;
-  top: 0;
-  z-index: 5000;
-  background-color: #f6efed;
+  top: 5px;
+  z-index: 999;
+  margin: 0px 20px;
 `;
 
-const Bottom = styled.div`
+const NavContent = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  border-bottom: 1px solid #ee5050;
+  padding: 10px 0;
+  background: linear-gradient(
+    108deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.07) 100%
+  );
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 20px 20px;
 `;
 
 const StyledLink = styled(Link)`

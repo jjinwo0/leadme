@@ -3,8 +3,11 @@ import styled from "styled-components";
 import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
+import { useState } from "react";
+import { LoginModal } from "../pages/LoginModal";
 const Header: React.FC = () => {
   const location = useLocation();
+  const [loginModal, setLoginModal] = useState<boolean>(false);
 
   const getPageTitle = (path: string): string => {
     switch (path) {
@@ -21,8 +24,13 @@ const Header: React.FC = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setLoginModal(false);
+  };
+
   return (
     <>
+      {loginModal ? <LoginModal onClose={handleCloseModal} /> : null}
       <HeaderWrapper>
         <Top>
           <TopLeft>
@@ -46,7 +54,13 @@ const Header: React.FC = () => {
                 <FaYoutube />
               </SnsBox>
             </div>
-            <LoginBtn>Login</LoginBtn>
+            <LoginBtn
+              onClick={() => {
+                setLoginModal(!loginModal);
+              }}
+            >
+              Login
+            </LoginBtn>
           </TopRight>
         </Top>
       </HeaderWrapper>

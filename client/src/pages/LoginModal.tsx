@@ -1,60 +1,92 @@
 import styled from "styled-components";
-import { SiGoogle, SiKakaotalk, SiNaver } from "react-icons/si";
+import { SiNaver } from "react-icons/si";
+import { FcGoogle } from "react-icons/fc";
+import { RiKakaoTalkFill } from "react-icons/ri";
 
-export const LoginModal = () => {
+interface LoginModalProps {
+  onClose: () => void;
+}
+
+export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   return (
-    <Container>
-      <Title>소셜로그인</Title>
-      <SNSBox>
-        <IconWrapper style={{ backgroundColor: "yellow" }}>
-          <SiKakaotalk style={{ color: "black" }} />
-        </IconWrapper>
-        <span>
-          <a href="http://localhost:8080/oauth2/authorization/kakao">카카오 로그인</a>
-        </span>
-      </SNSBox>
-      <SNSBox>
-        <IconWrapper style={{ backgroundColor: "red" }}>
-          <SiGoogle style={{ color: "white" }} />
-        </IconWrapper>
-        <span>
-          <a href="http://localhost:8080/oauth2/authorization/google">구글 로그인</a>
-        </span>
-      </SNSBox>
+    <Overlay onClick={onClose}>
+      <Container onClick={(e) => e.stopPropagation()}>
+        <Title>Login</Title>
+        <SNSBox style={{ backgroundColor: "yellow" }}>
+          <IconWrapper>
+            <RiKakaoTalkFill style={{ color: "black" }} />
+          </IconWrapper>
+          <span>
+            <a href="http://localhost:8080/oauth2/authorization/kakao">
+              카카오 로그인
+            </a>
+          </span>
+        </SNSBox>
 
-      <SNSBox>
-        <IconWrapper style={{ backgroundColor: "green" }}>
-          <SiNaver style={{ color: "white" }} />
-        </IconWrapper>
-        <span>
-          <a href="http://localhost:8080/oauth2/authorization/naver">네이버 로그인</a>
-        </span>
-      </SNSBox>
-    </Container>
+        <SNSBox style={{ backgroundColor: "green" }}>
+          <IconWrapper>
+            <SiNaver
+              style={{ color: "white", width: "18px", height: "18px" }}
+            />
+          </IconWrapper>
+          <span>
+            <a href="http://localhost:8080/oauth2/authorization/naver">
+              네이버 로그인
+            </a>
+          </span>
+        </SNSBox>
+
+        <SNSBox>
+          <IconWrapper>
+            <FcGoogle style={{ color: "white" }} />
+          </IconWrapper>
+          <span>
+            <a href="http://localhost:8080/oauth2/authorization/google">
+              구글 로그인
+            </a>
+          </span>
+        </SNSBox>
+      </Container>
+    </Overlay>
   );
 };
 
-const Container = styled.div`
+const Overlay = styled.div`
   position: fixed;
-  background-color: #fff;
-  width: 500px;
-  height: 500px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+`;
+
+const Container = styled.div`
+  width: 400px;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 20px;
+  gap: 10px;
+  z-index: 9999;
+  border-radius: 10px;
+  border: 3px solid rgba(223, 223, 223, 0.4);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
 `;
 
-const Title = styled.div`
-  font-size: 20px;
+const Title = styled.h1`
+  font-family: "Rajdhani", sans-serif;
+  font-size: 40px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const SNSBox = styled.div`
@@ -62,14 +94,17 @@ const SNSBox = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.08),
+    0px 2px 3px 0px rgba(0, 0, 0, 0.17);
   margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
-
+  transition: 0.3s ease;
+  opacity: 0.8;
   &:hover {
     background-color: #f5f5f5;
+    opacity: 1;
+    transform: scale(1.05);
   }
 
   span {
@@ -78,7 +113,13 @@ const SNSBox = styled.div`
   }
   a {
     text-decoration: none;
-    color: inherit;
+    color: rgba(0, 0, 0, 0.54);
+
+    font-family: Roboto;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
   }
 `;
 

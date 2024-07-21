@@ -106,6 +106,7 @@ const TopLeft = styled.div`
 const TopCenter = styled.div`
   font-weight: 700;
   font-size: 80px;
+  margin-top: 16px;
 `;
 
 const TopRight = styled.div`
@@ -135,21 +136,26 @@ const LoginBtn = styled.button`
   border: 1px solid #ee5050;
   border-radius: 4px;
   background-color: #ffffff;
-  margin-top: 8px;
+  margin: 4px 0 6px;
   cursor: pointer;
 `;
 
 const StickyNav = styled.nav`
   position: sticky;
-  top: 5px;
+  top: 0px;
   z-index: 999;
   margin: 0px 20px;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
 `;
 
 const NavContent = styled.div`
   display: flex;
   justify-content: center;
-  padding: 10px 0;
+  padding: 5px 0;
   background: linear-gradient(
     108deg,
     rgba(255, 255, 255, 0.26) 0%,

@@ -30,7 +30,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             />
           </IconWrapper>
           <span>
-            <a href="http://localhost:8080/oauth2/authorization/naver">
+            <a
+              style={{ color: "white" }}
+              href="http://localhost:8080/oauth2/authorization/naver"
+            >
               네이버 로그인
             </a>
           </span>

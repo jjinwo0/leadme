@@ -1,7 +1,9 @@
 package com.ssafy.withme.global.config.oauth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.domain.user.RefreshToken;
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.dto.TokenDto;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
 import com.ssafy.withme.global.util.CookieUtil;
 import com.ssafy.withme.repository.user.RefreshTokenRepository;
@@ -19,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -58,7 +61,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userService.findByEmail(email);
 
         // 1. 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
-        String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+        String refreshToken = tokenProvider.generateRefreshToken(user.getId(), REFRESH_TOKEN_DURATION);
         // 데이터 베이스에 유저아이디와 리프레시 토큰을 저장
         saveRefreshToken(user, refreshToken);
         // 클라이언트에서 액세스 토큰이 만료되면 재발급 요청하도록 쿠키에 리프레시 토큰을 저장
@@ -73,8 +76,21 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);
 
+        TokenDto tokenDto = TokenDto.builder()
+                .id(user.getId())
+                .accessToken(accessToken)
+                .accessTokenExpireTime(new Date(new Date().getTime() + ACCESS_TOKEN_DURATION.toMillis()))
+                .refreshToken(refreshToken)
+                .refreshTokenExpireTime(new Date(new Date().getTime() + REFRESH_TOKEN_DURATION.toMillis()))
+                .build();
+
         // 리다이렉트 ( 2에서 만든 URL로 리다이렉트합니다)
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+        // 응답 본문 JSON 작성
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(tokenDto));
     }
 
     // 생성된 리프레시 토큰을 전달받아 데이터베이스에 저장

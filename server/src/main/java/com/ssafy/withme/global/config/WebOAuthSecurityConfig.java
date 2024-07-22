@@ -1,5 +1,6 @@
 package com.ssafy.withme.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
 import com.ssafy.withme.global.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.withme.global.config.oauth.OAuth2SuccessHandler;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,7 +22,11 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
+@EnableWebSecurity
 @Configuration
 public class WebOAuthSecurityConfig {
 
@@ -78,8 +84,17 @@ public class WebOAuthSecurityConfig {
 
     // 실패 핸들러 예제
     private AuthenticationFailureHandler oAuth2FailureHandler() {
+
         return (request, response, exception) -> {
-            response.sendRedirect("/login?error=" + exception.getStackTrace());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Authentication failed");
+            errorResponse.put("message", exception.getMessage());
+
+            response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
         };
     }
 

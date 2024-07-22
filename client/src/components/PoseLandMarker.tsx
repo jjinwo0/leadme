@@ -5,18 +5,35 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
+import axios, { AxiosRequestConfig } from 'axios';
+
+declare global {
+  interface Window {
+    onYouTubeIframeAPIReady: () => void;
+    YT: any;
+    player: any;
+  }
+}
+
 const PoseLandmarkerComponent: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawCanvasRef = useRef<HTMLCanvasElement>(null);
   const [poseLandmarker, setPoseLandmarker] = useState<any>(null);
   const [webcamRunning, setWebcamRunning] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [landmarkData, setLandmarkData] = useState<any[]>([]);
   const [videoName, setVideoName] = useState<string>("");
+
+  // 유튜브 api 를 활용해 포즈 추출
+  const youtubeRef = useRef<HTMLIFrameElement | null>(null);
   const [youtubeUrl, setYoutubeUrl] = useState<string>("");
   const [videoId, setVideoId] = useState<string | null>(null);
+  const detectionIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
+
+    // 내 모습 추적하는 블레이즈 포즈 모델
     const initializePoseLandmarker = async () => {
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
@@ -154,20 +171,143 @@ const PoseLandmarkerComponent: React.FC = () => {
     };
   }, [webcamRunning]);
 
-  const extractVideoId = (url: string): string | null => {
-    const pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([^\?&\/]+)/;
-    const match = url.match(pattern);
-    return match ? match[1] : null;
-  };
+  // ====================================================
 
-  const playYoutube = () => {
-    const id = extractVideoId(youtubeUrl);
-    if (id) {
-      setVideoId(id);
-    } else {
-      alert('유효한 유튜브 URL을 입력하세요.');
+  interface Keypoint {
+    x: number;
+    y: number;
+    z: number;
+    visibility: number;
+  }
+  
+  interface ApiResponse {
+    url: string;
+    keypoints: Keypoint[][];
+  }
+
+  const client = axios.create({
+    baseURL: 'http://127.0.0.1:8080',
+  });
+  
+  const connections = [
+    [11, 12], // left shoulder to right shoulder
+    [11, 13], // left shoulder to left elbow
+    [13, 15], // left elbow to left writs
+    
+    [12, 14], // right shoulder to right elbow 
+    [14, 16], // right elbow to right writs
+
+    [11, 23], // left shoulder to left hip
+    [12, 24], // right shoulder to right hip
+    [23, 24], // left hip to right hip
+
+    [23, 24], // left hip to right hip
+    [23, 25], // left hip to left knee
+    [25, 27], // left knee to left ankle
+    [24, 26], // right hip to right knee
+    [26, 28], // right knee to right ankle
+
+    [27, 29], // left ankle to left heel
+    [29, 31], // left heel to left foot index
+    [27, 31],
+
+    [28, 30], // right ankle to rihgt heel
+    [30, 32], // right heel to right foot index
+    [28, 32]
+
+
+  ];
+
+  const getData = async (url: string, config?: AxiosRequestConfig): Promise<ApiResponse> => {
+    try {
+      const response = await client.get<ApiResponse>(url, config);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
+    
+  const playGuideLine = () => {
+    const fetchData = async () => {
+      const videoName = '1';
+      const url = `/api/v1/landmarks/${videoName}`;
+      const config: AxiosRequestConfig = {};
+
+      try {
+        const apiResponse = await getData(url, config);
+        console.log(apiResponse);
+        let lastTime = 0;
+
+        const canvas = drawCanvasRef.current;
+        const context = canvas?.getContext('2d');
+        const keypoints = apiResponse.landmarks;
+
+        let frameIndex = 0;
+
+        // keypoints를 Canvas에 그리는 함수
+        const drawKeypoints = (keypoints: Keypoint[]) => {
+          if (!context) return;
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          context.fillStyle = 'red';
+          keypoints.forEach(point => {
+            const x = point.x * canvas.width;
+            const y = point.y * canvas.height;
+
+            context.beginPath();
+            context.arc(x, y, 5, 0, 2 * Math.PI);
+            context.fill();
+          });
+
+          // keypoints를 선으로 연결합니다.
+          context.strokeStyle = 'blue';
+          context.lineWidth = 2;
+          connections.forEach(([startIdx, endIdx]) => {
+            const startPoint = keypoints[startIdx];
+            const endPoint = keypoints[endIdx];
+
+            context.beginPath();
+            context.moveTo(startPoint.x * canvas.width, startPoint.y * canvas.height);
+            context.lineTo(endPoint.x * canvas.width, endPoint.y * canvas.height);
+            context.stroke();
+          });
+        };
+
+        // 애니메이션 함수
+        const animate = (time: number) => {
+          if (!lastTime) {
+            lastTime = time;
+          }
+
+          const timeSinceLastFrame = time - lastTime;
+
+          if (timeSinceLastFrame >= 1000 / 30) { // 1초에 30프레임
+            console.log(frameIndex)
+            drawKeypoints(keypoints[frameIndex]); // 현재 프레임의 keypoints를 그립니다.
+            frameIndex = (frameIndex + 1) % keypoints.length; // 다음 프레임으로 이동 (loop)
+            lastTime = time;
+          }
+
+          requestAnimationFrame(animate); // 다음 프레임을 요청합니다.
+        };
+
+        requestAnimationFrame(animate); // 애니메이션 시작
+      } catch (err) {
+        console.log('Error fetching data');
+      } finally {
+        console.log('Loading completed');
+      }
+    };
+
+    fetchData();
+  };
+    ///////////////////////////////
+
+
+
+
+  
 
   return (
     <div>
@@ -198,25 +338,16 @@ const PoseLandmarkerComponent: React.FC = () => {
         />
       </div>
 
+      <button onClick={playGuideLine}> 재생 </button>
 
-      <input type="text" placeholder="유튜브 URL을 입력하세요" value={youtubeUrl}
-      onChange={(e) => setYoutubeUrl(e.target.value)}></input>
-
-      <button onClick={playYoutube}>유트브 영상 조회</button>
-      
-      {videoId && (
-          <div className="video-container">
-            <iframe
-              width="360"
-              height="640"
-              src={`https://www.youtube.com/embed/${videoId}`}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="video-iframe"
-            ></iframe>
-          </div>
-        )}
+      <hr></hr>
+    
+      <canvas
+          ref={drawCanvasRef}
+          width={640}
+          height={480}
+          style={{ position: "absolute", left: 0, top: 0 }}
+        />
 
 
     </div>

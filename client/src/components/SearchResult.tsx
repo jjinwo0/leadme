@@ -22,7 +22,7 @@ const imageData: ImageData[] = [
   {
     id: 2,
     src: img2,
-    title: "카리나 챌린지 카리나 챌린지 카리나 챌린지 카리나 챌린지",
+    title: "카리나 챌린지 카리나 챌린지 카리나asdf 챌린지 카리나 챌린지",
   },
   { id: 3, src: img1, title: "이주은 챌린지" },
   { id: 4, src: img2, title: "카리나 챌린지 카리나 챌린지" },
@@ -55,7 +55,7 @@ const Container = styled.div`
     rgba(255, 255, 255, 0.07) 100%
   );
   box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
   padding: 35px 40px;
@@ -74,7 +74,7 @@ const Container = styled.div`
 
     background: linear-gradient(
       to top,
-      rgba(255, 255, 255, 1) 80%,
+      rgba(255, 255, 255, 0.9) 50%,
       rgba(255, 255, 255, 0) 100%
     );
   }

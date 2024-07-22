@@ -64,7 +64,7 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,7 +84,7 @@ const Container = styled.div`
   z-index: 9999;
   border-radius: 10px;
   border: 3px solid rgba(223, 223, 223, 0.4);
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
   position: relative;

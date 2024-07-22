@@ -12,7 +12,7 @@ interface ImageData {
 }
 
 const imageData: ImageData[] = [
-  { id: 1, src: img1, title: "이주은 챌린지", tag: "#기아" },
+  { id: 1, src: img1, title: "이주은 챌린지이주은챌린지", tag: "#기아" },
   { id: 2, src: img2, title: "카리나 챌린지", tag: "#에스파" },
   { id: 3, src: img1, title: "이주은 챌린지", tag: "#치어리더 #기아" },
   { id: 4, src: img2, title: "카리나 챌린지", tag: "#윈터 #카리나" },
@@ -65,7 +65,6 @@ const PageLayout = styled.div`
 
 const MainSection = styled.div`
   width: 1080px;
-  height: 500px;
   border-radius: 20px;
   background: linear-gradient(
     118deg,
@@ -76,30 +75,45 @@ const MainSection = styled.div`
   backdrop-filter: blur(25px);
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  padding: 35px;
-  gap: 40px;
+  justify-content: space-between;
+  padding: 35px 40px 40px;
 `;
 
 const ContentSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  cursor: pointer;
+
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
 `;
 
 const TitleSection = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+
+  width: 200px;
 `;
 
 const MainTitle = styled.h1`
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 600;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const PlayButton = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
+  margin-bottom: -8px;
+  margin-right: -8px;
   cursor: pointer;
   transition: all 0.3s ease;
   &:hover {
@@ -108,17 +122,16 @@ const PlayButton = styled.img`
 `;
 
 const SubTitle = styled.div`
-  font-size: 14px;
+  font-size: 16px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 500;
+  margin-top: -6px;
+  margin-bottom: 22px;
 `;
 const FeedImage = styled.img`
   width: 200px;
   height: 355.5px;
   border-radius: 8px;
   object-fit: cover;
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-  &:hover {
-    transform: scale(1.05);
-  }
+  transition: transform 0.3s ease;
 `;

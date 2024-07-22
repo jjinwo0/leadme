@@ -1,7 +1,7 @@
 package com.ssafy.withme.domain.comment;
 
 import com.ssafy.withme.domain.BaseEntity;
-import com.ssafy.withme.domain.challenge.UserChallenge;
+import com.ssafy.withme.domain.challenge.Challenge;
 import com.ssafy.withme.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,10 +25,10 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_challenge_id")
-    private UserChallenge userChallenge;
+    private Challenge userChallenge;
 
     @Builder
-    public Comment(String content, User user, UserChallenge userChallenge) {
+    public Comment(String content, User user, Challenge userChallenge) {
         this.content = content;
         this.user = user;
         this.userChallenge = userChallenge;

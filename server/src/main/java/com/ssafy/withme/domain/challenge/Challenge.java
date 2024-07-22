@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserChallenge extends BaseEntity {
+public class Challenge extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_challenge_id")
@@ -38,7 +38,7 @@ public class UserChallenge extends BaseEntity {
     private List<Comment> commentList;
 
     @Builder
-    public UserChallenge(String challengeUrl, String challengeName, User user, Video video) {
+    public Challenge(String challengeUrl, String challengeName, User user, Video video) {
         this.challengeUrl = challengeUrl;
         this.challengeName = challengeName;
         this.user = user;

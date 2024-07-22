@@ -1,7 +1,7 @@
 package com.ssafy.withme.domain.user;
 
 import com.ssafy.withme.domain.BaseEntity;
-import com.ssafy.withme.domain.challenge.UserChallenge;
+import com.ssafy.withme.domain.challenge.Challenge;
 import com.ssafy.withme.domain.user.constant.RoleType;
 import com.ssafy.withme.domain.user.constant.UserStatus;
 import jakarta.persistence.*;
@@ -53,7 +53,7 @@ public class User extends BaseEntity {
     private List<Follow> fromFollowList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<UserChallenge> userChallengeList = new ArrayList<>();
+    private List<Challenge> userChallengeList = new ArrayList<>();
 
     @Builder
     public User(String email, String name) {

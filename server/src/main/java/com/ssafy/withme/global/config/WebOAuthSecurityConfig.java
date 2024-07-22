@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class WebOAuthSecurityConfig {
 
     }
 
+    // 토큰 방식으로 인증을 하기 때문에 기존에 사용하던 폼 로그인, 세션 비활성화
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -45,6 +47,8 @@ public class WebOAuthSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(mangement -> mangement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 헤더를 확인할 커스텀 필터 추가
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests(auth -> auth
                         // 토큰 재발급 url은 인증없이 접근 가능하도록 설정
@@ -52,7 +56,7 @@ public class WebOAuthSecurityConfig {
                         // /api/~ 권한 요규
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                         // 이외에는 모두 허가
-                        //.anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 )
 
                 // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영
@@ -62,8 +66,8 @@ public class WebOAuthSecurityConfig {
                                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                         //.redirectionEndpoint(endpoint -> endpoint.baseUri("/*/oauth2/code/*"))
                         .userInfoEndpoint(userInfoEndPoint -> userInfoEndPoint.userService(oAuth2UserCustomService))
-                        .successHandler(oAuth2SuccessHandler())
-                        .failureHandler(oAuth2FailureHandler())
+                        .successHandler(oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러
+                        .failureHandler(oAuth2FailureHandler()) // 인증 실패 시 실행할 핸들러
 
                 )
 

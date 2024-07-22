@@ -14,10 +14,10 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class LandMark {
+public class Landmark {
 
     @Id
-    private String videoName;
+    private String url;
 
     private List<List<Point>> landmarks;
 

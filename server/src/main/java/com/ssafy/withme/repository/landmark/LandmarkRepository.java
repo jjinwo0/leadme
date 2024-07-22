@@ -1,14 +1,13 @@
 package com.ssafy.withme.repository.landmark;
 
-import com.ssafy.withme.domain.landmark.LandMark;
+import com.ssafy.withme.domain.landmark.Landmark;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Map;
 
 @Repository
-public interface LandmarkRepository extends MongoRepository<LandMark, String> {
+public interface LandmarkRepository extends MongoRepository<Landmark, String> {
 
-    List<LandMark> findByVideoName(String videoname);
-
+    Landmark findByUrl(String url);
 }

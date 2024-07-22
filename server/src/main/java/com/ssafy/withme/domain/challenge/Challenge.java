@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,10 +18,14 @@ public class Challenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String videoName;
 
-    private String youtubeId;
+    private String url;
 
 
-
+    @Builder
+    private Challenge(String videoName, String url) {
+        this.videoName = videoName;
+        this.url = url;
+    }
 }

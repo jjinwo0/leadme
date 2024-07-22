@@ -77,7 +77,7 @@ const Header: React.FC = () => {
 };
 
 const HeaderWrapper = styled.header`
-  margin: 20px 20px -5px;
+  margin: 16px 20px -5px;
 `;
 
 const Top = styled.div`

@@ -128,8 +128,8 @@ export const SearchResultDetail: React.FC = () => {
         {videoData.map((video, index) => (
           <VideoSlide
             key={video.id}
-            isActive={index === currentIndex}
-            showComments={showComments}
+            $isActive={index === currentIndex}
+            $showComments={showComments}
           >
             <VideoContent>
               <VideoThumbnail src={video.src} alt={video.title} />
@@ -147,7 +147,7 @@ export const SearchResultDetail: React.FC = () => {
                 </ActionButton>
               </ActionButtons>
             </VideoContent>
-            <CommentSection show={showComments}>
+            <CommentSection $show={showComments}>
               <CommentHeader>댓글 {video.comments.length}</CommentHeader>
               <CommentList>
                 {video.comments.map((comment) => (
@@ -182,25 +182,26 @@ const VideoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto;
+  overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  height: calc(100vh - 100px);
+  height: 100vh;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
-const VideoSlide = styled.div<{ isActive: boolean; showComments: boolean }>`
+const VideoSlide = styled.div<{ $isActive: boolean; $showComments: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   scroll-snap-align: center;
-  height: calc(100vh - 115px);
+  height: 90vh;
   width: 100%;
+  margin-bottom: 10vh;
   transition: transform 0.3s ease-in-out;
   transform: ${(props) =>
-    props.showComments ? "translateX(-20%)" : "translateX(0)"};
+    props.$showComments ? "translateX(-20%)" : "translateX(0)"};
 `;
 
 const VideoContent = styled.div`
@@ -249,10 +250,10 @@ const ActionButton = styled.button`
   }
 `;
 
-const CommentSection = styled.div<{ show: boolean }>`
+const CommentSection = styled.div<{ $show: boolean }>`
   position: absolute;
   top: 0;
-  right: ${(props) => (props.show ? "0" : "-40%")};
+  right: ${(props) => (props.$show ? "0" : "-40%")};
   width: 30%;
   height: 100%;
   padding: 20px;

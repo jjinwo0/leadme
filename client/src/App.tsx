@@ -11,7 +11,7 @@ import Home from "./pages/Home";
 import Rank from "./pages/Rank";
 import Search from "./pages/Search";
 import Challenge from "./pages/Challenge";
-import { SearchResultDetail } from "./pages/SearchResultDetail";
+import { VideoDetail } from "./pages/VideoDetail";
 
 const App: React.FC = () => {
   return (
@@ -31,7 +31,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />}></Route>
           <Route path="/rank" element={<Rank />}></Route>
           <Route path="/search" element={<Search />}></Route>
-          <Route path="/search/:query" element={<SearchResultDetail />}></Route>
+          <Route path="/search/:query" element={<VideoDetail />}></Route>
           <Route path="/challenge" element={<Challenge />}></Route>
         </Routes>
       </ThemeProvider>

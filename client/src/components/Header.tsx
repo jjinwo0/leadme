@@ -5,7 +5,12 @@ import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { useState } from "react";
 import { LoginModal } from "../pages/LoginModal";
-const Header: React.FC = () => {
+
+interface HeaderProps {
+  stickyOnly?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
 
@@ -31,30 +36,32 @@ const Header: React.FC = () => {
   return (
     <>
       {loginModal ? <LoginModal onClose={handleCloseModal} /> : null}
-      <HeaderWrapper>
-        <Top>
-          <TopLeft>
-            Let's dance with
-            <br />
-            LeadMe
-          </TopLeft>
-          <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
-          <TopRight>
-            <SnsBox>
-              Instagram
-              <FaInstagram />
-            </SnsBox>
-            <SnsBox>
-              TikTok
-              <FaTiktok />
-            </SnsBox>
-            <SnsBox>
-              YouTube
-              <FaYoutube />
-            </SnsBox>
-          </TopRight>
-        </Top>
-      </HeaderWrapper>
+      {!stickyOnly && (
+        <HeaderWrapper>
+          <Top>
+            <TopLeft>
+              Let's dance with
+              <br />
+              LeadMe
+            </TopLeft>
+            <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
+            <TopRight>
+              <SnsBox>
+                Instagram
+                <FaInstagram />
+              </SnsBox>
+              <SnsBox>
+                TikTok
+                <FaTiktok />
+              </SnsBox>
+              <SnsBox>
+                YouTube
+                <FaYoutube />
+              </SnsBox>
+            </TopRight>
+          </Top>
+        </HeaderWrapper>
+      )}
       <StickyNav>
         <NavContent>
           <StyledLink to="/home">home</StyledLink>

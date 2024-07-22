@@ -1,21 +1,23 @@
 package com.ssafy.withme.global.config.jwt;
 
 import com.ssafy.withme.domain.user.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
+import com.ssafy.withme.global.config.jwt.constant.TokenType;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class TokenProvider {
 
@@ -23,20 +25,42 @@ public class TokenProvider {
 
     public String generateToken(User user, Duration expiredAt) {
         Date now = new Date();
-        return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
+        return makeAccessToken(new Date(now.getTime() + expiredAt.toMillis()), user);
+    }
+
+    public String generateRefreshToken(Long id, Duration expiredAt) {
+        Date now = new Date();
+        return makeRefreshToken( new Date(now.getTime() + expiredAt.toMillis()), id);
     }
 
     // JWT 토큰 생성 메서드
-    private String makeToken(Date expiry, User user) {
-        Date now = new Date();
+    private String makeAccessToken(Date expiry, User user) {
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더 타입은 JWT
                 .setIssuer(jwtProperties.getIssuer()) // 내용 : 프로퍼티에스에서 지정한 발급자명
-                .setIssuedAt(now) // 내용 issue at : 현재 시간
+                .setIssuedAt(new Date(System.currentTimeMillis())) // 내용 issue at : 현재 시간
                 .setExpiration(expiry) // 내용 exp : expiry 멤버 변수값
-                .setSubject(user.getEmail()) // 내용 sub : 유저의 이메일
-                .claim("id", user.getId()) // 클레임 id : 유저 id
+                .setSubject(TokenType.ACCESS.name()) // 내용 sub : 유저의 이메일 -> (jinwoo-dev) 토큰의 제목으로 설정
+                .claim("id", user.getId()) // claim : 토큰에 담아줄 정보 보따리 -> 자주 쓸만한거 넣어주시면 됩니다.
+                .claim("name", user.getName())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRoleType().getType())
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8))
+                .compact();
+    }
+
+    // Generate Refresh Token
+    private String makeRefreshToken(Date expiry, Long id) {
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer(jwtProperties.getIssuer())
+                .setSubject(TokenType.REFRESH.name())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(expiry)
+                .claim("id", id)
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8))
                 .compact();
     }
 
@@ -44,12 +68,17 @@ public class TokenProvider {
     public boolean validToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecretKey()) // 비밀키로 복호화
+                    .setSigningKey(jwtProperties.getSecretKey()) // 명 검증
                     .parseClaimsJws(token); // 클레임이란 받아온 정보(토큰)를 jwt 페이로드에 넣는 것이다.
-            return true;
+        } catch(ExpiredJwtException e){
+            log.info("토큰 만료: {}", e.getMessage());
+            return false;
         } catch(Exception e) {
+            log.info("Token Valid 예외 발생: {}", e.getMessage());
             return false;
         }
+
+        return true;
     }
 
     // 토큰 기반으로 스프링 시큐리티 인증 정보를 가져오는 메서드

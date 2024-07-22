@@ -1,5 +1,11 @@
 fastapi
-uvicorn
+uvicorn[standard]
+pydantic
+pytube
 opencv-python
 mediapipe
+pafy
+youtube-dl
+certifi
 yt-dlp
+pymongo

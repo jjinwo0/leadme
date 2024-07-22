@@ -69,7 +69,6 @@ const PageLayout = styled.div`
 
 const MainSection = styled.div`
   width: 1080px;
-  height: 600px;
   border-radius: 20px;
   background: linear-gradient(
     108deg,
@@ -81,7 +80,7 @@ const MainSection = styled.div`
   display: flex;
   flex-direction: column;
   padding: 35px;
-  gap: 40px;
+  gap: 35px;
 `;
 
 const TableWrapper = styled.div`
@@ -103,15 +102,19 @@ const Table = styled.table`
 `;
 
 const TableRow = styled.tr`
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 400;
   border-bottom: 1px solid #fff;
 `;
 
 const TableHeader = styled.th`
-  padding: 12px;
-  font-weight: bold;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
 `;
 
 const TableCell = styled.td`
-  padding: 12px;
+  padding: 14px;
+  font-size: 16px;
   border-bottom: 1px solid #fff;
 `;

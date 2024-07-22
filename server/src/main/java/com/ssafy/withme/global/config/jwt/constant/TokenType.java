@@ -1,4 +1,4 @@
-package com.ssafy.withme.domain.user.constant;
+package com.ssafy.withme.global.config.jwt.constant;
 
 public enum TokenType {
 

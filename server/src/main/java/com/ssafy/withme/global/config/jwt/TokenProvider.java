@@ -1,7 +1,7 @@
 package com.ssafy.withme.global.config.jwt;
 
 import com.ssafy.withme.domain.user.User;
-import com.ssafy.withme.domain.user.constant.TokenType;
+import com.ssafy.withme.global.config.jwt.constant.TokenType;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +45,7 @@ public class TokenProvider {
                 .claim("id", user.getId()) // claim : 토큰에 담아줄 정보 보따리 -> 자주 쓸만한거 넣어주시면 됩니다.
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
+                .claim("role", user.getRoleType().getType())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8))
                 .compact();
     }

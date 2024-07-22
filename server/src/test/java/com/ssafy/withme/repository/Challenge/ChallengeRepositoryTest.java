@@ -24,8 +24,8 @@ class ChallengeRepositoryTest {
     @Test
     void test(){
         //given
-        String findVideoName = "새삥";
-        Challenge challenge = createChallenge(findVideoName);
+        String findYoutubeId = "새삥";
+        Challenge challenge = createChallenge(findYoutubeId);
         Challenge challenge2 = createChallenge("헤이마마");
 
 
@@ -33,16 +33,16 @@ class ChallengeRepositoryTest {
                 List.of(challenge,challenge2)
         );
         //when
-        Challenge findChallenge = challengeRepository.findByVideoName(findVideoName);
+        Challenge findChallenge = challengeRepository.findByYoutubeId(findYoutubeId);
 
         //then
-        assertThat(findChallenge.getVideoName()).isEqualTo(findVideoName);
+        assertThat(findChallenge.getYoutubeId()).isEqualTo(findYoutubeId);
 
     }
 
-    private static Challenge createChallenge(String videoName) {
+    private static Challenge createChallenge(String youtubeId) {
         return Challenge.builder()
-                .videoName(videoName)
+                .youtubeId(youtubeId)
                 .url("url")
                 .build();
     }

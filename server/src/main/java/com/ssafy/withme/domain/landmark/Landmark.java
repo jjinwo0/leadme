@@ -17,7 +17,7 @@ import java.util.List;
 public class Landmark {
 
     @Id
-    private String url;
+    private String youtubeId;
 
     private List<List<Point>> landmarks;
 

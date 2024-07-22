@@ -6,5 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
-    Challenge findByVideoName(String videoName);
+
+    /**
+     * 유튜브 ID로 챌린지 조회
+    */
+    Challenge findByYoutubeId(String youtubeId);
 }

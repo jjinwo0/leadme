@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ChallengeCreateRequest {
 
-    private String videoName;
+    private String youtubeId;
 
     private String url;
 
     public Challenge toEntity() {
         return Challenge.builder()
-                .videoName(videoName)
+                .youtubeId(youtubeId)
                 .url(url)
                 .build();
 

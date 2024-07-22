@@ -44,7 +44,7 @@ const PageLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 40px auto;
+  margin: 50px auto;
 `;
 
 const MainSection = styled.div`

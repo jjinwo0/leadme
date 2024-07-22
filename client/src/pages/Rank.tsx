@@ -28,7 +28,7 @@ const Rank: React.FC = () => {
       <Header />
       <PageLayout>
         <MainSection>
-          <SearchBar width={464} />
+          <SearchBar width={464} icon />
           <TableWrapper>
             <Table>
               <thead>

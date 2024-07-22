@@ -40,27 +40,18 @@ const Header: React.FC = () => {
           </TopLeft>
           <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
           <TopRight>
-            <div>
-              <SnsBox>
-                Instagram
-                <FaInstagram />
-              </SnsBox>
-              <SnsBox>
-                TikTok
-                <FaTiktok />
-              </SnsBox>
-              <SnsBox>
-                YouTube
-                <FaYoutube />
-              </SnsBox>
-            </div>
-            <LoginBtn
-              onClick={() => {
-                setLoginModal(!loginModal);
-              }}
-            >
-              Login
-            </LoginBtn>
+            <SnsBox>
+              Instagram
+              <FaInstagram />
+            </SnsBox>
+            <SnsBox>
+              TikTok
+              <FaTiktok />
+            </SnsBox>
+            <SnsBox>
+              YouTube
+              <FaYoutube />
+            </SnsBox>
           </TopRight>
         </Top>
       </HeaderWrapper>
@@ -70,6 +61,13 @@ const Header: React.FC = () => {
           <StyledLink to="/search">search</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
+          <LoginBtn
+            onClick={() => {
+              setLoginModal(!loginModal);
+            }}
+          >
+            login
+          </LoginBtn>
         </NavContent>
       </StickyNav>
     </>
@@ -77,13 +75,13 @@ const Header: React.FC = () => {
 };
 
 const HeaderWrapper = styled.header`
-  margin: 16px 20px -5px;
+  margin: 14px 20px -5px;
 `;
 
 const Top = styled.div`
   padding: 18px 30px 8px;
   color: #ee5050;
-  font-size: 19px;
+  font-size: 16px;
   font-family: "Rajdhani", sans-serif;
   display: flex;
   justify-content: space-between;
@@ -105,15 +103,12 @@ const TopLeft = styled.div`
 
 const TopCenter = styled.div`
   font-weight: 700;
-  font-size: 80px;
-  margin-top: 16px;
+  font-size: 72px;
+  margin: 2px 0 6px;
 `;
 
 const TopRight = styled.div`
   width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   text-align: right;
   font-weight: 600;
 `;
@@ -128,16 +123,20 @@ const SnsBox = styled.div`
 
 const LoginBtn = styled.button`
   width: 72px;
-  padding: 1px 0;
   color: #ee5050;
-  font-size: 19px;
-  font-weight: 600;
-  font-family: "Rajdhani", sans-serif;
-  border: 1px solid #ee5050;
-  border-radius: 4px;
-  background-color: #ffffff;
-  margin: 4px 0 6px;
+  border: none;
+  background-color: inherit;
+  font-size: 16px;
+  font-family: "Noto Sans", sans-serif;
+  text-decoration: none;
+  position: absolute;
+  right: 36px;
   cursor: pointer;
+
+  &:hover {
+    color: #ff7676;
+    text-decoration: underline;
+  }
 `;
 
 const StickyNav = styled.nav`
@@ -150,12 +149,14 @@ const StickyNav = styled.nav`
     rgba(255, 255, 255, 1) 80%,
     rgba(255, 255, 255, 0) 100%
   );
+  border-radius: 0 0 20px 20px;
 `;
 
 const NavContent = styled.div`
   display: flex;
   justify-content: center;
-  padding: 5px 0;
+  align-items: center;
+  padding: 2.5px 0;
   background: linear-gradient(
     108deg,
     rgba(255, 255, 255, 0.26) 0%,
@@ -164,11 +165,12 @@ const NavContent = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 0 0 20px 20px;
+  position: relative;
 `;
 
 const StyledLink = styled(Link)`
   color: #ee5050;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   padding: 9px 14px;

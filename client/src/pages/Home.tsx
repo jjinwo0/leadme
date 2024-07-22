@@ -44,12 +44,12 @@ const PageLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 50px auto;
+  margin: 40px auto;
 `;
 
 const MainSection = styled.div`
   width: 820px;
-  height: 540px;
+  height: 520px;
   border-radius: 20px;
   background: linear-gradient(
     118deg,
@@ -69,13 +69,14 @@ const TitleSection = styled.div`
 `;
 
 const MainTitle = styled.h1`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 10px;
 `;
 
 const SubTitle = styled.h2`
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0 8px;
 `;
 
 const FeedGrid = styled.div`

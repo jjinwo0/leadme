@@ -134,7 +134,6 @@ const LoginBtn = styled.button`
   border: none;
   background-color: inherit;
   font-size: 16px;
-  font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   position: absolute;
   right: 36px;

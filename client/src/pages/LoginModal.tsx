@@ -11,19 +11,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   return (
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
         <Title>Login</Title>
-        <SNSBox style={{ backgroundColor: "yellow" }}>
+        <SNSBox backgroundColor="#fbff00" hoverColor="#f7e600">
           <IconWrapper>
-            <RiKakaoTalkFill style={{ color: "black" }} />
+            <RiKakaoTalkFill style={{ color: "#533030" }} />
           </IconWrapper>
           <span>
-            <a href="http://localhost:8080/oauth2/authorization/kakao">
+            <a
+              style={{ color: "#533030" }}
+              href="http://localhost:8080/oauth2/authorization/kakao"
+            >
               카카오 로그인
             </a>
           </span>
         </SNSBox>
 
-        <SNSBox style={{ backgroundColor: "green" }}>
+        <SNSBox backgroundColor="#03CF5D" hoverColor="#02b74b">
           <IconWrapper>
             <SiNaver
               style={{ color: "white", width: "18px", height: "18px" }}
@@ -31,7 +35,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           </IconWrapper>
           <span>
             <a
-              style={{ color: "white" }}
+              style={{ color: "#ffffff" }}
               href="http://localhost:8080/oauth2/authorization/naver"
             >
               네이버 로그인
@@ -39,7 +43,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           </span>
         </SNSBox>
 
-        <SNSBox>
+        <SNSBox backgroundColor="#ffffff" hoverColor="#f0f0f0">
           <IconWrapper>
             <FcGoogle style={{ color: "white" }} />
           </IconWrapper>
@@ -83,6 +87,18 @@ const Container = styled.div`
   background: rgba(255, 255, 255, 0.75);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
+  position: relative;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #ee5050;
+  cursor: pointer;
 `;
 
 const Title = styled.h1`
@@ -92,7 +108,12 @@ const Title = styled.h1`
   margin-bottom: 30px;
 `;
 
-const SNSBox = styled.div`
+interface SNSBoxProps {
+  backgroundColor: string;
+  hoverColor: string;
+}
+
+const SNSBox = styled.div<SNSBoxProps>`
   width: 100%;
   height: 50px;
   display: flex;
@@ -101,13 +122,12 @@ const SNSBox = styled.div`
   box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.08),
     0px 2px 3px 0px rgba(0, 0, 0, 0.17);
   margin-bottom: 10px;
-  cursor: pointer;
   transition: 0.3s ease;
-  opacity: 0.8;
+  cursor: pointer;
+  background-color: ${(props) => props.backgroundColor};
+
   &:hover {
-    background-color: #f5f5f5;
-    opacity: 1;
-    transform: scale(1.05);
+    background-color: ${(props) => props.hoverColor};
   }
 
   span {
@@ -116,8 +136,7 @@ const SNSBox = styled.div`
   }
   a {
     text-decoration: none;
-    color: rgba(0, 0, 0, 0.54);
-
+    color: #444444;
     font-family: Roboto;
     font-size: 18px;
     font-style: normal;

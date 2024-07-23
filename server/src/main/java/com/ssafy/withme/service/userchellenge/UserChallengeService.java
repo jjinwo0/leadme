@@ -14,6 +14,7 @@ import com.ssafy.withme.repository.challenge.ChallengeRepository;
 import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -55,24 +56,24 @@ public class UserChallengeService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new org.springframework.core.io.ByteArrayResource(videoFile.getBytes()) {
+        body.add("videoFile", new ByteArrayResource(videoFile.getBytes()) {
             @Override
             public String getFilename() {
                 return videoFile.getOriginalFilename();
             }
         });
-
+        body.add("filename", request.getName());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         // Fast API 반환값
         ResponseEntity<String> response = restTemplate.exchange(FAST_API_URL, HttpMethod.POST, requestEntity, String.class);
-
+        System.out.println(response);
         String result = response.getBody();
 
         List<Frame> userFrames = deserialize(result);
+        System.out.println(challenge.getYoutubeId());
 
         Landmark landmark = landmarkRepository.findByYoutubeId(challenge.getYoutubeId());
-        List<List<Landmark.Point>> Frames = landmark.getLandmarks();
         List<Frame> challengeFrames = landmark.getLandmarks().stream()
                 .map(keypoints -> keypoints.stream()
                         .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ()))
@@ -82,6 +83,7 @@ public class UserChallengeService {
 
         // 점수
         double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
+        System.out.println(score);
 
     }
 

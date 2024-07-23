@@ -45,6 +45,8 @@ public class ChallengeService {
         HashMap<String, String> requestBody = new HashMap<>();
         // 유튜브 url을 바디에 넣는다.
         requestBody.put("url", challenge.getUrl());
+        requestBody.put("youtubeId", challenge.getYoutubeId());
+
 
         HttpEntity<HashMap<String, String>> CreateLandMarkDataRequest = new HttpEntity<>(requestBody, httpHeaders);
         restTemplate.postForEntity(FAST_API_URL, CreateLandMarkDataRequest, String.class);

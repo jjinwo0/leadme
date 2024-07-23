@@ -1,9 +1,11 @@
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { isLoginState } from "./../stores/authAtom";
 import styled from "styled-components";
 import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { useState } from "react";
 import { LoginModal } from "../pages/LoginModal";
 
 interface HeaderProps {
@@ -13,6 +15,15 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
+
+  const loginCheck = useRecoilValue(isLoginState);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (loginCheck) {
+      setIsLogin(true);
+    }
+  }, [loginCheck]);
 
   const getPageTitle = (path: string): string => {
     switch (path) {
@@ -70,13 +81,17 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
           <StyledLink to="/search">search</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
-          <LoginBtn
-            onClick={() => {
-              setLoginModal(!loginModal);
-            }}
-          >
-            login
-          </LoginBtn>
+          {isLogin ? (
+            <LogBtn>logout</LogBtn>
+          ) : (
+            <LogBtn
+              onClick={() => {
+                setLoginModal(!loginModal);
+              }}
+            >
+              login
+            </LogBtn>
+          )}
         </NavContent>
       </StickyNav>
     </>
@@ -142,7 +157,7 @@ const SnsBox = styled.div`
   gap: 10px;
 `;
 
-const LoginBtn = styled.button`
+const LogBtn = styled.button`
   width: 72px;
   color: #ee5050;
   border: none;

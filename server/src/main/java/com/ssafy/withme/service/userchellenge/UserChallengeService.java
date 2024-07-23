@@ -1,9 +1,17 @@
 package com.ssafy.withme.service.userchellenge;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.controller.userchallenege.request.UserChallengeCreateRequest;
 import com.ssafy.withme.domain.challenge.Challenge;
+import com.ssafy.withme.domain.landmark.Landmark;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
+import com.ssafy.withme.global.response.Frame;
+import com.ssafy.withme.global.response.Keypoint;
+import com.ssafy.withme.global.util.PoseComparison;
 import com.ssafy.withme.repository.challenge.ChallengeRepository;
+import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -15,6 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
 
@@ -30,6 +41,7 @@ public class UserChallengeService {
     private final ChallengeRepository challengeRepository;
 
     private final RestTemplate restTemplate;
+    private final LandmarkRepository landmarkRepository;
 
     public void createUserChallenge(UserChallengeCreateRequest request, MultipartFile videoFile) throws EntityNotFoundException, IOException {
         Long challengeId = request.getChallengeId();
@@ -52,6 +64,57 @@ public class UserChallengeService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        restTemplate.exchange(FAST_API_URL, HttpMethod.POST, requestEntity, String.class);
+        // Fast API 반환값
+        ResponseEntity<String> response = restTemplate.exchange(FAST_API_URL, HttpMethod.POST, requestEntity, String.class);
+
+        String result = response.getBody();
+
+        List<Frame> userFrames = deserialize(result);
+
+        Landmark landmark = landmarkRepository.findByYoutubeId(challenge.getYoutubeId());
+        List<List<Landmark.Point>> Frames = landmark.getLandmarks();
+        List<Frame> challengeFrames = landmark.getLandmarks().stream()
+                .map(keypoints -> keypoints.stream()
+                        .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ()))
+                        .collect(Collectors.toList()))
+                .map(Frame::new)
+                .collect(Collectors.toList());
+
+        // 점수
+        double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
+
     }
+
+    /**
+     * 파이썬 서버에서 받아온 keypoints 값을 역직렬화 진행
+     * @param jsonResponse
+     * @return List<Frame>
+     * @throws JsonProcessingException
+     */
+    public static List<Frame> deserialize(String jsonResponse) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+        JsonNode landmarkNode = rootNode.path("landmarks");
+
+        List<Frame> frames = new ArrayList<>();
+
+        // landmarks[]
+        for(JsonNode frameNode : landmarkNode){
+            List<Keypoint> keypoints = new ArrayList<>();
+
+            // landmark[][]
+            for(JsonNode keypointNode : frameNode) {
+                double x = keypointNode.path("x").asDouble();
+                double y = keypointNode.path("y").asDouble();
+                double z = keypointNode.path("z").asDouble();
+
+                keypoints.add(new Keypoint(x, y, z));
+            }
+            frames.add(new Frame(keypoints));
+        }
+        return frames;
+    }
+
+
 }

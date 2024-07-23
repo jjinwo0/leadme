@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   };
 
   return (
-    <Container>
+    <>
       {loginModal ? <LoginModal onClose={handleCloseModal} /> : null}
       {!stickyOnly && (
         <HeaderWrapper>
@@ -79,21 +79,18 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
           </LoginBtn>
         </NavContent>
       </StickyNav>
-    </Container>
+    </>
   );
 };
 
-const Container = styled.div`
-  min-width: 1120px;
+const HeaderWrapper = styled.header`
+  min-width: 1080px;
+  margin: 14px 20px -5px;
 
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-`;
-
-const HeaderWrapper = styled.header`
-  margin: 14px 20px -5px;
 `;
 
 const Top = styled.div`
@@ -163,6 +160,7 @@ const LoginBtn = styled.button`
 `;
 
 const StickyNav = styled.nav`
+  min-width: 1080px;
   position: sticky;
   top: 0px;
   z-index: 999;
@@ -173,6 +171,11 @@ const StickyNav = styled.nav`
     rgba(255, 255, 255, 0) 100%
   );
   border-radius: 0 0 20px 20px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 
 const NavContent = styled.div`

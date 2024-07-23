@@ -4,15 +4,12 @@ import com.ssafy.withme.domain.BaseEntity;
 import com.ssafy.withme.domain.user.constant.RoleType;
 import com.ssafy.withme.domain.user.constant.UserStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 @Entity(name = "users")
 public class User extends BaseEntity {
 
@@ -45,18 +42,18 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    @Builder
-    public User(String email, String name) {
-        this.email = email;
-        this.name  = name;
-    }
-
-    @Builder
-    public User(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
+//    @Builder
+//    public User(String email, String name) {
+//        this.email = email;
+//        this.name  = name;
+//    }
+//
+//    @Builder
+//    public User(String email, String password, String nickname) {
+//        this.email = email;
+//        this.password = password;
+//        this.nickname = nickname;
+//    }
 
     public User update(String name) {
         this.name = name;

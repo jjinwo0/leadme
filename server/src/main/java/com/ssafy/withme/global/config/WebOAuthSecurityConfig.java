@@ -56,7 +56,7 @@ public class WebOAuthSecurityConfig {
                         // /api/~ 권한 요규
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                         // 이외에는 모두 허가
-                        .anyRequest().permitAll()
+//                        .anyRequest().permitAll()
                 )
 
                 // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영

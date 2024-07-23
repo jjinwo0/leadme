@@ -1,5 +1,6 @@
 package com.ssafy.withme.global.config.oauth;
 
+import com.ssafy.withme.domain.dto.CustomOAuth2User;
 import com.ssafy.withme.domain.user.RefreshToken;
 import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
@@ -34,7 +35,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
 
     // 로그인 성공 시 리다이렉트 페이지
-    public static final String REDIRECT_PATH = "http://localhost:5173";
+    public static final String REDIRECT_PATH = "http://localhost:5173/home";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -46,6 +47,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         // 인증된 principal(주체)를 반환한다.
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        System.out.println("여기 확인하자");
+        System.out.println(oAuth2User);
         String email = ((Map<String, String>) oAuth2User.getAttributes().get("kakao_account")).get("email");
         User user = userService.findByEmail(email);
     }
@@ -53,10 +56,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // 일반적인 로직은 동일하게 사용하고, 토큰과 관련된 작업만 추가로 처리하기 위해 오버라이드함
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = ((Map<String, String>) oAuth2User.getAttributes().get("kakao_account")).get("email");
 
-//        User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+        System.out.println(authentication);
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        // *** 여기서 계속 틀렸음
+        String email = ((CustomOAuth2User) oAuth2User).getUserDto().getEmail();
+        System.out.println(email);
+
         User user = userService.findByEmail(email);
 
         // 1. 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장

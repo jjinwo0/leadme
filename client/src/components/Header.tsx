@@ -16,14 +16,7 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
 
-  const loginCheck = useRecoilValue(isLoginState);
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (loginCheck) {
-      setIsLogin(true);
-    }
-  }, [loginCheck]);
+  const isLogin = useRecoilValue(isLoginState);
 
   const getPageTitle = (path: string): string => {
     switch (path) {

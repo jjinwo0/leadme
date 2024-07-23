@@ -18,9 +18,9 @@ const imageData: ImageData[] = [
 ];
 const Home: React.FC = () => {
   return (
-    <div>
+    <>
       <Header />
-      <PageLayout>
+      <Container>
         <MainSection>
           <SearchBar />
           <TitleSection>
@@ -35,12 +35,14 @@ const Home: React.FC = () => {
             ))}
           </FeedGrid>
         </MainSection>
-      </PageLayout>
-    </div>
+      </Container>
+    </>
   );
 };
 
-const PageLayout = styled.div`
+const Container = styled.div`
+  min-width: 1120px;
+
   display: flex;
   justify-content: center;
   align-items: center;

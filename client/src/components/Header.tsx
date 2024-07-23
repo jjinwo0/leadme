@@ -44,7 +44,9 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
               <br />
               LeadMe
             </TopLeft>
-            <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
+            <TopCenter>
+              <a href="">{getPageTitle(location.pathname)} !</a>
+            </TopCenter>
             <TopRight>
               <SnsBox>
                 Instagram
@@ -82,7 +84,13 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
 };
 
 const HeaderWrapper = styled.header`
+  min-width: 1080px;
   margin: 14px 20px -5px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 
 const Top = styled.div`
@@ -102,6 +110,7 @@ const Top = styled.div`
     4px 0 4px -4px rgba(0, 0, 0, 0.15), 0 -4px 4px -4px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
 `;
+
 const TopLeft = styled.div`
   width: 200px;
   text-align: left;
@@ -112,6 +121,11 @@ const TopCenter = styled.div`
   font-weight: 700;
   font-size: 72px;
   margin: 2px 0 6px;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 const TopRight = styled.div`
@@ -146,6 +160,7 @@ const LoginBtn = styled.button`
 `;
 
 const StickyNav = styled.nav`
+  min-width: 1080px;
   position: sticky;
   top: 0px;
   z-index: 999;
@@ -156,6 +171,11 @@ const StickyNav = styled.nav`
     rgba(255, 255, 255, 0) 100%
   );
   border-radius: 0 0 20px 20px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 
 const NavContent = styled.div`

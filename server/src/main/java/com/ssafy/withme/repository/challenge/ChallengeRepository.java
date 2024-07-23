@@ -1,4 +1,4 @@
-package com.ssafy.withme.repository.Challenge;
+package com.ssafy.withme.repository.challenge;
 
 import com.ssafy.withme.domain.challenge.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;

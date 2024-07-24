@@ -65,6 +65,8 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
             userDto.setName(oAuth2Response.getName());
             userDto.setUserStatus(UserStatus.ACTIVE);
 
+            log.info("new user: {}", userDto);
+
             System.out.println("새로운 로그인 : " + userDto);
             return new CustomOAuth2User(userDto);
         }
@@ -73,6 +75,9 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
             // 회원 email은 안바뀔 것이므로 따로 설정 x
 
             User existingUser = existData.get();
+
+            log.info("existing user: {}", existingUser);
+
             existingUser.update(oAuth2Response.getName());
 
             userRepository.save(existingUser);

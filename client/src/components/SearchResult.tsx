@@ -93,7 +93,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
           </LeftBtn>
         )}
         <SliderWrapper>
-          <Slider translateValue={-currentIndex * SLIDE_WIDTH}>
+          <Slider $translateValue={-currentIndex * SLIDE_WIDTH}>
             {imageData.map((img) => (
               <ContentSection key={img.id}>
                 <FeedImage src={img.src} />
@@ -181,13 +181,13 @@ const SliderWrapper = styled.div`
 `;
 
 interface SliderProps {
-  translateValue: number;
+  $translateValue: number;
 }
 
 const Slider = styled.div<SliderProps>`
   display: flex;
   transition: transform 0.5s ease;
-  transform: translateX(${(props) => props.translateValue}px);
+  transform: translateX(${(props) => props.$translateValue}px);
 `;
 
 const ContentSection = styled.div`

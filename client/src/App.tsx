@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { MainCanvas } from "./components/MainCanvas";
 import { FixedDOM } from "./components/dom/FixedDOM";
 import { ThemeProvider } from "styled-components";
@@ -15,27 +14,25 @@ import { VideoDetail } from "./pages/VideoDetail";
 
 const App: React.FC = () => {
   return (
-    <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Wrapper>
-                <MainCanvas />
-                <FixedDOM />
-              </Wrapper>
-            }
-          ></Route>
-          <Route path="/home" element={<Home />}></Route>
-          <Route path="/rank" element={<Rank />}></Route>
-          <Route path="/search" element={<Search />}></Route>
-          <Route path="/search/:query" element={<VideoDetail />}></Route>
-          <Route path="/challenge" element={<Challenge />}></Route>
-        </Routes>
-      </ThemeProvider>
-    </RecoilRoot>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Wrapper>
+              <MainCanvas />
+              <FixedDOM />
+            </Wrapper>
+          }
+        ></Route>
+        <Route path="/home" element={<Home />}></Route>
+        <Route path="/rank" element={<Rank />}></Route>
+        <Route path="/search" element={<Search />}></Route>
+        <Route path="/search/:query" element={<VideoDetail />}></Route>
+        <Route path="/challenge" element={<Challenge />}></Route>
+      </Routes>
+    </ThemeProvider>
   );
 };
 

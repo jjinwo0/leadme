@@ -13,7 +13,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Title>Login</Title>
-        <SNSBox backgroundColor="#fbff00" hoverColor="#f7e600">
+        <SNSBox>
           <IconWrapper>
             <RiKakaoTalkFill style={{ color: "#533030" }} />
           </IconWrapper>
@@ -27,7 +27,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           </span>
         </SNSBox>
 
-        <SNSBox backgroundColor="#03CF5D" hoverColor="#02b74b">
+        <SNSBox>
           <IconWrapper>
             <SiNaver
               style={{ color: "white", width: "18px", height: "18px" }}
@@ -43,7 +43,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           </span>
         </SNSBox>
 
-        <SNSBox backgroundColor="#ffffff" hoverColor="#f0f0f0">
+        <SNSBox>
           <IconWrapper>
             <FcGoogle style={{ color: "white" }} />
           </IconWrapper>
@@ -108,12 +108,7 @@ const Title = styled.h1`
   margin-bottom: 30px;
 `;
 
-interface SNSBoxProps {
-  backgroundColor: string;
-  hoverColor: string;
-}
-
-const SNSBox = styled.div<SNSBoxProps>`
+const SNSBox = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
@@ -124,11 +119,6 @@ const SNSBox = styled.div<SNSBoxProps>`
   margin-bottom: 10px;
   transition: 0.3s ease;
   cursor: pointer;
-  background-color: ${(props) => props.backgroundColor};
-
-  &:hover {
-    background-color: ${(props) => props.hoverColor};
-  }
 
   span {
     flex: 1;

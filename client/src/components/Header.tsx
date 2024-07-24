@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { isLoginState } from "./../stores/authAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { accessTokenState } from "./../stores/authAtom";
 import styled from "styled-components";
 import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
@@ -16,7 +16,9 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
 
-  const isLogin = useRecoilValue(isLoginState);
+  const accessToken = useRecoilValue(accessTokenState);
+  const setAccessToken = useSetRecoilState(accessTokenState);
+  const isLogin = !!accessToken; // 로그인 상태를 accessToken 여부로 확인
 
   const getPageTitle = (path: string): string => {
     switch (path) {
@@ -35,6 +37,12 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
 
   const handleCloseModal = () => {
     setLoginModal(false);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("access_token");
+    setAccessToken(null);
+    window.location.reload();
   };
 
   return (
@@ -75,7 +83,13 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
           {isLogin ? (
-            <LogBtn>logout</LogBtn>
+            <LogBtn
+              onClick={() => {
+                handleLogout();
+              }}
+            >
+              logout
+            </LogBtn>
           ) : (
             <LogBtn
               onClick={() => {

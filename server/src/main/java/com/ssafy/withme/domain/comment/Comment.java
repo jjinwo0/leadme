@@ -3,10 +3,14 @@ package com.ssafy.withme.domain.comment;
 import com.ssafy.withme.domain.BaseEntity;
 import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.domain.userchallenge.UserChallenge;
+import com.ssafy.withme.domain.usercomment.UserCommentLike;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -22,10 +26,14 @@ public class Comment extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private User user;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_challenge_id")
     private UserChallenge userChallenge;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<UserCommentLike> userCommentLikes = new ArrayList<>();
+
 }

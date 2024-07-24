@@ -9,8 +9,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity(name = "users")
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @Id
@@ -60,4 +60,10 @@ public class User extends BaseEntity {
         return this;
     }
 
+    @Builder
+    public User(String name, String email, UserStatus userStatus) {
+        this.name = name;
+        this.email = email;
+        this.userStatus = userStatus;
+    }
 }

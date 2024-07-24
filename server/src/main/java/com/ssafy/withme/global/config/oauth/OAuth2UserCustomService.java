@@ -29,9 +29,6 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         // 요청을 바탕으로 유저 정보를 담은 객체 반환
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("OAuth2User: {}", oAuth2User);
-        System.out.println();
-        System.out.println();
-        System.out.println(oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("registrationId: {}", registrationId);
@@ -49,19 +46,19 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         }
 
         //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
-        String username = oAuth2Response.getEmail();
-        System.out.println("email : " + username);
-        Optional<User> existData = userRepository.findByEmail(username);
+        String email = oAuth2Response.getEmail();
+        System.out.println("email : " + email);
+        Optional<User> existData = userRepository.findByEmail(email);
 
         // 첫 로그인
         if (existData.isEmpty()) {
+            User newUser = User.builder()
+                    .email(oAuth2Response.getEmail())
+                    .name(oAuth2Response.getName())
+                    .userStatus(UserStatus.ACTIVE)
+                    .build();
 
-            User userEntity = new User();
-            userEntity.setEmail(oAuth2Response.getEmail());
-            userEntity.setName(oAuth2Response.getName());
-            userEntity.setUserStatus(UserStatus.ACTIVE);
-
-            userRepository.save(userEntity);
+            userRepository.save(newUser);
 
             UserDto userDto = new UserDto();
             userDto.setEmail(oAuth2Response.getEmail());
@@ -73,11 +70,10 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         }
         // 이미 로그인 한 회원일 경우(DB에 저장된 유저)
         else {
-            // 회원 username은 안바뀔 것이므로 따로 설정 x
+            // 회원 email은 안바뀔 것이므로 따로 설정 x
 
             User existingUser = existData.get();
-            existingUser.setEmail(oAuth2Response.getEmail());
-            existingUser.setName(oAuth2Response.getName());
+            existingUser.update(oAuth2Response.getName());
 
             userRepository.save(existingUser);
 
@@ -86,7 +82,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
             userDto.setName(existingUser.getName());
             userDto.setUserStatus(existingUser.getUserStatus());
 
-            System.out.println("업데이트 : " + userDto.getEmail());
+            log.info("Updated user: {}", userDto.getEmail());
             return new CustomOAuth2User(userDto);
         }
 

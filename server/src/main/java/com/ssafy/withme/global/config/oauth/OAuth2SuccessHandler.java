@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     // 스프링 시큐리티에서 별도의 authenticationSuccessHandler를 지정하지 않으면
@@ -35,7 +37,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
 
     // 로그인 성공 시 리다이렉트 페이지
-    public static final String REDIRECT_PATH = "http://localhost:5173/home";
+    public static final String REDIRECT_PATH = "http://localhost:3000/home";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -82,6 +84,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         clearAuthenticationAttributes(request, response);
 
         // 리다이렉트 ( 2에서 만든 URL로 리다이렉트합니다)
+        log.info("targetUrl: {}" + targetUrl);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 

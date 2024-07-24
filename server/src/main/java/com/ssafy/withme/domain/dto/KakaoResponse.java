@@ -1,5 +1,7 @@
 package com.ssafy.withme.domain.dto;
 
+import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.domain.user.constant.UserStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,5 +39,17 @@ public class KakaoResponse implements OAuth2Response{
     public String getName() {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
         return properties.get("nickname").toString();
+    }
+
+    public User toEntity() {
+
+        String email = this.getEmail();
+        String name = this.getName();
+
+        return User.builder()
+                .email(email)
+                .name(name)
+                .userStatus(UserStatus.ACTIVE)
+                .build();
     }
 }

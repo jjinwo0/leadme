@@ -51,12 +51,12 @@ public class WebOAuthSecurityConfig {
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests(auth -> auth
-                        // 토큰 재발급 url은 인증없이 접근 가능하도록 설정
+                        // 토큰 재발급 url은 인증없이 접근 가능하도록 설정 permitAll()? denyAll()?
                         .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll()
                         // /api/~ 권한 요규
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
                         // 이외에는 모두 허가
-//                        .anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 )
 
                 // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영
@@ -70,6 +70,10 @@ public class WebOAuthSecurityConfig {
                         .failureHandler(oAuth2FailureHandler()) // 인증 실패 시 실행할 핸들러
 
                 )
+
+//                .logout(logout -> logout
+//                        .logoutSuccessUrl("/login")
+//                )
 
                 // /api로 시작하는 url인 경우 401 상태 코드를 반환하도록 예외 처리
                 .exceptionHandling(exceptionHandling -> exceptionHandling

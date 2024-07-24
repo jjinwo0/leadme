@@ -30,7 +30,7 @@ def download_video(url, output_path='downloaded_video.mp4'):
     return output_path
 
 
-def process_video(video_url, video_path):
+def process_video(youtubeId, video_path):
     keypoints_list = []
 
     # 비디오 파일이 존재하는지 확인
@@ -83,12 +83,12 @@ def process_video(video_url, video_path):
             break
 
     document = {
-        'url': video_url,
+        'youtubeId': youtubeId,
         'landmarks': keypoints_list
     }
 
     # upsert를 사용하여 문서가 없으면 삽입하고, 있으면 업데이트
-    filter_query = {'_id': video_url}
+    filter_query = {'_id': youtubeId}
     update_query = {'$set': document}
     collection.update_one(filter_query, update_query, upsert=True)
 

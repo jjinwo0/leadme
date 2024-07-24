@@ -1,16 +1,19 @@
 import React from "react";
+import theme from "./theme";
 import { Routes, Route } from "react-router-dom";
 import { MainCanvas } from "./components/MainCanvas";
 import { FixedDOM } from "./components/dom/FixedDOM";
 import { ThemeProvider } from "styled-components";
-import theme from "./theme";
+import { VideoDetail } from "./pages/VideoDetail";
 import GlobalStyle from "./globalStyles";
 import styled from "styled-components";
 import Home from "./pages/Home";
 import Rank from "./pages/Rank";
 import Search from "./pages/Search";
+import Report from "./pages/Report";
 import Challenge from "./pages/Challenge";
-import { VideoDetail } from "./pages/VideoDetail";
+import Chat from "./pages/Chat";
+import Mypage from "./pages/Mypage";
 
 const App: React.FC = () => {
   return (
@@ -31,6 +34,9 @@ const App: React.FC = () => {
         <Route path="/search" element={<Search />}></Route>
         <Route path="/search/:query" element={<VideoDetail />}></Route>
         <Route path="/challenge" element={<Challenge />}></Route>
+        <Route path="/mypage" element={<Mypage />}></Route>
+        <Route path="/report" element={<Report />}></Route>
+        <Route path="/chat" element={<Chat />}></Route>
       </Routes>
     </ThemeProvider>
   );

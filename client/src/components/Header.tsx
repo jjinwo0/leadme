@@ -83,21 +83,37 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
           {isLogin ? (
-            <LogBtn
-              onClick={() => {
-                handleLogout();
-              }}
-            >
-              logout
-            </LogBtn>
+            <LeftContainer>
+              <Mypage>
+                mypage
+                <Fake>
+                  <LeftHoverBox>
+                    <HoverLink to="/mypage">마이페이지</HoverLink>
+                    <Hr />
+                    <HoverLink to="/report">분석 결과</HoverLink>
+                    <Hr />
+                    <HoverLink to="/chat">채팅 목록</HoverLink>
+                  </LeftHoverBox>
+                </Fake>
+              </Mypage>
+              <LeftBtn
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+                logout
+              </LeftBtn>
+            </LeftContainer>
           ) : (
-            <LogBtn
-              onClick={() => {
-                setLoginModal(!loginModal);
-              }}
-            >
-              login
-            </LogBtn>
+            <LeftContainer>
+              <LeftBtn
+                onClick={() => {
+                  setLoginModal(!loginModal);
+                }}
+              >
+                login
+              </LeftBtn>
+            </LeftContainer>
           )}
         </NavContent>
       </StickyNav>
@@ -164,21 +180,82 @@ const SnsBox = styled.div`
   gap: 10px;
 `;
 
-const LogBtn = styled.button`
-  width: 72px;
+const LeftContainer = styled.div`
+  position: absolute;
+  right: 22px;
+
+  display: flex;
+  flex-direction: row;
+`;
+
+const LeftBtn = styled.div`
+  font-family: "Noto Sans", sans-serif;
+  font-size: 15px;
   color: #ee5050;
   border: none;
+  padding: 9px 12px;
   background-color: inherit;
-  font-size: 16px;
   text-decoration: none;
-  position: absolute;
-  right: 36px;
+  margin: 0 12px;
+  position: relative;
   cursor: pointer;
 
   &:hover {
     color: #ff7676;
     text-decoration: underline;
   }
+`;
+
+const Mypage = styled.div`
+  font-family: "Noto Sans", sans-serif;
+  font-size: 15px;
+  color: #ee5050;
+  border: none;
+  padding: 9px 14px;
+  background-color: inherit;
+  text-decoration: none;
+  margin: 0 12px;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    div {
+      display: block;
+    }
+  }
+`;
+
+const Fake = styled.div`
+  display: none;
+  position: absolute;
+  left: -44px;
+  top: 30px;
+  padding: 16px;
+`;
+
+const LeftHoverBox = styled.div`
+  width: 135px;
+  top: 48px;
+  z-index: 9999;
+  padding: 1px 0;
+
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(25px);
+
+  cursor: default;
+`;
+
+const HoverLink = styled(Link)`
+  display: block;
+  color: #ee5050;
+  text-align: center;
+  font-size: 15px;
+  font-family: "Noto Sans KR", sans-serif;
+  text-decoration: none;
+  padding: 8px;
+  margin: 6px;
 `;
 
 const StickyNav = styled.nav`
@@ -222,12 +299,17 @@ const StyledLink = styled(Link)`
   font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   padding: 9px 14px;
-  margin: 0 18px;
+  margin: 0 16px;
 
   &:hover {
     color: #ff7676;
     text-decoration: underline;
   }
+`;
+
+const Hr = styled.hr`
+  border: 1px solid white;
+  margin: 0;
 `;
 
 export default Header;

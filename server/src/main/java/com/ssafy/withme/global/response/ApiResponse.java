@@ -27,6 +27,8 @@ public abstract class ApiResponse<T> {
         this.errors = new ArrayList<>();
     }
 
+
+
     public String toJson() {
         return new Gson().toJson(this);
     }

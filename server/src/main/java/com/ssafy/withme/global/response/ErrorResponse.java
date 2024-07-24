@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ErrorResponse extends ApiResponse<Void>{
@@ -38,7 +39,9 @@ public class ErrorResponse extends ApiResponse<Void>{
 
     // Default Exception 발생 시 처리
     public static ErrorResponse of(Exception exception) {
-        return new ErrorResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage(), null);
+        Errors errors = new MapBindingResult(new HashMap<>() , "");
+        errors.reject("error.global", exception.getMessage());
+        return new ErrorResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage(), errors);
     }
 
     private List<CustomErrors> parseErrors(Errors errors) {

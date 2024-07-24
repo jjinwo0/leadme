@@ -4,12 +4,11 @@ import com.ssafy.withme.controller.challenge.request.ChallengeCreateRequest;
 import com.ssafy.withme.domain.challenge.Challenge;
 import com.ssafy.withme.domain.landmark.Landmark;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
-import com.ssafy.withme.repository.Challenge.ChallengeRepository;
+import com.ssafy.withme.repository.challenge.ChallengeRepository;
 import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -46,6 +45,8 @@ public class ChallengeService {
         HashMap<String, String> requestBody = new HashMap<>();
         // 유튜브 url을 바디에 넣는다.
         requestBody.put("url", challenge.getUrl());
+        requestBody.put("youtubeId", challenge.getYoutubeId());
+
 
         HttpEntity<HashMap<String, String>> CreateLandMarkDataRequest = new HttpEntity<>(requestBody, httpHeaders);
         restTemplate.postForEntity(FAST_API_URL, CreateLandMarkDataRequest, String.class);

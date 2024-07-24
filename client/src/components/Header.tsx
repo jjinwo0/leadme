@@ -61,16 +61,12 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
             </TopCenter>
             <TopRight>
               <SnsBox>
-                Instagram
-                <FaInstagram />
+                YouTube
+                <FaYoutube />
               </SnsBox>
               <SnsBox>
                 TikTok
                 <FaTiktok />
-              </SnsBox>
-              <SnsBox>
-                YouTube
-                <FaYoutube />
               </SnsBox>
             </TopRight>
           </Top>
@@ -79,7 +75,8 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
       <StickyNav>
         <NavContent>
           <StyledLink to="/home">home</StyledLink>
-          <StyledLink to="/search">search</StyledLink>
+          <StyledLink to="/feed">feed</StyledLink>
+          <StyledLink to="/practice">practice</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
           {isLogin ? (

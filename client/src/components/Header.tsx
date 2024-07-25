@@ -126,7 +126,7 @@ const HeaderWrapper = styled.header`
 `;
 
 const Top = styled.div`
-  padding: 18px 30px 8px;
+  padding: 22px 30px 10px;
   color: #ee5050;
   font-size: 16px;
   font-family: "Rajdhani", sans-serif;
@@ -151,7 +151,7 @@ const TopLeft = styled.div`
 
 const TopCenter = styled.div`
   font-weight: 700;
-  font-size: 72px;
+  font-size: 76px;
   margin: 2px 0 6px;
 
   a {

@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
+import img1 from "../assets/image/img1.png";
+import img2 from "../assets/image/img2.png";
 
 interface User {
   id: string;
@@ -8,6 +10,30 @@ interface User {
   follower: number;
   following: number;
 }
+
+interface ImageData {
+  id: number;
+  src: string;
+  title: string;
+}
+
+const imageData: ImageData[] = [
+  {
+    id: 1,
+    src: img1,
+    title: "윈터와 카리나의 블라 블라 ",
+  },
+  {
+    id: 2,
+    src: img2,
+    title: "카리나 챌린지 카리나 챌린지 카리나asdf 챌린지 카리나 챌린지",
+  },
+  { id: 3, src: img1, title: "이주은 챌린지" },
+  { id: 4, src: img2, title: "카리나 챌린지 카리나 챌린지" },
+  { id: 5, src: img1, title: "추가 이미지 1" },
+  { id: 6, src: img2, title: "추가 이미지 2" },
+  { id: 7, src: img1, title: "추가 이미지 3" },
+];
 
 const Mypage: React.FC = () => {
   const user: User = {
@@ -22,7 +48,7 @@ const Mypage: React.FC = () => {
       <Header stickyOnly />
       <Container>
         <MainSection>
-          <Title>Profile</Title>
+          <ProfileTitle>Profile</ProfileTitle>
           <ProfileContainer>
             <Flex>
               <ProfileImg />
@@ -53,19 +79,28 @@ const Mypage: React.FC = () => {
             </BtnContainer>
           </ProfileContainer>
         </MainSection>
+        <MainSection>
+          <FeedTitle>Feed</FeedTitle>
+          <FeedContainer>
+            {imageData.map((img) => (
+              <OneFeed key={img.id}>
+                <OneImg src={img.src} />
+                <OneTitle>{img.title}</OneTitle>
+              </OneFeed>
+            ))}
+          </FeedContainer>
+        </MainSection>
       </Container>
     </>
   );
 };
 
 const Container = styled.div`
-  min-width: 1120px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 50px auto;
   flex-direction: column;
-  gap: 30px;
 `;
 
 const MainSection = styled.div`
@@ -78,13 +113,24 @@ const MainSection = styled.div`
   );
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(50px);
-  padding: 30px 40px 26px;
+  padding: 30px 40px 28px;
+
+  &:not(:last-child) {
+    margin-bottom: 50px;
+  }
 `;
 
-const Title = styled.div`
+const ProfileTitle = styled.div`
   font-family: "Rajdhani", sans-serif;
   font-weight: 600;
-  font-size: 36px;
+  font-size: 30px;
+  margin-left: 6px;
+`;
+
+const FeedTitle = styled.div`
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
+  font-size: 40px;
 `;
 
 const ProfileContainer = styled.div`
@@ -102,11 +148,12 @@ const Flex = styled.div`
 `;
 
 const ProfileImg = styled.div`
-  width: 98px;
-  height: 98px;
+  width: 90px;
+  height: 90px;
   background-color: white;
   border-radius: 50%;
   margin-right: 60px;
+  margin-top: 8px;
 `;
 
 const Tr = styled.tr`
@@ -147,6 +194,53 @@ const Btn = styled.div`
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
   padding: 6px 10px;
   margin-left: 14px;
+`;
+
+const FeedContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const OneFeed = styled.div`
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 12px 0;
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
+  &:not(:nth-child(4n)) {
+    margin-right: 66.6px;
+  }
+`;
+
+const OneImg = styled.img`
+  width: 200px;
+  height: 355.5px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: 10px 0 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+`;
+
+const OneTitle = styled.div`
+  color: #ee5050;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 500;
+  width: 100%;
+  max-height: 40px;
+  font-size: 16px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 export default Mypage;

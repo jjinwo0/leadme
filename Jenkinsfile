@@ -54,16 +54,30 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    
-                    sh """
-                    ssh -o StrictHostKeyChecking=no -i I11C109T.pem ubuntu@i11c109.p.ssafy.io -p ${EC2_INSTANCE_PORT} << 'ENDSSH'
-                        docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
-                        docker stop ${DOCKERHUB_NAME} || true
-                        docker rm ${DOCKERHUB_NAME} || true
-                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
-                        docker image prune -f
-                    ENDSSH
-                    """
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: ubuntu,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: '',
+                                        execCommand: """
+                                        docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
+                                        docker stop ${DOCKERHUB_NAME} || true
+                                        docker rm ${DOCKERHUB_NAME} || true
+                                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
+                                        docker image prune -f
+                                        """,
+                                        execTimeout: 120000
+                                    )
+                                ],
+                                usePromotionTimestamp: false,
+                                alwaysPublishFromMaster: false,
+                                retry: 1,
+                                verbose: true
+                            )
+                        ]
+                    )
                 }
             }
         }

@@ -1,52 +1,72 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import img1 from "../assets/image/img1.png";
-import img2 from "../assets/image/img2.png";
 import { BsFillCaretRightFill } from "react-icons/bs";
-
-import youtubeButton from "../assets/icons/youtubeButton.png";
-import tiktokButton from "../assets/icons/tiktokButton.png";
-import instaButton from "../assets/icons/instaButton.png";
-import playButton from "../assets/icons/playButton.png";
+import youtubeButton from "../../assets/icons/youtubeButton.png";
+import tiktokButton from "../../assets/icons/tiktokButton.png";
+import instaButton from "../../assets/icons/instaButton.png";
+import playButton from "../../assets/icons/playButton.png";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+const API_KEY = "AIzaSyCu0oBuaDUV8ygWfz3bQca0jhcj_1AR7MQ";
+const BASE_URL = "https://www.googleapis.com/youtube/v3/search";
 
 interface SearchResultProps {
   platform: string;
 }
 
-interface ImageData {
-  id: number;
-  src: string;
-  title: string;
+interface YouTubeItem {
+  id: {
+    videoId: string;
+  };
+  snippet: {
+    title: string;
+    thumbnails: {
+      high: {
+        url: string;
+      };
+    };
+  };
 }
-
-const imageData: ImageData[] = [
-  {
-    id: 1,
-    src: img1,
-    title: "윈터와 카리나의 블라 블라 ",
-  },
-  {
-    id: 2,
-    src: img2,
-    title: "카리나 챌린지 카리나 챌린지 카리나asdf 챌린지 카리나 챌린지",
-  },
-  { id: 3, src: img1, title: "이주은 챌린지" },
-  { id: 4, src: img2, title: "카리나 챌린지 카리나 챌린지" },
-  { id: 5, src: img1, title: "추가 이미지 1" },
-  { id: 6, src: img2, title: "추가 이미지 2" },
-  { id: 7, src: img1, title: "추가 이미지 3" },
-  { id: 8, src: img2, title: "추가 이미지 4" },
-  { id: 9, src: img1, title: "추가 이미지 1" },
-  { id: 10, src: img2, title: "추가 이미지 2" },
-  { id: 11, src: img1, title: "추가 이미지 3" },
-  { id: 12, src: img2, title: "추가 이미지 4" },
-];
 
 const ITEMS_PER_PAGE = 4;
 const SLIDE_WIDTH = 266.5; // 슬라이더 이동 거리 (4개씩만 보이게 했을 때)
 
-const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
+const fetchVideos = async ({ pageParam = "", queryKey }: any) => {
+  const [_, query] = queryKey;
+  const { data } = await axios.get(BASE_URL, {
+    params: {
+      part: "snippet",
+      q: `${query} #shorts #챌린지 #춤 #${query} #dance #댄스챌린지`,
+      type: "video",
+      videoDuration: "short",
+      maxResults: 4,
+      pageToken: pageParam,
+      key: API_KEY,
+    },
+  });
+  return data;
+};
+
+export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const location = useLocation();
+  const nav = useNavigate();
+  const query = new URLSearchParams(location.search).get("q") || "";
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["videos", query],
+    queryFn: fetchVideos,
+    getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+  });
 
   const getImg = (pf: string): string => {
     switch (pf) {
@@ -62,19 +82,26 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   };
 
   const handleNext = () => {
-    if (currentIndex < imageData.length - ITEMS_PER_PAGE) {
-      setCurrentIndex(currentIndex + ITEMS_PER_PAGE);
+    const totalVideos = data?.pages.flatMap((page) => page.items).length || 0;
+    if (currentIndex + ITEMS_PER_PAGE >= totalVideos && hasNextPage) {
+      fetchNextPage();
     }
+    setCurrentIndex((prev) =>
+      Math.min(prev + ITEMS_PER_PAGE, totalVideos - ITEMS_PER_PAGE)
+    );
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - ITEMS_PER_PAGE);
-    }
+    setCurrentIndex((prev) => Math.max(prev - ITEMS_PER_PAGE, 0));
   };
 
-  const canGoNext = currentIndex < imageData.length - ITEMS_PER_PAGE;
-  const canGoPrev = currentIndex > 0;
+  const handleThumbnailClick = (videoId: string) => {
+    nav(`/search/${videoId}?q=${encodeURIComponent(query)}`);
+  };
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (isError) return <div>에러: {(error as Error).message}</div>;
+  const videos = data?.pages.flatMap((page) => page.items) || [];
 
   return (
     <Container>
@@ -83,7 +110,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
         <div>{platform}</div>
       </Title>
       <SliderContainer>
-        {canGoPrev && (
+        {currentIndex > 0 && (
           <LeftBtn onClick={handlePrev}>
             <BsFillCaretRightFill
               color="#ee5050"
@@ -94,20 +121,24 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
         )}
         <SliderWrapper>
           <Slider $translateValue={-currentIndex * SLIDE_WIDTH}>
-            {imageData.map((img) => (
-              <ContentSection key={img.id}>
-                <FeedImage src={img.src} />
-                <FeedTitle>{img.title}</FeedTitle>
+            {videos.map((video: YouTubeItem) => (
+              <ContentSection
+                key={video.id.videoId}
+                onClick={() => handleThumbnailClick(video.id.videoId)}
+              >
+                <FeedImage src={video.snippet.thumbnails.high.url} />
+                <FeedTitle>{video.snippet.title}</FeedTitle>
               </ContentSection>
             ))}
           </Slider>
         </SliderWrapper>
-        {canGoNext && (
-          <RightBtn onClick={handleNext}>
+        {(currentIndex + ITEMS_PER_PAGE < videos.length || hasNextPage) && (
+          <RightBtn onClick={handleNext} disabled={isFetchingNextPage}>
             <BsFillCaretRightFill color="#ee5050" size="24" />
           </RightBtn>
         )}
       </SliderContainer>
+      {isFetchingNextPage && <div>로딩 중...</div>}
     </Container>
   );
 };
@@ -252,5 +283,3 @@ const RightBtn = styled.button`
   right: -34px;
   z-index: 150;
 `;
-
-export default SearchResult;

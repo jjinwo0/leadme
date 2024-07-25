@@ -11,6 +11,15 @@ pipeline {
         DOCKERHUB_NAME = 'leadme'
     }
 
+    script {
+        // SSH 키 파일 생성
+        writeFile file: 'I11C109T.pem', text: "${EC2_INSTANCE_PRIVATE_KEY}".trim()
+        
+        // 파일 권한 수정
+        sh 'chmod 400 I11C109T.pem'
+    }
+
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -66,8 +75,7 @@ pipeline {
 
                         docker stop ${DOCKERHUB_NAME} || true
 
-                        docker rm ${DOCKERHUB_NAME} || true{MYSQL_PASSWORD} -d -p 3306:3306 mysql:latest
-
+                        docker rm ${DOCKERHUB_NAME} || true
                         
                         docker run --name ${DOCKERHUB_NAME} -d -p 8080:8080 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                         

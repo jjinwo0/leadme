@@ -54,11 +54,6 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // SSH 키 파일 생성
-                    writeFile file: 'I11C109T.pem', text: "${EC2_INSTANCE_PRIVATE_KEY}".trim()
-                    
-                    // 파일 권한 수정
-                    sh 'chmod 400 I11C109T.pem'
                     
                     sh """
                     ssh -o StrictHostKeyChecking=no -i I11C109T.pem ubuntu@i11c109.p.ssafy.io -p ${EC2_INSTANCE_PORT} << 'ENDSSH'

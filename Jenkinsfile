@@ -4,6 +4,7 @@ pipeline {
     environment {
         GITLAB_REPOSITORY_URL = credentials('GITLAB_REPOSITORY_URL')
         DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
         DOCKERHUB_REPOSITORY = credentials('DOCKERHUB_REPOSITORY')
         EC2_INSTANCE_PRIVATE_KEY = credentials('EC2_INSTANCE_PRIVATE_KEY')
         EC2_INSTANCE_PORT = 22
@@ -38,6 +39,9 @@ pipeline {
                 script {
                     // Docker build and push
                     dir('S11P12C109/server'){
+                         sh '''
+                    docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+                    '''
                         sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY} ."
                         sh "docker push ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest"
                     }

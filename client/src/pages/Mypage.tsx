@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
 import img1 from "../assets/image/img1.png";
 import img2 from "../assets/image/img2.png";
+import ProfileModal from "../components/ProfileModal";
 
 interface User {
   id: string;
@@ -43,6 +44,16 @@ const Mypage: React.FC = () => {
     following: 123,
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Header stickyOnly />
@@ -75,7 +86,7 @@ const Mypage: React.FC = () => {
             </Flex>
             <BtnContainer>
               <Btn>메세지 목록</Btn>
-              <Btn>프로필 편집</Btn>
+              <Btn onClick={handleOpenModal}>프로필 편집</Btn>
             </BtnContainer>
           </ProfileContainer>
         </MainSection>
@@ -91,6 +102,7 @@ const Mypage: React.FC = () => {
           </FeedContainer>
         </MainSection>
       </Container>
+      {isModalOpen && <ProfileModal onClose={handleCloseModal} />}
     </>
   );
 };
@@ -194,6 +206,7 @@ const Btn = styled.div`
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
   padding: 6px 10px;
   margin-left: 14px;
+  cursor: pointer;
 `;
 
 const FeedContainer = styled.div`

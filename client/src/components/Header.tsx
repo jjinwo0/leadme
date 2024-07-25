@@ -5,7 +5,7 @@ import { accessTokenState } from "./../stores/authAtom";
 import styled from "styled-components";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { LoginModal } from "../pages/LoginModal";
+import { LoginModal } from "./LoginModal";
 
 interface HeaderProps {
   stickyOnly?: boolean;

@@ -40,7 +40,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           </span>
         </SNSBox>
 
-        <SNSBox $bgColor="#f1f1f1" $hoverColor="#eeeeee">
+        <SNSBox $bgColor="#ffffff" $hoverColor="#f3f3f3">
           <IconWrapper>
             <FcGoogle />
           </IconWrapper>
@@ -101,7 +101,7 @@ const CloseButton = styled.button`
 const Title = styled.h1`
   font-family: "Rajdhani", sans-serif;
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 30px;
 `;
 
@@ -119,6 +119,7 @@ const SNSBox = styled.div<BgProps>`
   margin-bottom: 10px;
   transition: 0.3s ease;
   background-color: ${(props) => props.$bgColor};
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 
   span {

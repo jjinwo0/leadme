@@ -22,13 +22,13 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://i11c109.p.ssafy.io:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://i11c109.p.ssafy.io:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: ssafy
     password: ssafy
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/local
+      uri: mongodb://i11c109.p.ssafy.io:27017/local
 
   config:
     activate:
@@ -42,7 +42,7 @@ logging:
 
 jwt:
   issuer: secretkey@gmail.com
-  secreat_key: leadme
+  secret_key: leadme
 
 
 

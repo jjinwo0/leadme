@@ -7,7 +7,7 @@ pipeline {
         DOCKERHUB_REPOSITORY = credentials('DOCKERHUB_REPOSITORY')
         EC2_INSTANCE_PRIVATE_KEY = credentials('EC2_INSTANCE_PRIVATE_KEY')
         EC2_INSTANCE_PORT = 22
-        DOCKERHUB_NAME = leadme
+        DOCKERHUB_NAME = 'leadme'
     }
 
     stages {

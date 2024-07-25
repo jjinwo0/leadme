@@ -65,7 +65,7 @@ pipeline {
                         docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                         docker stop ${DOCKERHUB_NAME} || true
                         docker rm ${DOCKERHUB_NAME} || true
-                        docker run --name ${DOCKERHUB_NAME} -d -p 8080:8080 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
+                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                         docker image prune -f
                     ENDSSH
                     """

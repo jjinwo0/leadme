@@ -57,7 +57,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: ubuntu,
+                                configName: 'ubuntu',
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: '',

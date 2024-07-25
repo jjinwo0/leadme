@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    ssh -o StrictHostKeyChecking=no -i ${EC2_INSTANCE_PRIVATE_KEY} ubuntu@i11c109.p.ssafy.io -p ${EC2_INSTANCE_PORT} << 'ENDSSH'
+                    ssh -o StrictHostKeyChecking=no -i I11C109T.pem ubuntu@i11c109.p.ssafy.io -p ${EC2_INSTANCE_PORT} << 'ENDSSH'
 
                         docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
 

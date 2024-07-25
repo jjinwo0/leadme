@@ -4,12 +4,12 @@ import { Routes, Route } from "react-router-dom";
 import { MainCanvas } from "./components/MainCanvas";
 import { FixedDOM } from "./components/dom/FixedDOM";
 import { ThemeProvider } from "styled-components";
-import { VideoDetail } from "./pages/VideoDetail";
+import { Search } from "./pages/Search";
+import { SearchResultDetail } from "./pages/SearchResultDetail";
 import GlobalStyle from "./globalStyles";
 import styled from "styled-components";
 import Home from "./pages/Home";
 import Rank from "./pages/Rank";
-import Search from "./pages/Search";
 import Report from "./pages/Report";
 import Challenge from "./pages/Challenge";
 import Chat from "./pages/Chat";
@@ -34,7 +34,7 @@ const App: React.FC = () => {
         <Route path="/home" element={<Home />}></Route>
         <Route path="/rank" element={<Rank />}></Route>
         <Route path="/search" element={<Search />}></Route>
-        <Route path="/search/:query" element={<VideoDetail />}></Route>
+        <Route path="/search/:videoId" element={<SearchResultDetail />} />
         <Route path="/challenge" element={<Challenge />}></Route>
         <Route path="/mypage" element={<Mypage />}></Route>
         <Route path="/report" element={<Report />}></Route>

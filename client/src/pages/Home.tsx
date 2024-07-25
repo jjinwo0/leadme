@@ -53,7 +53,7 @@ const Home: React.FC = () => {
       <Header />
       <Container>
         <MainSection>
-          <SearchBar />
+          <SearchBar navigation />
           <TitleSection>
             <MainTitle>Our feed</MainTitle>
             <SubTitle>2024-LeadMe</SubTitle>

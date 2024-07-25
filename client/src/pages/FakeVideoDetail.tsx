@@ -27,7 +27,7 @@ export const VideoDetail: React.FC = () => {
     <PageLayout>
       <Header stickyOnly />
       <SearchBarWrapper>
-        <SearchBar width={650} />
+        <SearchBar width={650} navigation />
       </SearchBarWrapper>
       <VideoContainer>
         {videoData.map((video, index) => (

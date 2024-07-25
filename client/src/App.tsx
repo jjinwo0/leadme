@@ -14,6 +14,8 @@ import Report from "./pages/Report";
 import Challenge from "./pages/Challenge";
 import Chat from "./pages/Chat";
 import Mypage from "./pages/Mypage";
+import Practice from "./pages/Practice";
+import Feed from "./pages/Feed";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +39,8 @@ const App: React.FC = () => {
         <Route path="/mypage" element={<Mypage />}></Route>
         <Route path="/report" element={<Report />}></Route>
         <Route path="/chat" element={<Chat />}></Route>
+        <Route path="/practice" element={<Practice />}></Route>
+        <Route path="/feed" element={<Feed />}></Route>
       </Routes>
     </ThemeProvider>
   );

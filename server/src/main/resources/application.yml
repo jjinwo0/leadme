@@ -26,6 +26,12 @@ spring:
     username: ssafy
     password: ssafy
 
+  # 파일 전송 시 20MB를 초과할 수 없으며 모든 데이터가 25MB를 초과할 수 없다.
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+
   data:
     mongodb:
       uri: mongodb://i11c109.p.ssafy.io:27017/local

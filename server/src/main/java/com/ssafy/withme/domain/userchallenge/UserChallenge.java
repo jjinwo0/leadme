@@ -21,15 +21,17 @@ public class UserChallenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
+    private String videoPath;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name="challenge_id")
     private Challenge challenge;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private User user;
-
-    private String videoPath;
 
     @OneToMany(mappedBy = "userChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;

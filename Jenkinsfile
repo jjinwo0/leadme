@@ -37,8 +37,10 @@ pipeline {
             steps {
                 script {
                     // Docker build and push
-                    sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY} ."
-                    sh "docker push ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest"
+                    dir('S11P12C109/server'){
+                        sh "docker build -t ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY} ."
+                        sh "docker push ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest"
+                    }
                 }
             }
         }

@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { accessTokenState } from "./../stores/authAtom";
 import styled from "styled-components";
-import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { LoginModal } from "../pages/LoginModal";
@@ -24,8 +23,6 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
     switch (path) {
       case "/home":
         return "LeadMe";
-      case "/search":
-        return "Search";
       case "/challenge":
         return "Challenge";
       case "/rank":
@@ -213,7 +210,7 @@ const Mypage = styled.div`
   text-decoration: none;
   margin: 0 12px;
   position: relative;
-  cursor: pointer;
+  cursor: default;
 
   &:hover {
     div {

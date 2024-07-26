@@ -21,9 +21,9 @@ def download_video(url, output_path='downloaded_video.mp4'):
         os.remove(output_path)
 
     ydl_opts = {
-        'format': 'best',
+        'format': 'bestvideo+bestaudio/best',
         'outtmpl': output_path,
-        'quiet': True,
+        'quiet': True
     }
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])

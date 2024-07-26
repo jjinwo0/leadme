@@ -65,6 +65,7 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 10000;
+  min-width: 1120px;
 `;
 
 const Container = styled.div`

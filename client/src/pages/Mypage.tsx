@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import styled from "styled-components";
 import img1 from "../assets/image/img1.png";
 import img2 from "../assets/image/img2.png";
 import ProfileModal from "../components/ProfileModal";
+import FollowModal from "../components/FollowModal"; // FollowModal import
 
 interface User {
   id: string;
@@ -44,14 +46,32 @@ const Mypage: React.FC = () => {
     following: 123,
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isFollowModalOpen, setIsFollowModalOpen] = useState(false);
+  const [followModalType, setFollowModalType] = useState<
+    "follower" | "following" | null
+  >(null);
+  const navigate = useNavigate();
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  const handleOpenProfileModal = () => {
+    setIsProfileModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseProfileModal = () => {
+    setIsProfileModalOpen(false);
+  };
+
+  const handleOpenFollowModal = (type: "follower" | "following") => {
+    setFollowModalType(type);
+    setIsFollowModalOpen(true);
+  };
+
+  const handleCloseFollowModal = () => {
+    setIsFollowModalOpen(false);
+  };
+
+  const handleMessagesClick = () => {
+    navigate(`/chat/${user.id}`);
   };
 
   return (
@@ -73,11 +93,11 @@ const Mypage: React.FC = () => {
                     <Th>한 줄 소개</Th>
                     <Td>{user.one_liner}</Td>
                   </Tr>
-                  <Tr>
+                  <Tr onClick={() => handleOpenFollowModal("follower")}>
                     <Th>팔로워</Th>
                     <Td>{user.follower}</Td>
                   </Tr>
-                  <Tr>
+                  <Tr onClick={() => handleOpenFollowModal("following")}>
                     <Th>팔로잉</Th>
                     <Td>{user.following}</Td>
                   </Tr>
@@ -85,8 +105,8 @@ const Mypage: React.FC = () => {
               </table>
             </Flex>
             <BtnContainer>
-              <Btn>메세지 목록</Btn>
-              <Btn onClick={handleOpenModal}>프로필 편집</Btn>
+              <Btn onClick={handleMessagesClick}>메세지 목록</Btn>
+              <Btn onClick={handleOpenProfileModal}>프로필 편집</Btn>
             </BtnContainer>
           </ProfileContainer>
         </MainSection>
@@ -102,12 +122,16 @@ const Mypage: React.FC = () => {
           </FeedContainer>
         </MainSection>
       </Container>
-      {isModalOpen && <ProfileModal onClose={handleCloseModal} />}
+      {isProfileModalOpen && <ProfileModal onClose={handleCloseProfileModal} />}
+      {isFollowModalOpen && followModalType && (
+        <FollowModal onClose={handleCloseFollowModal} type={followModalType} />
+      )}
     </>
   );
 };
 
 const Container = styled.div`
+  min-width: 1120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,6 +150,7 @@ const MainSection = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(50px);
   padding: 30px 40px 28px;
+  margin: 0 20px;
 
   &:not(:last-child) {
     margin-bottom: 50px;
@@ -170,6 +195,10 @@ const ProfileImg = styled.div`
 
 const Tr = styled.tr`
   text-align: left;
+
+  &:nth-child(n + 3) {
+    cursor: pointer;
+  }
 `;
 
 const Th = styled.th`
@@ -199,14 +228,20 @@ const BtnContainer = styled.div`
 `;
 
 const Btn = styled.div`
-  font-size: 14px;
+  font-size: 15px;
   font-family: "Noto Sans KR", sans-serif;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.65);
   border-radius: 4px;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15);
-  padding: 6px 10px;
+  padding: 7px 14px;
   margin-left: 14px;
+  margin-bottom: -2px;
+  transition: background-color, 0.3s;
   cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+  }
 `;
 
 const FeedContainer = styled.div`

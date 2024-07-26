@@ -131,6 +131,7 @@ const Mypage: React.FC = () => {
 };
 
 const Container = styled.div`
+  min-width: 1120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,6 +150,7 @@ const MainSection = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(50px);
   padding: 30px 40px 28px;
+  margin: 0 20px;
 
   &:not(:last-child) {
     margin-bottom: 50px;

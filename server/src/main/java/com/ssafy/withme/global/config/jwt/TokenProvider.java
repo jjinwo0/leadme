@@ -1,10 +1,14 @@
 package com.ssafy.withme.global.config.jwt;
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.global.error.ErrorCode;
+import com.ssafy.withme.global.exception.BusinessException;
+import com.ssafy.withme.global.util.CryptoUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +21,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
@@ -30,13 +35,22 @@ public class TokenProvider {
     private String makeToken(Date expiry, User user) {
         Date now = new Date();
 
+        String encryptedId;
+
+        // user id 암호화
+        try {
+            encryptedId = CryptoUtils.encrypt(String.valueOf(user.getId()));
+        } catch (Exception e){
+            throw new RuntimeException("Error encrypting user id", e);
+        }
+
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더 타입은 JWT
                 .setIssuer(jwtProperties.getIssuer()) // 내용 : 프로퍼티에스에서 지정한 발급자명
                 .setIssuedAt(now) // 내용 issue at : 현재 시간
                 .setExpiration(expiry) // 내용 exp : expiry 멤버 변수값
                 .setSubject(user.getEmail()) // 내용 sub : 유저의 이메일
-                .claim("id", user.getId()) // 클레임 id : 유저 id
+                .claim("id", encryptedId) // 클레임 id : 유저 id
                 .compact();
     }
 
@@ -48,6 +62,7 @@ public class TokenProvider {
                     .parseClaimsJws(token); // 클레임이란 받아온 정보(토큰)를 jwt 페이로드에 넣는 것이다.
             return true;
         } catch(Exception e) {
+            log.info("failed to validate token: {}", e.getMessage());
             return false;
         }
     }
@@ -71,7 +86,14 @@ public class TokenProvider {
 
     public Long getUserId(String token) {
         Claims claims = getClaims(token);
-        return claims.get("id", Long.class);
+
+        String encrypted = claims.get("id", String.class);
+
+        try {
+            return Long.parseLong(CryptoUtils.decrypt(encrypted));
+        } catch (Exception e) {
+            throw new RuntimeException("Error decrypting user ID", e);
+        }
     }
 
     // 토큰을 분석하면서 claims을 빼낸다.

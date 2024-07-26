@@ -84,10 +84,11 @@ public class WebOAuthSecurityConfig {
                 .build();
     }
 
-    // 실패 핸들러 예제
+    // 실패 핸들링
+    // exception message와 status code를 queryparam으로 전달
     private AuthenticationFailureHandler oAuth2FailureHandler() {
         return (request, response, exception) -> {
-            response.sendRedirect("/login?error=" + exception.getStackTrace());
+            response.sendRedirect("/login?error=" + exception.getMessage() + "&code=" + response.getStatus());
         };
     }
 

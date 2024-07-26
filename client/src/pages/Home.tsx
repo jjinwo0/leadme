@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { accessTokenState } from "./../stores/authAtom";
 import styled from "styled-components";
 import Header from "./../components/Header";
 import { SearchBar } from "../components/SearchBar";
@@ -16,11 +19,39 @@ const imageData: ImageData[] = [
   { src: img1, alt: "Description of image 3" },
   { src: img2, alt: "Description of image 4" },
 ];
+
 const Home: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const setAccessToken = useSetRecoilState(accessTokenState);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+
+    if (token) {
+      // URL에서 access_token 추출 후 세션 스토리지에 저장
+      sessionStorage.setItem("access_token", token);
+      setAccessToken(token);
+      params.delete("token");
+
+      navigate(
+        {
+          pathname: location.pathname,
+          search: params.toString(),
+        },
+        { replace: true }
+      );
+    }
+
+    // refresh_token 쿠키에 저장된 것 확인
+    // console.log(document.cookie);
+  }, [location, navigate, setAccessToken]);
+
   return (
-    <div>
+    <>
       <Header />
-      <PageLayout>
+      <Container>
         <MainSection>
           <SearchBar />
           <TitleSection>
@@ -35,16 +66,18 @@ const Home: React.FC = () => {
             ))}
           </FeedGrid>
         </MainSection>
-      </PageLayout>
-    </div>
+      </Container>
+    </>
   );
 };
 
-const PageLayout = styled.div`
+const Container = styled.div`
+  min-width: 1120px;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 40px auto;
+  margin: 50px auto;
 `;
 
 const MainSection = styled.div`

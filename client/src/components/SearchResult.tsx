@@ -4,6 +4,11 @@ import img1 from "../assets/image/img1.png";
 import img2 from "../assets/image/img2.png";
 import { BsFillCaretRightFill } from "react-icons/bs";
 
+import youtubeButton from "../assets/icons/youtubeButton.png";
+import tiktokButton from "../assets/icons/tiktokButton.png";
+import instaButton from "../assets/icons/instaButton.png";
+import playButton from "../assets/icons/playButton.png";
+
 interface SearchResultProps {
   platform: string;
 }
@@ -38,11 +43,23 @@ const imageData: ImageData[] = [
 ];
 
 const ITEMS_PER_PAGE = 4;
-// const SLIDE_WIDTH = 220; // 슬라이더 이동 거리 (옆에 살짝 보이게 했을 때)
 const SLIDE_WIDTH = 266.5; // 슬라이더 이동 거리 (4개씩만 보이게 했을 때)
 
 const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const getImg = (pf: string): string => {
+    switch (pf) {
+      case "YouTube":
+        return youtubeButton;
+      case "TikTok":
+        return tiktokButton;
+      case "Instagram":
+        return instaButton;
+      default:
+        return playButton;
+    }
+  };
 
   const handleNext = () => {
     if (currentIndex < imageData.length - ITEMS_PER_PAGE) {
@@ -61,7 +78,10 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
 
   return (
     <Container>
-      <Title>{platform}</Title>
+      <Title>
+        <img src={getImg(platform)} alt="platform logo" />
+        <div>{platform}</div>
+      </Title>
       <SliderContainer>
         {canGoPrev && (
           <LeftBtn onClick={handlePrev}>
@@ -73,7 +93,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
           </LeftBtn>
         )}
         <SliderWrapper>
-          <Slider translateValue={-currentIndex * SLIDE_WIDTH}>
+          <Slider $translateValue={-currentIndex * SLIDE_WIDTH}>
             {imageData.map((img) => (
               <ContentSection key={img.id}>
                 <FeedImage src={img.src} />
@@ -106,7 +126,7 @@ const Container = styled.div`
   backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
-  padding: 35px 40px;
+  padding: 14px 40px 32px;
   position: relative;
   z-index: 100;
 
@@ -129,9 +149,21 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 40px;
+  font-size: 38px;
   font-weight: 600;
   font-family: "Rajdhani", sans-serif;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 86px;
+    margin-left: -24px;
+    margin-top: 4px;
+  }
+
+  div {
+    margin-left: -6px;
+  }
 `;
 
 const SliderContainer = styled.div`
@@ -149,13 +181,13 @@ const SliderWrapper = styled.div`
 `;
 
 interface SliderProps {
-  translateValue: number;
+  $translateValue: number;
 }
 
 const Slider = styled.div<SliderProps>`
   display: flex;
   transition: transform 0.5s ease;
-  transform: translateX(${(props) => props.translateValue}px);
+  transform: translateX(${(props) => props.$translateValue}px);
 `;
 
 const ContentSection = styled.div`
@@ -169,7 +201,6 @@ const ContentSection = styled.div`
     }
   }
   &:not(:last-child) {
-    /* margin-right: 40px; 옆에 살짝 보이게 했을 때 */
     margin-right: 66.5px;
   }
 `;
@@ -179,7 +210,7 @@ const FeedImage = styled.img`
   height: 355.5px;
   border-radius: 8px;
   object-fit: cover;
-  margin: 30px 0 12px;
+  margin: 10px 0 12px;
   transition: all 0.3s ease;
   cursor: pointer;
 `;

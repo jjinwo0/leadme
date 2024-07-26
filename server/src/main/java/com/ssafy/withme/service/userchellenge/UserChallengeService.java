@@ -36,7 +36,7 @@ import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
 public class UserChallengeService {
 
 
-    static final String FAST_API_URL = "http://localhost:8000/upload";
+    static final String FAST_API_URL = "http://localhost:8000/upload/userFile";
 
     private final UserChallengeRepository userChallengeRepository;
 
@@ -77,13 +77,13 @@ public class UserChallengeService {
         Landmark landmark = landmarkRepository.findByYoutubeId(challenge.getYoutubeId());
         List<Frame> challengeFrames = landmark.getLandmarks().stream()
                 .map(keypoints -> keypoints.stream()
-                        .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ(), p.getVisibility()))
+                        .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ()))
                         .collect(Collectors.toList()))
                 .map(Frame::new)
                 .collect(Collectors.toList());
 
         // 점수
-        double score = PoseComparison.calculatePoseScore(userFrames, challengeFrames);
+        double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
         System.out.println(score);
 
     }
@@ -98,7 +98,7 @@ public class UserChallengeService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode rootNode = objectMapper.readTree(jsonResponse);
-        JsonNode landmarkNode = rootNode.path("keypoints");
+        JsonNode landmarkNode = rootNode.path("landmarks");
 
         List<Frame> frames = new ArrayList<>();
 
@@ -111,9 +111,8 @@ public class UserChallengeService {
                 double x = keypointNode.path("x").asDouble();
                 double y = keypointNode.path("y").asDouble();
                 double z = keypointNode.path("z").asDouble();
-                double visibility  = keypointNode.path("visibility").asDouble();
 
-                keypoints.add(new Keypoint(x, y, z, visibility));
+                keypoints.add(new Keypoint(x, y, z));
             }
             frames.add(new Frame(keypoints));
         }

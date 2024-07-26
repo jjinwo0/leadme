@@ -36,7 +36,7 @@ import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
 public class UserChallengeService {
 
 
-    static final String FAST_API_URL = "http://localhost:8000/upload";
+    static final String FAST_API_URL = "http://localhost:8000/upload/userFile";
 
     private final UserChallengeRepository userChallengeRepository;
 

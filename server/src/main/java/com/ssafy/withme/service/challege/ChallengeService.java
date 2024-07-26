@@ -21,7 +21,7 @@ import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
 @Service
 public class ChallengeService {
 
-    static final String FAST_API_URL = "http://localhost:8000/videoUrl";
+    static final String FAST_API_URL = "http://localhost:8000/upload/videoUrl";
     private final ChallengeRepository challengeRepository;
 
     private final LandmarkRepository landmarkRepository;

@@ -50,6 +50,8 @@ jwt:
   issuer: secretkey@gmail.com
   secret_key: leadme
 
+youtube-api-key: AIzaSyCu0oBuaDUV8ygWfz3bQca0jhcj_1AR7MQ
+
 
 
 ---

@@ -37,7 +37,7 @@ const fetchVideos = async ({ pageParam = "", queryKey }: any) => {
   const { data } = await axios.get(BASE_URL, {
     params: {
       part: "snippet",
-      q: `${query} #shorts #챌린지 #춤 #${query} #dance #댄스챌린지`,
+      q: `${query} #${query} #shorts #챌린지 #춤 #dance #댄스챌린지`,
       type: "video",
       videoDuration: "short",
       maxResults: 4,

@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <React.StrictMode>
         <QueryClientProvider client={queryClient}>
           <Root />
-          <ReactQueryDevtools />
+          {/* <ReactQueryDevtools /> */}
         </QueryClientProvider>
       </React.StrictMode>
     </BrowserRouter>

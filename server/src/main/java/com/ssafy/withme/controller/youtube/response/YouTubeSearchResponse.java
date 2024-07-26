@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 public class YouTubeSearchResponse {
 
     private String videoId;
+    private String nextPageToken;
     private Object snippet;
 
     @Builder
-    public YouTubeSearchResponse(String videoId, Object snippet) {
+    public YouTubeSearchResponse(String videoId, String nextPageToken, Object snippet) {
         this.videoId = videoId;
+        this.nextPageToken = nextPageToken;
         this.snippet = snippet;
     }
 

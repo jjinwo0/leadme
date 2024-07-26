@@ -50,11 +50,13 @@ public class YouTubeService {
         search.setPageToken(youTubeSearchRequest.getPageToken());
 
         SearchListResponse searchResponse = search.execute();
+        String nextPageToken = searchResponse.getNextPageToken();
         java.util.List<SearchResult> searchResultList = searchResponse.getItems();
 
         List<YouTubeSearchResponse> searchResponseList = searchResultList.stream()
                 .map(searchResult -> YouTubeSearchResponse.builder()
                                 .videoId(searchResult.getId().getVideoId())
+                                .nextPageToken(nextPageToken)
                                 .snippet(searchResult.getSnippet())
                                 .build())
                 .collect(Collectors.toList());

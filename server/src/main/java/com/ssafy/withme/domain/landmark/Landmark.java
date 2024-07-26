@@ -29,7 +29,6 @@ public class Landmark {
         private Double x;
         private Double y;
         private Double z;
-        private Double visibility;
     }
 
 

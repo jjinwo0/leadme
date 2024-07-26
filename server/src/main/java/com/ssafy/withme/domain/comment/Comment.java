@@ -6,6 +6,7 @@ import com.ssafy.withme.domain.userchallenge.UserChallenge;
 import com.ssafy.withme.domain.usercomment.UserCommentLike;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,11 @@ public class Comment extends BaseEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<UserCommentLike> userCommentLikes = new ArrayList<>();
 
+    @Builder
+    public Comment(String content, User user, UserChallenge userChallenge, List<UserCommentLike> userCommentLikes) {
+        this.content = content;
+        this.user = user;
+        this.userChallenge = userChallenge;
+        this.userCommentLikes = userCommentLikes;
+    }
 }

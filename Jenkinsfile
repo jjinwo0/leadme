@@ -9,6 +9,8 @@ pipeline {
         EC2_INSTANCE_PRIVATE_KEY = credentials('EC2_INSTANCE_PRIVATE_KEY')
         EC2_INSTANCE_PORT = 22
         DOCKERHUB_NAME = 'leadme'
+        VM_OPTION_NAME = credentials('VM_OPTION_NAME')
+        VM_OPTION_PASSWORD = credentials('VM_OPTION_PASSWORD')
     }
 
     stages {
@@ -65,7 +67,7 @@ pipeline {
                                         docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                                         docker stop ${DOCKERHUB_NAME} || true
                                         docker rm ${DOCKERHUB_NAME} || true
-                                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
+                                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 -e JAVA_OPTS="-D${VM_OPTION_NAME}=${VM_OPTION_PASSWORD}" ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                                         docker image prune -f
                                         """,
                                         execTimeout: 120000

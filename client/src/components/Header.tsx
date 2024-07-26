@@ -1,11 +1,9 @@
-import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { accessTokenState } from "./../stores/authAtom";
 import styled from "styled-components";
 import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
+import { useState } from "react";
 import { LoginModal } from "../pages/LoginModal";
 
 interface HeaderProps {
@@ -15,10 +13,6 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
-
-  const accessToken = useRecoilValue(accessTokenState);
-  const setAccessToken = useSetRecoilState(accessTokenState);
-  const isLogin = !!accessToken; // 로그인 상태를 accessToken 여부로 확인
 
   const getPageTitle = (path: string): string => {
     switch (path) {
@@ -39,12 +33,6 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
     setLoginModal(false);
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("access_token");
-    setAccessToken(null);
-    window.location.reload();
-  };
-
   return (
     <>
       {loginModal ? <LoginModal onClose={handleCloseModal} /> : null}
@@ -56,9 +44,7 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
               <br />
               LeadMe
             </TopLeft>
-            <TopCenter>
-              <a href="">{getPageTitle(location.pathname)} !</a>
-            </TopCenter>
+            <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
             <TopRight>
               <SnsBox>
                 Instagram
@@ -82,39 +68,13 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
           <StyledLink to="/search">search</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
-          {isLogin ? (
-            <LeftContainer>
-              <Mypage>
-                mypage
-                <Fake>
-                  <LeftHoverBox>
-                    <HoverLink to="/mypage">마이페이지</HoverLink>
-                    <Hr />
-                    <HoverLink to="/report">분석 결과</HoverLink>
-                    <Hr />
-                    <HoverLink to="/chat">채팅 목록</HoverLink>
-                  </LeftHoverBox>
-                </Fake>
-              </Mypage>
-              <LeftBtn
-                onClick={() => {
-                  handleLogout();
-                }}
-              >
-                logout
-              </LeftBtn>
-            </LeftContainer>
-          ) : (
-            <LeftContainer>
-              <LeftBtn
-                onClick={() => {
-                  setLoginModal(!loginModal);
-                }}
-              >
-                login
-              </LeftBtn>
-            </LeftContainer>
-          )}
+          <LoginBtn
+            onClick={() => {
+              setLoginModal(!loginModal);
+            }}
+          >
+            login
+          </LoginBtn>
         </NavContent>
       </StickyNav>
     </>
@@ -122,13 +82,7 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
 };
 
 const HeaderWrapper = styled.header`
-  min-width: 1080px;
   margin: 14px 20px -5px;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 `;
 
 const Top = styled.div`
@@ -148,7 +102,6 @@ const Top = styled.div`
     4px 0 4px -4px rgba(0, 0, 0, 0.15), 0 -4px 4px -4px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
 `;
-
 const TopLeft = styled.div`
   width: 200px;
   text-align: left;
@@ -159,11 +112,6 @@ const TopCenter = styled.div`
   font-weight: 700;
   font-size: 72px;
   margin: 2px 0 6px;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
 `;
 
 const TopRight = styled.div`
@@ -180,24 +128,15 @@ const SnsBox = styled.div`
   gap: 10px;
 `;
 
-const LeftContainer = styled.div`
-  position: absolute;
-  right: 22px;
-
-  display: flex;
-  flex-direction: row;
-`;
-
-const LeftBtn = styled.div`
-  font-family: "Noto Sans", sans-serif;
-  font-size: 15px;
+const LoginBtn = styled.button`
+  width: 72px;
   color: #ee5050;
   border: none;
-  padding: 9px 12px;
   background-color: inherit;
+  font-size: 16px;
   text-decoration: none;
-  margin: 0 12px;
-  position: relative;
+  position: absolute;
+  right: 36px;
   cursor: pointer;
 
   &:hover {
@@ -206,60 +145,7 @@ const LeftBtn = styled.div`
   }
 `;
 
-const Mypage = styled.div`
-  font-family: "Noto Sans", sans-serif;
-  font-size: 15px;
-  color: #ee5050;
-  border: none;
-  padding: 9px 14px;
-  background-color: inherit;
-  text-decoration: none;
-  margin: 0 12px;
-  position: relative;
-  cursor: pointer;
-
-  &:hover {
-    div {
-      display: block;
-    }
-  }
-`;
-
-const Fake = styled.div`
-  display: none;
-  position: absolute;
-  left: -44px;
-  top: 30px;
-  padding: 16px;
-`;
-
-const LeftHoverBox = styled.div`
-  width: 135px;
-  top: 48px;
-  z-index: 9999;
-  padding: 1px 0;
-
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(25px);
-
-  cursor: default;
-`;
-
-const HoverLink = styled(Link)`
-  display: block;
-  color: #ee5050;
-  text-align: center;
-  font-size: 15px;
-  font-family: "Noto Sans KR", sans-serif;
-  text-decoration: none;
-  padding: 8px;
-  margin: 6px;
-`;
-
 const StickyNav = styled.nav`
-  min-width: 1080px;
   position: sticky;
   top: 0px;
   z-index: 999;
@@ -270,11 +156,6 @@ const StickyNav = styled.nav`
     rgba(255, 255, 255, 0) 100%
   );
   border-radius: 0 0 20px 20px;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 `;
 
 const NavContent = styled.div`
@@ -299,17 +180,12 @@ const StyledLink = styled(Link)`
   font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   padding: 9px 14px;
-  margin: 0 16px;
+  margin: 0 18px;
 
   &:hover {
     color: #ff7676;
     text-decoration: underline;
   }
-`;
-
-const Hr = styled.hr`
-  border: 1px solid white;
-  margin: 0;
 `;
 
 export default Header;

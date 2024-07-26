@@ -22,7 +22,7 @@ const Challenge: React.FC = () => {
   return (
     <>
       <Header />
-      <Container>
+      <PageLayout>
         <MainSection>
           {imageData.map((img) => (
             <ContentSection key={img.id}>
@@ -47,15 +47,14 @@ const Challenge: React.FC = () => {
             </ContentSection>
           ))}
         </MainSection>
-      </Container>
+      </PageLayout>
     </>
   );
 };
 
 export default Challenge;
 
-const Container = styled.div`
-  min-width: 1120px;
+const PageLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

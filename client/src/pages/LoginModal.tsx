@@ -13,21 +13,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Title>Login</Title>
-        <SNSBox $bgColor="#FFF039" $hoverColor="#FFEC00">
+        <SNSBox backgroundColor="#fbff00" hoverColor="#f7e600">
           <IconWrapper>
             <RiKakaoTalkFill style={{ color: "#533030" }} />
           </IconWrapper>
           <span>
-            <a href="http://localhost:8080/oauth2/authorization/kakao">
-              Kakao 로그인
+            <a
+              style={{ color: "#533030" }}
+              href="http://localhost:8080/oauth2/authorization/kakao"
+            >
+              카카오 로그인
             </a>
           </span>
         </SNSBox>
 
-        <SNSBox $bgColor="#03CF5D" $hoverColor="#0ec25c">
+        <SNSBox backgroundColor="#03CF5D" hoverColor="#02b74b">
           <IconWrapper>
             <SiNaver
-              style={{ color: "#ffffff", width: "17px", height: "17px" }}
+              style={{ color: "white", width: "18px", height: "18px" }}
             />
           </IconWrapper>
           <span>
@@ -35,18 +38,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
               style={{ color: "#ffffff" }}
               href="http://localhost:8080/oauth2/authorization/naver"
             >
-              Naver 로그인
+              네이버 로그인
             </a>
           </span>
         </SNSBox>
 
-        <SNSBox $bgColor="#f1f1f1" $hoverColor="#eeeeee">
+        <SNSBox backgroundColor="#ffffff" hoverColor="#f0f0f0">
           <IconWrapper>
-            <FcGoogle />
+            <FcGoogle style={{ color: "white" }} />
           </IconWrapper>
           <span>
             <a href="http://localhost:8080/oauth2/authorization/google">
-              Google 로그인
+              구글 로그인
             </a>
           </span>
         </SNSBox>
@@ -105,21 +108,27 @@ const Title = styled.h1`
   margin-bottom: 30px;
 `;
 
-interface BgProps {
-  $bgColor: string;
-  $hoverColor: string;
+interface SNSBoxProps {
+  backgroundColor: string;
+  hoverColor: string;
 }
 
-const SNSBox = styled.div<BgProps>`
+const SNSBox = styled.div<SNSBoxProps>`
   width: 100%;
   height: 50px;
   display: flex;
   align-items: center;
   border-radius: 10px;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.08),
+    0px 2px 3px 0px rgba(0, 0, 0, 0.17);
   margin-bottom: 10px;
   transition: 0.3s ease;
-  background-color: ${(props) => props.$bgColor};
   cursor: pointer;
+  background-color: ${(props) => props.backgroundColor};
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor};
+  }
 
   span {
     flex: 1;
@@ -133,10 +142,6 @@ const SNSBox = styled.div<BgProps>`
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-  }
-
-  &:hover {
-    background-color: ${(props) => props.$hoverColor};
   }
 `;
 
@@ -153,5 +158,3 @@ const IconWrapper = styled.div`
     height: 24px;
   }
 `;
-
-export default LoginModal;

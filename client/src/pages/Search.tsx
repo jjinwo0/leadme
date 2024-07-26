@@ -18,7 +18,6 @@ const App: React.FC = () => {
 };
 
 const Container = styled.div`
-  min-width: 1120px;
   margin: 50px auto;
 `;
 

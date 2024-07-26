@@ -26,7 +26,7 @@ const Rank: React.FC = () => {
   return (
     <>
       <Header />
-      <Container>
+      <PageLayout>
         <MainSection>
           <SearchBar width={464} icon />
           <TableWrapper>
@@ -52,15 +52,14 @@ const Rank: React.FC = () => {
             </Table>
           </TableWrapper>
         </MainSection>
-      </Container>
+      </PageLayout>
     </>
   );
 };
 
 export default Rank;
 
-const Container = styled.div`
-  min-width: 1120px;
+const PageLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

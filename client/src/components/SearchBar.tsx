@@ -1,27 +1,36 @@
 import styled from "styled-components";
 import React, { ChangeEvent, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-
+import { useNavigate } from "react-router-dom";
 interface SearchBarProps {
   width?: number;
   icon?: boolean;
+  navigation?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   width,
   icon = false,
+  navigation = false,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const nav = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    console.log(width, icon);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (navigation && searchTerm.trim()) {
+      nav(`/search?q=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   return (
     <SearchForm $width={width} $icon={icon}>
       <SearchField type="text" value={searchTerm} onChange={handleChange} />
-      <SearchButton type="submit">
+      <SearchButton type="submit" onClick={handleSearch}>
         {icon ? <IoSearchSharp /> : "search"}
       </SearchButton>
     </SearchForm>

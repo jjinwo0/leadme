@@ -64,7 +64,7 @@ export const Dancer = () => {
 
   // 애니메이션 제어
   useEffect(() => {
-    let timeout: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout>;
     if (currentAnimation === "wave") {
       actions[currentAnimation]?.reset().fadeIn(0.5).play();
     } else {
@@ -74,14 +74,14 @@ export const Dancer = () => {
         .play()
         .setLoop(THREE.LoopOnce, 1);
 
-      timeout = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         if (actions[currentAnimation]) {
           actions[currentAnimation].paused = true;
         }
       }, 8000);
     }
     return () => {
-      clearTimeout(timeout);
+      if (timeoutId) clearTimeout(timeoutId);
       actions[currentAnimation]?.reset().fadeOut(0.5).stop();
     };
   }, [actions, currentAnimation, scroll.offset]);

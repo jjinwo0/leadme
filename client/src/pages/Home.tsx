@@ -22,7 +22,7 @@ const Home: React.FC = () => {
       <Header />
       <PageLayout>
         <MainSection>
-          <SearchBar />
+          <SearchBar navigation />
           <TitleSection>
             <MainTitle>Our feed</MainTitle>
             <SubTitle>2024-LeadMe</SubTitle>

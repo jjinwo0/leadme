@@ -3,7 +3,7 @@ export const FixedDOM = () => {
   return (
     <FixedDOMWrapper id="fixed">
       <h2>SNS 업로드 기능까지</h2>
-      <p>인스타와 유튜브에 바로 업로드 가능</p>
+      <p>유튜브에 바로 업로드 가능</p>
     </FixedDOMWrapper>
   );
 };

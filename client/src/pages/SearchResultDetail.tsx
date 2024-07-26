@@ -1,37 +1,37 @@
-import { useParams } from "react-router-dom";
-import Header from "../components/Header";
-import { SearchBar } from "../components/SearchBar";
-import styled from "styled-components";
+import React from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
 
 export const SearchResultDetail: React.FC = () => {
-  const { query } = useParams();
+  const { videoId } = useParams<{ videoId: string }>();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search).get("q") || "";
 
   return (
-    <>
-      <Header stickyOnly />
-      <PageLayout>
-        <SearchBar width={650} />
-        <div>검색결과:{query}</div>
-      </PageLayout>
-    </>
+    <div>
+      <h2>비디오 재생</h2>
+      <Link to={`/search?q=${encodeURIComponent(query)}`}>
+        검색 결과로 돌아가기
+      </Link>
+      <div style={{ width: "100%", maxWidth: "315px", margin: "0 auto" }}>
+        <div
+          style={{ position: "relative", paddingBottom: "177.77%", height: 0 }}
+        >
+          <iframe
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
   );
 };
-
-const PageLayout = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 30px 20px;
-  padding: 30px;
-  flex-direction: column;
-  gap: 30px;
-  border-radius: 20px;
-  background: linear-gradient(
-    108deg,
-    rgba(255, 255, 255, 0.26) 0%,
-    rgba(255, 255, 255, 0.07) 100%
-  );
-
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(15px);
-  height: 100vh;
-`;

@@ -3,7 +3,7 @@ spring:
     default : local
 
 server:
-  port: 8080
+  port: 8090
 
 ---
 spring:
@@ -22,11 +22,11 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: 
+    url: jdbc:mysql://i11c109.p.ssafy.io:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: ssafy
+    password: ssafy
 
-# 파일 전송 시 20MB를 초과할 수 없으며 모든 데이터가 25MB를 초과할 수 없다.
+  # 파일 전송 시 20MB를 초과할 수 없으며 모든 데이터가 25MB를 초과할 수 없다.
   servlet:
     multipart:
       max-file-size: 20MB
@@ -34,7 +34,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/local
+      uri: mongodb://i11c109.p.ssafy.io:27017/local
 
   config:
     activate:
@@ -48,7 +48,7 @@ logging:
 
 jwt:
   issuer: secretkey@gmail.com
-  secreat_key: leadme
+  secret_key: leadme
 
 
 

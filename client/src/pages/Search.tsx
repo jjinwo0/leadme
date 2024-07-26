@@ -1,17 +1,17 @@
 import styled from "styled-components";
-import Header from "./../components/Header";
+import Header from "../components/Header";
 import { SearchBar } from "../components/SearchBar";
-import SearchResult from "./../components/SearchResult";
+import { SearchResult } from "../features/search/SearchResult";
 
-const App: React.FC = () => {
+export const Search: React.FC = () => {
   return (
     <>
       <Header />
       <Container>
-        <SearchBar width={750} />
+        <SearchBar width={750} navigation />
         <SearchResult platform={"YouTube"} />
-        <SearchResult platform={"TikTok"} />
-        <SearchResult platform={"Instagram"} />
+        {/* <FakeSearchResult platform={"TikTok"} /> */}
+        {/* <FakeSearchResult platform={"Instagram"} /> */}
       </Container>
     </>
   );
@@ -20,5 +20,3 @@ const App: React.FC = () => {
 const Container = styled.div`
   margin: 50px auto;
 `;
-
-export default App;

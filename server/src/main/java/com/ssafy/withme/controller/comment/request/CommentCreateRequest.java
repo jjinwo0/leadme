@@ -22,9 +22,4 @@ public class CommentCreateRequest {
 
     private Long userChallengeId;
 
-    public Comment toEntity(UserChallenge userChallenge){
-        return Comment.builder
-
-                .build();
-    }
 }

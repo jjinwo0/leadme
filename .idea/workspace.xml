@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="725e38f7-ec48-4ce6-a807-2a8dfd882a91" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/service/userchellenge/response/UserChallengeAnalyzeResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/request/UserChallengeDeleteRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/request/UserChallengeSaveRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/global/exception/FileNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leadme/downloaded_video.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/leadme/downloaded_video.mp4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leadme/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/leadme/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leadme/testName.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/LeadMeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/WithmeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leadme/video/temporary/46def926-1531-4131-8094-2f98bd0fc295.mp4" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/UserChallengeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/UserChallengeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/request/UserChallengeCreateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/controller/userchallenege/request/UserChallengeAnalyzeRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/global/error/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/global/error/ErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/service/userchellenge/UserChallengeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/ssafy/withme/service/userchellenge/UserChallengeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.yml" afterDir="false" />
     </list>

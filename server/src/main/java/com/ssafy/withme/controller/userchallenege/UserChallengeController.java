@@ -1,15 +1,14 @@
 package com.ssafy.withme.controller.userchallenege;
 
 import com.ssafy.withme.controller.userchallenege.request.UserChallengeAnalyzeRequest;
+import com.ssafy.withme.controller.userchallenege.request.UserChallengeDeleteRequest;
+import com.ssafy.withme.controller.userchallenege.request.UserChallengeSaveRequest;
 import com.ssafy.withme.global.response.ApiResponse;
 import com.ssafy.withme.global.response.SuccessResponse;
 import com.ssafy.withme.service.userchellenge.UserChallengeService;
 import com.ssafy.withme.service.userchellenge.response.UserChallengeAnalyzeResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,6 +26,14 @@ public class UserChallengeController {
         return SuccessResponse.of(userChallengeService.analyzeVideo(request, videoFile));
     }
 
-//    @PostMapping
+    @PostMapping("/api/v1/userChallenge/temporary/save")
+    public void saveTemporaryFile(@RequestBody UserChallengeSaveRequest request) {
+        userChallengeService.saveUserFile(request);
+    }
+
+    @PostMapping("/api/v1/userChallenge/temporary/delete")
+    public void deleteTemporaryFile(@RequestBody UserChallengeDeleteRequest request){
+        userChallengeService.deleteUserFile(request);
+    }
 
 }

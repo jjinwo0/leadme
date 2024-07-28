@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsFillCaretRightFill } from "react-icons/bs";
 import youtubeButton from "../../assets/icons/youtubeButton.png";
 import tiktokButton from "../../assets/icons/tiktokButton.png";
 import instaButton from "../../assets/icons/instaButton.png";
 import playButton from "../../assets/icons/playButton.png";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axiosInstance/apiClient";
 
@@ -58,10 +58,12 @@ const fetchVideos = async ({
     maxResults: 4,
     pageToken: pageParam,
   });
+  console.log(response.data.data);
   return response.data;
 };
 
 export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
+  const queryClient = useQueryClient();
   const [currentIndex, setCurrentIndex] = useState(0);
   const location = useLocation();
   const nav = useNavigate();
@@ -95,15 +97,34 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
     }
   };
 
-  const handleNext = () => {
+  const prefetchNextPage = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      const lastPage = data?.pages[data.pages.length - 1];
+      const nextPageToken = lastPage?.data[0]?.nextPageToken;
+
+      if (nextPageToken) {
+        queryClient.prefetchQuery({
+          queryKey: ["videos", query, nextPageToken],
+          queryFn: () => fetchVideos({ pageParam: nextPageToken, query }),
+        });
+      }
+    }
+  }, [data, hasNextPage, isFetchingNextPage, query, queryClient]);
+
+  useEffect(() => {
+    const totalVideos = data?.pages.flatMap((page) => page.data).length || 0;
+    if (currentIndex + ITEMS_PER_PAGE >= totalVideos - ITEMS_PER_PAGE) {
+      prefetchNextPage();
+    }
+  }, [currentIndex, data, prefetchNextPage]);
+
+  const handleNext = useCallback(() => {
     const totalVideos = data?.pages.flatMap((page) => page.data).length || 0;
     if (currentIndex + ITEMS_PER_PAGE >= totalVideos && hasNextPage) {
       fetchNextPage();
     }
-    setCurrentIndex((prev) =>
-      Math.min(prev + ITEMS_PER_PAGE, totalVideos - ITEMS_PER_PAGE)
-    );
-  };
+    setCurrentIndex((prev) => Math.min(prev + ITEMS_PER_PAGE, totalVideos));
+  }, [currentIndex, data, fetchNextPage, hasNextPage]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - ITEMS_PER_PAGE, 0));
@@ -123,7 +144,7 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
         .map((item) => [item.videoId, item])
     )
   ).map(([, item]) => item as VideoItem);
-
+  if (videos.length === 0) return <div>검색 결과가 없습니다.</div>;
   return (
     <Container>
       <Title>

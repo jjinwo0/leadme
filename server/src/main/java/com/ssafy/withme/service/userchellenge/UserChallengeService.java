@@ -3,7 +3,7 @@ package com.ssafy.withme.service.userchellenge;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.withme.controller.userchallenege.request.UserChallengeCreateRequest;
+import com.ssafy.withme.controller.userchallenege.request.UserChallengeAnalyzeRequest;
 import com.ssafy.withme.domain.challenge.Challenge;
 import com.ssafy.withme.domain.landmark.Landmark;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
@@ -14,6 +14,7 @@ import com.ssafy.withme.global.util.PoseComparison;
 import com.ssafy.withme.repository.challenge.ChallengeRepository;
 import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
+import com.ssafy.withme.service.userchellenge.response.UserChallengeAnalyzeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -45,7 +46,7 @@ public class UserChallengeService {
     private final RestTemplate restTemplate;
     private final LandmarkRepository landmarkRepository;
 
-    public void createUserChallenge(UserChallengeCreateRequest request, MultipartFile videoFile) throws EntityNotFoundException, IOException {
+    public UserChallengeAnalyzeResponse analyzeVideo(UserChallengeAnalyzeRequest request, MultipartFile videoFile) throws EntityNotFoundException, IOException {
         Long challengeId = request.getChallengeId();
         Challenge challenge = challengeRepository.findById(challengeId).orElse(null);
 
@@ -63,13 +64,15 @@ public class UserChallengeService {
                 return videoFile.getOriginalFilename();
             }
         });
-        body.add("filename", request.getName());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         // Fast API 반환값
         ResponseEntity<String> response = restTemplate.exchange(FAST_API_URL, HttpMethod.POST, requestEntity, String.class);
         System.out.println(response);
         String result = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(result);
+        String uuid = rootNode.path("uuid").asText();
 
         List<Frame> userFrames = deserialize(result);
         System.out.println(challenge.getYoutubeId());
@@ -83,9 +86,14 @@ public class UserChallengeService {
                 .collect(Collectors.toList());
 
         // 점수
-        double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
+//        double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
+        double score = 0;
         System.out.println(score);
 
+        return UserChallengeAnalyzeResponse.builder()
+                .uuid(uuid)
+                .score(score)
+                .build();
     }
 
     /**

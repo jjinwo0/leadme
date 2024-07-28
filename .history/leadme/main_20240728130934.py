@@ -2,7 +2,6 @@ from fastapi import FastAPI, File, UploadFile, Form
 from pydantic import BaseModel
 import shutil
 import os
-import uuid
 from video_processor import download_video, process_video, process_video_user
 
 app = FastAPI()
@@ -12,9 +11,9 @@ class Video(BaseModel):
     youtubeId : str
 
 UPLOAD_DIRECTORY = "."
-TEMP_DIRECTORY = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/temporary"  # 임시 저장 디렉토리 경로
-PERMANENT_DIRECTORY_USER = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/user"  # 영구 저장 디렉토리 경로
-PERMANENT_DIRECTORY_CHALLENGE = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/challenge"  # 영구 저장 디렉토리 경로
+TEMP_DIRECTORY = "/temporary"  # 임시 저장 디렉토리 경로
+PERMANENT_DIRECTORY_USER = "/video/user"  # 영구 저장 디렉토리 경로
+PERMANENT_DIRECTORY_CHALLENGE = "/video/challenge"  # 영구 저장 디렉토리 경로
 
 @app.get("/")
 async def read_root():
@@ -25,6 +24,19 @@ async def saveVideoDataByUrl(video: Video):
     video_path = download_video(video.url, 'downloaded_video.mp4')
     keypoints = process_video(video.youtubeId, video_path)
     return {"youtubeId": video.youtubeId, "keypoints": keypoints}
+
+# # 유저 영상을 다운로드 받는데 데이터를 저장안하고 넘어갈껄?, 
+# @app.post("/upload/userFile")
+# async def saveVideDataByUserFile(videoFile : UploadFile = File(...), filename: str = Form(...)):
+#     video_path = os.path.join(UPLOAD_DIRECTORY, filename+".mp4")
+    
+#     with open(video_path, "wb") as buffer:
+#         shutil.copyfileobj(videoFile.file, buffer)
+
+#     print("execute")
+
+#     keypoints = process_video_user(video_path)
+#     return {"keypoints": keypoints}
 
 
 @app.post("/upload/userFile")
@@ -41,19 +53,3 @@ async def saveVideDataByUserFile(videoFile: UploadFile = File(...)):
     keypoints = process_video_user(temp_video_path)
 
     return {"keypoints": keypoints, "uuid": unique_id}
-
-
-@app.post("/save/userVideo")
-async def saveUserVideo(uuid: str, save: bool):
-    temp_video_path = os.path.join(TEMP_DIRECTORY, f"{uuid}.mp4")
-    permanent_video_path = os.path.join(PERMANENT_DIRECTORY, f"{uuid}.mp4")
-    
-    if save:
-        # 파일을 영구 저장 디렉토리로 이동
-        shutil.move(temp_video_path, permanent_video_path)
-        return {"message": "Video saved permanently.", "uuid": uuid}
-    else:
-        # 임시 파일 삭제
-        if os.path.exists(temp_video_path):
-            os.remove(temp_video_path)
-        return {"message": "Temporary video deleted.", "uuid": uuid}

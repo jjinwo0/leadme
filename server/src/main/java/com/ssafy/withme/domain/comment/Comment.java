@@ -38,10 +38,9 @@ public class Comment extends BaseEntity {
     private List<UserCommentLike> userCommentLikes = new ArrayList<>();
 
     @Builder
-    public Comment(String content, User user, UserChallenge userChallenge, List<UserCommentLike> userCommentLikes) {
+    public Comment(String content, User user, UserChallenge userChallenge){
         this.content = content;
         this.user = user;
         this.userChallenge = userChallenge;
-        this.userCommentLikes = userCommentLikes;
     }
 }

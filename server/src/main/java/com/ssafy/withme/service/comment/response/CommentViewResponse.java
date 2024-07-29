@@ -10,13 +10,15 @@ import java.time.LocalDateTime;
 public class CommentViewResponse {
 
     private String username;
+    private String profileImg;
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
     @Builder
-    private CommentViewResponse(String username, String content, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    public CommentViewResponse(String username, String profileImg, String content, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.username = username;
+        this.profileImg = profileImg;
         this.content = content;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
@@ -25,6 +27,7 @@ public class CommentViewResponse {
     public static CommentViewResponse of(Comment comment){
         return CommentViewResponse.builder()
 //                .username(comment.getUser().getName())
+//                .profileImg(comment.getUser().getProfileImg())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate())
                 .lastModifiedDate(comment.getLastModifiedDate())

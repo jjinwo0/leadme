@@ -43,4 +43,8 @@ public class Comment extends BaseEntity {
         this.user = user;
         this.userChallenge = userChallenge;
     }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }

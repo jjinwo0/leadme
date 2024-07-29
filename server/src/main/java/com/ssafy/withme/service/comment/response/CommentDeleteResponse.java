@@ -1,4 +1,4 @@
-package com.ssafy.withme.controller.comment;
+package com.ssafy.withme.service.comment.response;
 
 import com.ssafy.withme.domain.comment.Comment;
 import lombok.Builder;

@@ -124,6 +124,18 @@ const ModalBody = styled.div`
   flex-grow: 1;
   overflow-y: auto;
   padding: 20px;
+
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    cursor: pointer;
+  }
 `;
 
 const MessageContainer = styled.div<{ $isMine: boolean }>`

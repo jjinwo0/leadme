@@ -25,12 +25,13 @@ public class Challenge extends BaseEntity {
     private String url;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<UserChallenge> userChallenges = new ArrayList<>();
+    private List<UserChallenge> userChallenges;
 
     @Builder
     private Challenge(String youtubeId, String url) {
         this.youtubeId = youtubeId;
         this.url = url;
+        this.userChallenges = new ArrayList<>();
     }
 
 

@@ -33,13 +33,17 @@ spring:
       max-file-size: 20MB
       max-request-size: 25MB
 
-#  data:
-#    mongodb:
-#      uri: mongodb://i11c109.p.ssafy.io:27017/local
-
   data:
     mongodb:
-      uri: mongodb://localhost:27017/local
+      uri: mongodb://i11c109.p.ssafy.io:27017/local
+
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/local
+
+    redis:
+      host: i11c109.p.ssafy.io
+      port: 6379
 
     redis:
       host: i11c109.p.ssafy.io

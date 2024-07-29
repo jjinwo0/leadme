@@ -91,7 +91,7 @@ const Form = styled.form`
   input {
     width: 100%;
     min-width: 348px;
-    color: #ee5050;
+    color: #232427;
     font-family: "Noto Sans KR", sans-serif;
     font-size: 14px;
     border: none;

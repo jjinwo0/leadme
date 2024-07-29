@@ -186,6 +186,7 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 
   @media (max-width: 1120px) {
     margin: 50px 20px;
@@ -273,11 +274,11 @@ const NoChatsMessage = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 400;
   font-size: 15px;
-  margin-top: 16px;
+  margin-top: 24px;
 `;
 
 const FindContainer = styled.div`
-  width: 100%;
+  width: 700px;
   height: 564px;
 
   display: flex;

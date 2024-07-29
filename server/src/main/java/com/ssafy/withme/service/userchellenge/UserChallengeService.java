@@ -9,6 +9,8 @@ import com.ssafy.withme.controller.userchallenege.request.UserChallengeDeleteReq
 import com.ssafy.withme.controller.userchallenege.request.UserChallengeSaveRequest;
 import com.ssafy.withme.domain.challenge.Challenge;
 import com.ssafy.withme.domain.landmark.Landmark;
+import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.domain.userchallenge.UserChallenge;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.global.exception.FileNotFoundException;
 import com.ssafy.withme.global.response.Frame;
@@ -17,6 +19,7 @@ import com.ssafy.withme.global.util.PoseComparison;
 
 import com.ssafy.withme.repository.challenge.ChallengeRepository;
 import com.ssafy.withme.repository.landmark.LandmarkRepository;
+import com.ssafy.withme.repository.user.UserRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
 import com.ssafy.withme.service.userchellenge.response.UserChallengeAnalyzeResponse;
 import jakarta.annotation.PostConstruct;
@@ -31,11 +34,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
@@ -45,13 +50,15 @@ import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_USER_CHALLENGE_
 @Service
 public class UserChallengeService {
 
-    private final String TEMP_DIRECTORY = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/temporary";
+    private final String TEMP_DIRECTORY = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\temporary";
 
-    private final String PERMANENT_DIRECTORY = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/user";
+    private final String PERMANENT_DIRECTORY = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\user";
 
     static final String FAST_API_URL = "http://localhost:8000/upload/userFile";
 
     private final UserChallengeRepository userChallengeRepository;
+
+    private final UserRepository userRepository;
 
     private final ChallengeRepository challengeRepository;
 
@@ -60,12 +67,12 @@ public class UserChallengeService {
 
     public UserChallengeAnalyzeResponse analyzeVideo(UserChallengeAnalyzeRequest request, MultipartFile videoFile) throws EntityNotFoundException, IOException {
         Long challengeId = request.getChallengeId();
+
         Challenge challenge = challengeRepository.findById(challengeId).orElse(null);
 
         if(challenge == null){
             throw new EntityNotFoundException(NOT_EXISTS_CHALLENGE);
         }
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -142,10 +149,11 @@ public class UserChallengeService {
 
     /**
      * uuid와 fileName을 받아 임시저장 파일에서 해당 영상을 찾아 영구저장 파일로 이동시키고 파일 이름을 변경하여 영구저장한다.
-     * [미처리] DB에 저장해야함.
      * @param request
      */
     public void saveUserFile(UserChallengeSaveRequest request) {
+        Challenge challenge = challengeRepository.findById(request.getChallengeId()).orElse(null);
+//        User user = userRepository.findById(request.getUserId()).get();
         Path tempVideoPath = Paths.get(TEMP_DIRECTORY, request.getUuid() + ".mp4");
         if (!Files.exists(tempVideoPath)) {
             throw new FileNotFoundException(NOT_EXISTS_USER_CHALLENGE_FILE);
@@ -156,8 +164,15 @@ public class UserChallengeService {
             String finalFileName = request.getFileName() + ".mp4";
             Path permanentVideoPath = Paths.get(PERMANENT_DIRECTORY, finalFileName);
             Files.move(tempVideoPath, permanentVideoPath);
-//            return ResponseEntity.ok("Video saved permanently as " + finalFileName);
-        } catch (IOException e) {
+
+            UserChallenge userChallenge = UserChallenge.builder()
+                    .name(request.getFileName())
+//                    .user(user)
+                    .challenge(challenge)
+                    .videoPath(PERMANENT_DIRECTORY+"/"+finalFileName)
+                    .build();
+            userChallengeRepository.save(userChallenge);
+        } catch(IOException e) {
             e.printStackTrace();
         }
 

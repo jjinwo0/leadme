@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserChallengeSaveRequest {
 
+    private Long challengeId;
+
+    private Long userId;
+
     private String uuid;
 
     private String fileName;

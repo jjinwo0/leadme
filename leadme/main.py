@@ -12,9 +12,9 @@ class Video(BaseModel):
     youtubeId : str
 
 UPLOAD_DIRECTORY = "."
-TEMP_DIRECTORY = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/temporary"  # 임시 저장 디렉토리 경로
-PERMANENT_DIRECTORY_USER = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/user"  # 영구 저장 디렉토리 경로
-PERMANENT_DIRECTORY_CHALLENGE = "/Users/yangjun-yeong/Desktop/School/2024_2/S11P12C109/leadme/video/challenge"  # 영구 저장 디렉토리 경로
+TEMP_DIRECTORY = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\temporary"  # 임시 저장 디렉토리 경로
+PERMANENT_DIRECTORY_USER = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\user"  # 영구 저장 디렉토리 경로
+PERMANENT_DIRECTORY_CHALLENGE = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\challenge"  # 영구 저장 디렉토리 경로
 
 @app.get("/")
 async def read_root():

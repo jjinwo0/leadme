@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -36,7 +35,7 @@ public class UserChallenge {
     private User user;
 
     @OneToMany(mappedBy = "userChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @Builder
     private UserChallenge(String name, String videoPath, Challenge challenge, User user) {

@@ -20,8 +20,9 @@ PERMANENT_DIRECTORY_CHALLENGE = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C10
 async def read_root():
     return "This is root path from MyAPI"
 
-@app.post("/upload/videoUrl")
-async def saveVideoDataByUrl(video: Video):
+@app.post("/videoUrl")
+async def saveVideoData(video: Video):
+    # 비디오 다운로드 및 처리
     video_path = download_video(video.url, 'downloaded_video.mp4')
     keypoints = process_video(video.youtubeId, video_path)
     return {"youtubeId": video.youtubeId, "keypoints": keypoints}

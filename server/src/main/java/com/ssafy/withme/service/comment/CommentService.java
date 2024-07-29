@@ -1,6 +1,8 @@
 package com.ssafy.withme.service.comment;
 
+import com.ssafy.withme.controller.comment.CommentDeleteResponse;
 import com.ssafy.withme.controller.comment.request.CommentCreateRequest;
+import com.ssafy.withme.controller.comment.request.CommentDeleteRequest;
 import com.ssafy.withme.domain.comment.Comment;
 import com.ssafy.withme.domain.userchallenge.UserChallenge;
 import com.ssafy.withme.repository.comment.CommentRepository;
@@ -34,5 +36,11 @@ public class CommentService {
                 .build();
         Comment saveComment = commentRepository.save(newComment);
         return CommentCreateResponse.of(saveComment);
+    }
+
+    public CommentDeleteResponse delete(CommentDeleteRequest request) {
+        Comment comment = commentRepository.findById(request.getCommentId()).get();
+        commentRepository.delete(comment);
+        return CommentDeleteResponse.of(comment);
     }
 }

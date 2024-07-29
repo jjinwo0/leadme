@@ -1,15 +1,12 @@
 package com.ssafy.withme.controller.comment;
 
 import com.ssafy.withme.controller.comment.request.CommentCreateRequest;
+import com.ssafy.withme.controller.comment.request.CommentDeleteRequest;
 import com.ssafy.withme.global.response.SuccessResponse;
-import com.ssafy.withme.repository.comment.CommentRepository;
 import com.ssafy.withme.service.comment.CommentService;
 import com.ssafy.withme.service.comment.response.CommentCreateResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,10 +20,14 @@ public class CommentController {
     @PostMapping("/api/v1/comment")
     public SuccessResponse<CommentCreateResponse> createComment(@RequestBody CommentCreateRequest request){
         return SuccessResponse.of(commentService.create(request));
-
     }
 
     // 댓글을 삭제한다.
+    @DeleteMapping("/api/v1/comment")
+    public SuccessResponse<CommentDeleteResponse> deleteComment(@RequestBody CommentDeleteRequest request){
+        return SuccessResponse.of(commentService.delete(request));
+    }
 
     // 댓글을 수정한다.
+
 }

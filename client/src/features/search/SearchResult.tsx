@@ -154,9 +154,9 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
         )}
         <SliderWrapper>
           <Slider $translateValue={-currentIndex * SLIDE_WIDTH}>
-            {videos.map((video: VideoItem) => (
+            {videos.map((video: VideoItem, index) => (
               <ContentSection
-                key={video.videoId}
+                key={`${video.videoId}-${index}`}
                 onClick={() => handleThumbnailClick(video.videoId)}
               >
                 <FeedImage src={video.snippet.thumbnails.high.url} />

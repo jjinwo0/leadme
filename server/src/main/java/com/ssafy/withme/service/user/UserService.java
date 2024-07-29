@@ -2,6 +2,7 @@ package com.ssafy.withme.service.user;
 
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.global.config.jwt.TokenProvider;
 import com.ssafy.withme.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
 
 //    public Long save(AddUserRequest dto) {
 //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -35,5 +37,9 @@ public class UserService {
         System.out.println(email);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
+
+    public User findUserIdByToken(String token) {
+        return findById(tokenProvider.getUserId(token));
     }
 }

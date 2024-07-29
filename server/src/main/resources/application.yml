@@ -22,9 +22,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://i11c109.p.ssafy.io:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://localhost:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-    username: root
+    url: jdbc:mysql://i11c109.p.ssafy.io:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://localhost:3306/leadme?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: ssafy
     password: ssafy
 
   # 파일 전송 시 20MB를 초과할 수 없으며 모든 데이터가 25MB를 초과할 수 없다.

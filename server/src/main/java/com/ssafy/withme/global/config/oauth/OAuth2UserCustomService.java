@@ -52,11 +52,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
         // 첫 로그인
         if (existData.isEmpty()) {
-            User newUser = User.builder()
-                    .email(oAuth2Response.getEmail())
-                    .name(oAuth2Response.getName())
-                    .userStatus(UserStatus.ACTIVE)
-                    .build();
+            User newUser = oAuth2Response.toEntity();
 
             userRepository.save(newUser);
 

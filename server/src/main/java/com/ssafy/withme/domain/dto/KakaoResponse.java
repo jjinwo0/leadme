@@ -43,9 +43,10 @@ public class KakaoResponse implements OAuth2Response{
 
     @Override
     public String getName() {
-        return kakaoAccount.get("nickname").toString();
+        return profile.get("nickname").toString();
     }
 
+    @Override
     public User toEntity() {
 
         String email = this.getEmail();
@@ -55,8 +56,7 @@ public class KakaoResponse implements OAuth2Response{
                 .email(email)
                 .name(name)
                 .userStatus(UserStatus.ACTIVE)
-                .profileImg(kakaoAccount.get("profile_image_url").toString())
-                .nickname(profile.get("nickname").toString())
+                .profileImg(profile.get("profile_image_url").toString())
                 .roleType(RoleType.USER)
                 .build();
     }

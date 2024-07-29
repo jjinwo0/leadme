@@ -1,5 +1,6 @@
 package com.ssafy.withme.domain.dto;
 
+import com.ssafy.withme.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -31,5 +32,14 @@ public class NaverResponse implements OAuth2Response{
     @Override
     public String getName() {
         return attributes.get("name").toString();
+    }
+
+    @Override
+    public User toEntity() {
+
+        return User.builder()
+                .email(getEmail())
+                .name(getName())
+                .build();
     }
 }

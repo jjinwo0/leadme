@@ -35,6 +35,7 @@ public class GoogleResponse implements OAuth2Response{
         return attributes.get("name").toString();
     }
 
+    @Override
     public User toEntity() {
 
         return User.builder()

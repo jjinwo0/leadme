@@ -68,6 +68,7 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   const location = useLocation();
   const nav = useNavigate();
   const query = new URLSearchParams(location.search).get("q") || "";
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data,
@@ -99,32 +100,28 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
 
   const prefetchNextPage = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      const lastPage = data?.pages[data.pages.length - 1];
-      const nextPageToken = lastPage?.data[0]?.nextPageToken;
-
-      if (nextPageToken) {
-        queryClient.prefetchQuery({
-          queryKey: ["videos", query, nextPageToken],
-          queryFn: () => fetchVideos({ pageParam: nextPageToken, query }),
-        });
+      const nextPageIndex = currentPage + 1;
+      const nextPageData = data?.pages[nextPageIndex];
+      if (!nextPageData) {
+        fetchNextPage();
       }
     }
-  }, [data, hasNextPage, isFetchingNextPage, query, queryClient]);
+  }, [currentPage, data, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
-    const totalVideos = data?.pages.flatMap((page) => page.data).length || 0;
-    if (currentIndex + ITEMS_PER_PAGE >= totalVideos - ITEMS_PER_PAGE) {
-      prefetchNextPage();
-    }
-  }, [currentIndex, data, prefetchNextPage]);
+    prefetchNextPage();
+  }, [prefetchNextPage]);
 
   const handleNext = useCallback(() => {
     const totalVideos = data?.pages.flatMap((page) => page.data).length || 0;
-    if (currentIndex + ITEMS_PER_PAGE >= totalVideos && hasNextPage) {
-      fetchNextPage();
-    }
-    setCurrentIndex((prev) => Math.min(prev + ITEMS_PER_PAGE, totalVideos));
-  }, [currentIndex, data, fetchNextPage, hasNextPage]);
+    const nextIndex = Math.min(
+      currentIndex + ITEMS_PER_PAGE,
+      totalVideos - ITEMS_PER_PAGE
+    );
+    setCurrentIndex(nextIndex);
+    setCurrentPage(Math.floor(nextIndex / ITEMS_PER_PAGE));
+    prefetchNextPage();
+  }, [currentIndex, data, prefetchNextPage]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - ITEMS_PER_PAGE, 0));
@@ -137,13 +134,7 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러: {(error as Error).message}</div>;
 
-  const videos = Array.from(
-    new Map(
-      data?.pages
-        .flatMap((page) => page.data)
-        .map((item) => [item.videoId, item])
-    )
-  ).map(([, item]) => item as VideoItem);
+  const videos = data?.pages.flatMap((page) => page.data) || [];
   if (videos.length === 0) return <div>검색 결과가 없습니다.</div>;
   return (
     <Container>

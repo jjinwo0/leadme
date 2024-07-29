@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsFillCaretRightFill } from "react-icons/bs";
-import youtubeButton from "../../assets/icons/youtubeButton.png";
-import tiktokButton from "../../assets/icons/tiktokButton.png";
-import instaButton from "../../assets/icons/instaButton.png";
-import playButton from "../../assets/icons/playButton.png";
+import youtubeButton from "assets/icons/youtubeButton.png";
+import tiktokButton from "assets/icons/tiktokButton.png";
+import instaButton from "assets/icons/instaButton.png";
+import playButton from "assets/icons/playButton.png";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../axiosInstance/apiClient";
+import { axiosInstance } from "axiosInstance/apiClient";
 
 interface FetchVideosParams {
   pageParam: string;

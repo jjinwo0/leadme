@@ -10,8 +10,13 @@ import com.ssafy.withme.repository.comment.CommentRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
 import com.ssafy.withme.service.comment.response.CommentCreateResponse;
 import com.ssafy.withme.service.comment.response.CommentUpdateResponse;
+import com.ssafy.withme.service.comment.response.CommentViewResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +24,16 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserChallengeRepository userChallengeRepository;
+
+
+
+    public List<CommentViewResponse> findCommentByChallengeId(Pageable pageable, Long userChallengeId) {
+        List<Comment> findCommentByUserChallengeId = commentRepository.findByUserChallengeId(userChallengeId, pageable);
+        List<CommentViewResponse> comments = findCommentByUserChallengeId.stream()
+                .map(comment -> CommentViewResponse.of(comment))
+                .collect(Collectors.toList());
+        return comments;
+    }
 
 
     /**

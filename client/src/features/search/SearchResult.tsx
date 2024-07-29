@@ -5,7 +5,7 @@ import youtubeButton from "../../assets/icons/youtubeButton.png";
 import tiktokButton from "../../assets/icons/tiktokButton.png";
 import instaButton from "../../assets/icons/instaButton.png";
 import playButton from "../../assets/icons/playButton.png";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axiosInstance/apiClient";
 
@@ -63,7 +63,6 @@ const fetchVideos = async ({
 };
 
 export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
-  const queryClient = useQueryClient();
   const [currentIndex, setCurrentIndex] = useState(0);
   const location = useLocation();
   const nav = useNavigate();

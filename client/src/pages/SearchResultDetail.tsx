@@ -8,10 +8,10 @@ import React, {
 import { useParams, useLocation } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { axiosInstance } from "../axiosInstance/apiClient";
-import VideoPlayer from "../features/search/VideoPlayer";
-import Header from "../components/Header";
-import { SearchBar } from "../components/SearchBar";
+import { axiosInstance } from "axiosInstance/apiClient";
+import VideoPlayer from "features/search/VideoPlayer";
+import Header from "components/Header";
+import { SearchBar } from "components/SearchBar";
 
 interface Video {
   videoId: string;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
+import Header from "components/Header";
 import styled from "styled-components";
-import { ChatModal } from "../features/Chat/ChatModal";
+import { ChatModal } from "features/Chat/ChatModal";
 import { IoIosSend } from "react-icons/io";
-import FindModal from "../features/Chat/FindeModal"; // 새로운 모달 컴포넌트 가져오기
+import FindModal from "features/Chat/FindeModal"; // 새로운 모달 컴포넌트 가져오기
 
 interface ChatData {
   id: number;

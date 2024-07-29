@@ -54,7 +54,7 @@ public class UserChallengeService {
 
     private final String PERMANENT_DIRECTORY = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\user";
 
-    static final String FAST_API_URL = "http://localhost:8000/upload/userFile";
+    static final String FAST_API_URL = "http://localhost:8000/upload";
 
     private final UserChallengeRepository userChallengeRepository;
 
@@ -99,14 +99,13 @@ public class UserChallengeService {
         Landmark landmark = landmarkRepository.findByYoutubeId(challenge.getYoutubeId());
         List<Frame> challengeFrames = landmark.getLandmarks().stream()
                 .map(keypoints -> keypoints.stream()
-                        .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ()))
+                        .map(p -> new Keypoint(p.getX(), p.getY(), p.getZ(), p.getVisibility()))
                         .collect(Collectors.toList()))
                 .map(Frame::new)
                 .collect(Collectors.toList());
 
         // 점수
-//        double score = PoseComparison.calcuatePoseScore(userFrames, challengeFrames);
-        double score = 0;
+        double score = PoseComparison.calculatePoseScore(userFrames, challengeFrames);
         System.out.println(score);
 
         return UserChallengeAnalyzeResponse.builder()
@@ -125,7 +124,7 @@ public class UserChallengeService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode rootNode = objectMapper.readTree(jsonResponse);
-        JsonNode landmarkNode = rootNode.path("landmarks");
+        JsonNode landmarkNode = rootNode.path("keypoints");
 
         List<Frame> frames = new ArrayList<>();
 
@@ -138,8 +137,9 @@ public class UserChallengeService {
                 double x = keypointNode.path("x").asDouble();
                 double y = keypointNode.path("y").asDouble();
                 double z = keypointNode.path("z").asDouble();
+                double visibility  = keypointNode.path("visibility").asDouble();
 
-                keypoints.add(new Keypoint(x, y, z));
+                keypoints.add(new Keypoint(x, y, z, visibility));
             }
             frames.add(new Frame(keypoints));
         }

@@ -5,7 +5,7 @@ import {
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
 
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from "axios";
 
 declare global {
   interface Window {
@@ -32,7 +32,6 @@ const PoseLandmarkerComponent: React.FC = () => {
   const detectionIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-
     // 내 모습 추적하는 블레이즈 포즈 모델
     const initializePoseLandmarker = async () => {
       const vision = await FilesetResolver.forVisionTasks(
@@ -179,22 +178,22 @@ const PoseLandmarkerComponent: React.FC = () => {
     z: number;
     visibility: number;
   }
-  
+
   interface ApiResponse {
     url: string;
     keypoints: Keypoint[][];
   }
 
   const client = axios.create({
-    baseURL: 'http://127.0.0.1:8080',
+    baseURL: "http://127.0.0.1:8080",
   });
-  
+
   const connections = [
     [11, 12], // left shoulder to right shoulder
     [11, 13], // left shoulder to left elbow
     [13, 15], // left elbow to left writs
-    
-    [12, 14], // right shoulder to right elbow 
+
+    [12, 14], // right shoulder to right elbow
     [14, 16], // right elbow to right writs
 
     [11, 23], // left shoulder to left hip
@@ -213,12 +212,13 @@ const PoseLandmarkerComponent: React.FC = () => {
 
     [28, 30], // right ankle to rihgt heel
     [30, 32], // right heel to right foot index
-    [28, 32]
-
-
+    [28, 32],
   ];
 
-  const getData = async (url: string, config?: AxiosRequestConfig): Promise<ApiResponse> => {
+  const getData = async (
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<ApiResponse> => {
     try {
       const response = await client.get<ApiResponse>(url, config);
       return response.data;
@@ -226,10 +226,10 @@ const PoseLandmarkerComponent: React.FC = () => {
       throw new Error(error.message);
     }
   };
-    
+
   const playGuideLine = () => {
     const fetchData = async () => {
-      const videoName = '1';
+      const videoName = "1";
       const url = `/api/v1/landmarks/${videoName}`;
       const config: AxiosRequestConfig = {};
 
@@ -239,7 +239,7 @@ const PoseLandmarkerComponent: React.FC = () => {
         let lastTime = 0;
 
         const canvas = drawCanvasRef.current;
-        const context = canvas?.getContext('2d');
+        const context = canvas?.getContext("2d");
         const keypoints = apiResponse.landmarks;
 
         let frameIndex = 0;
@@ -250,8 +250,8 @@ const PoseLandmarkerComponent: React.FC = () => {
 
           context.clearRect(0, 0, canvas.width, canvas.height);
 
-          context.fillStyle = 'red';
-          keypoints.forEach(point => {
+          context.fillStyle = "red";
+          keypoints.forEach((point) => {
             const x = point.x * canvas.width;
             const y = point.y * canvas.height;
 
@@ -261,15 +261,21 @@ const PoseLandmarkerComponent: React.FC = () => {
           });
 
           // keypoints를 선으로 연결합니다.
-          context.strokeStyle = 'blue';
+          context.strokeStyle = "blue";
           context.lineWidth = 2;
           connections.forEach(([startIdx, endIdx]) => {
             const startPoint = keypoints[startIdx];
             const endPoint = keypoints[endIdx];
 
             context.beginPath();
-            context.moveTo(startPoint.x * canvas.width, startPoint.y * canvas.height);
-            context.lineTo(endPoint.x * canvas.width, endPoint.y * canvas.height);
+            context.moveTo(
+              startPoint.x * canvas.width,
+              startPoint.y * canvas.height
+            );
+            context.lineTo(
+              endPoint.x * canvas.width,
+              endPoint.y * canvas.height
+            );
             context.stroke();
           });
         };
@@ -282,8 +288,9 @@ const PoseLandmarkerComponent: React.FC = () => {
 
           const timeSinceLastFrame = time - lastTime;
 
-          if (timeSinceLastFrame >= 1000 / 30) { // 1초에 30프레임
-            console.log(frameIndex)
+          if (timeSinceLastFrame >= 1000 / 30) {
+            // 1초에 30프레임
+            console.log(frameIndex);
             drawKeypoints(keypoints[frameIndex]); // 현재 프레임의 keypoints를 그립니다.
             frameIndex = (frameIndex + 1) % keypoints.length; // 다음 프레임으로 이동 (loop)
             lastTime = time;
@@ -294,20 +301,15 @@ const PoseLandmarkerComponent: React.FC = () => {
 
         requestAnimationFrame(animate); // 애니메이션 시작
       } catch (err) {
-        console.log('Error fetching data');
+        console.log("Error fetching data");
       } finally {
-        console.log('Loading completed');
+        console.log("Loading completed");
       }
     };
 
     fetchData();
   };
-    ///////////////////////////////
-
-
-
-
-  
+  ///////////////////////////////
 
   return (
     <div>
@@ -341,15 +343,13 @@ const PoseLandmarkerComponent: React.FC = () => {
       <button onClick={playGuideLine}> 재생 </button>
 
       <hr></hr>
-    
+
       <canvas
-          ref={drawCanvasRef}
-          width={640}
-          height={480}
-          style={{ position: "absolute", left: 0, top: 0 }}
-        />
-
-
+        ref={drawCanvasRef}
+        width={640}
+        height={480}
+        style={{ position: "absolute", left: 0, top: 0 }}
+      />
     </div>
   );
 };

@@ -27,7 +27,7 @@ public class Comment extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = LAZY)
@@ -38,10 +38,13 @@ public class Comment extends BaseEntity {
     private List<UserCommentLike> userCommentLikes = new ArrayList<>();
 
     @Builder
-    public Comment(String content, User user, UserChallenge userChallenge, List<UserCommentLike> userCommentLikes) {
+    public Comment(String content, User user, UserChallenge userChallenge){
         this.content = content;
         this.user = user;
         this.userChallenge = userChallenge;
-        this.userCommentLikes = userCommentLikes;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
     }
 }

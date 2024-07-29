@@ -45,6 +45,10 @@ spring:
       host: i11c109.p.ssafy.io
       port: 6379
 
+    redis:
+      host: i11c109.p.ssafy.io
+      port: 6379
+
   config:
     activate:
       on-profile: local

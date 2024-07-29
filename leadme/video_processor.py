@@ -14,11 +14,8 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['local']  # 'local' 데이터베이스 이름 설정
 collection = db['landmarks']  # 'landmarks' 컬렉션 이름 설정
 
-
-CHALLENGE_DIRECTORY = "/challenge"
-
 # 비디오 다운로드 함수
-def download_video(url, output_path=CHALLENGE_DIRECTORY + '/downloaded_video.mp4'):
+def download_video(url, output_path='downloaded_video.mp4'):
     # 기존 파일이 있다면 삭제
     if os.path.exists(output_path):
         os.remove(output_path)

@@ -1,5 +1,6 @@
 package com.ssafy.withme.domain.dto;
 
+import com.ssafy.withme.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -32,5 +33,14 @@ public class GoogleResponse implements OAuth2Response{
     @Override
     public String getName() {
         return attributes.get("name").toString();
+    }
+
+    public User toEntity() {
+
+        return User.builder()
+                .name(getName())
+                .email(getEmail())
+                .profileImg(attributes.get("picture").toString())
+                .build();
     }
 }

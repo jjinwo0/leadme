@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Entity(name = "users")
@@ -60,10 +61,29 @@ public class User extends BaseEntity {
         return this;
     }
 
+//    @Builder
+//    public User(String name, String email, UserStatus userStatus) {
+//        this.name = name;
+//        this.email = email;
+//        this.userStatus = userStatus;
+//    }
+
     @Builder
-    public User(String name, String email, UserStatus userStatus) {
+    public User(String name, String password, String nickname, String email, String gender, String age, RoleType roleType, String profileImg, String profileComment, UserStatus userStatus) {
         this.name = name;
+        this.password = password;
+        this.nickname = nickname;
         this.email = email;
+        this.gender = gender;
+        this.age = age;
+        this.roleType = roleType;
+        this.profileImg = profileImg;
+        this.profileComment = profileComment;
         this.userStatus = userStatus;
+    }
+
+    public void updateLoginTime() {
+
+        this.loginDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 }

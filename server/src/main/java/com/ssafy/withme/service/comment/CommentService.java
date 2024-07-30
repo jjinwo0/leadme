@@ -1,6 +1,11 @@
 package com.ssafy.withme.service.comment;
 
 import com.ssafy.withme.controller.comment.request.CommentUpdateRequest;
+import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.domain.user.constant.RoleType;
+import com.ssafy.withme.global.error.ErrorCode;
+import com.ssafy.withme.global.exception.AuthorizationException;
+import com.ssafy.withme.repository.user.UserRepository;
 import com.ssafy.withme.service.comment.response.CommentDeleteResponse;
 import com.ssafy.withme.controller.comment.request.CommentCreateRequest;
 import com.ssafy.withme.controller.comment.request.CommentDeleteRequest;
@@ -24,7 +29,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserChallengeRepository userChallengeRepository;
-
+    private final UserRepository userRepository;
 
 
     public List<CommentViewResponse> findCommentByChallengeId(Pageable pageable, Long userChallengeId) {
@@ -54,12 +59,24 @@ public class CommentService {
 
     public CommentDeleteResponse delete(CommentDeleteRequest request) {
         Comment comment = commentRepository.findById(request.getCommentId()).get();
+        Long userId = request.getUserId();
+        User findUser = userRepository.findById(userId).get();
+        // 댓글 작성하 유저가 아니고, 관리자도 아니라면?
+        if(findUser != comment.getUser() || findUser.getRoleType() != RoleType.ADMIN){
+            throw new AuthorizationException(ErrorCode.NOT_AUTHORIZATION);
+        }
         commentRepository.delete(comment);
         return CommentDeleteResponse.of(comment);
     }
 
     public CommentUpdateResponse update(CommentUpdateRequest request) {
         Comment comment = commentRepository.findById(request.getCommentId()).get();
+        Long userId = request.getUserId();
+        User findUser = userRepository.findById(userId).get();
+        // 댓글 작성하 유저가 아니고, 관리자도 아니라면?
+        if(findUser != comment.getUser() || findUser.getRoleType() != RoleType.ADMIN){
+            throw new AuthorizationException(ErrorCode.NOT_AUTHORIZATION);
+        }
         comment.changeContent(request.getContent());
         Comment updatedComment = commentRepository.save(comment);
         return CommentUpdateResponse.of(updatedComment);

@@ -3,7 +3,7 @@ import Header from "components/Header";
 import styled from "styled-components";
 import { ChatModal } from "features/Chat/ChatModal";
 import { IoIosSend } from "react-icons/io";
-import FindModal from "features/Chat/FindeModal"; // 새로운 모달 컴포넌트 가져오기
+import FindModal from "features/Chat/FindeModal";
 
 interface ChatData {
   id: number;
@@ -35,38 +35,21 @@ const chatList: ChatData[] = [
         content: "오늘 날씨가 좋네요.",
         timestamp: "10:02",
       },
-      {
-        id: 4,
-        senderId: "me",
-        content: "어쩌라구요",
-        timestamp: "10:03",
-      },
+      { id: 4, senderId: "me", content: "어쩌라구요", timestamp: "10:03" },
       {
         id: 5,
         senderId: "user1",
-        content:
-          "ajsldsfjksldjflksdjfkljsdklfjklsjdfkljsda kljsdflk jsdaklfj lksdajf klsjadflkjsadlkfjklsdajflk sjdaklf sdakljf klsdajklf jsdaklfj klsadjf ",
+        content: "긴 메시지 테스트",
         timestamp: "10:03",
       },
-      {
-        id: 6,
-        senderId: "me",
-        content: "?????",
-        timestamp: "10:03",
-      },
+      { id: 6, senderId: "me", content: "?????", timestamp: "10:03" },
       {
         id: 7,
         senderId: "user1",
-        content:
-          "ajsldsfjksldjflksdjfkljsdklfjklsjdfkljsda kljsdflk jsdaklfj lksdajf klsjadflkjsadlkfjklsdajflk sjdaklf sdakljf klsdajklf jsdaklfj klsadjf ajsldsfjksldjflksdjfkljsdklfjklsjdfkljsda kljsdflk jsdaklfj lksdajf klsjadflkjsadlkfjklsdajflk sjdaklf sdakljf klsdajklf jsdaklfj klsadjf ",
+        content: "긴 메시지 테스트2",
         timestamp: "10:03",
       },
-      {
-        id: 8,
-        senderId: "me",
-        content: "?????",
-        timestamp: "10:03",
-      },
+      { id: 8, senderId: "me", content: "?????", timestamp: "10:03" },
     ],
   },
   {
@@ -85,21 +68,11 @@ const chatList: ChatData[] = [
       {
         id: 3,
         senderId: "user1",
-        content: "그냥해봤어요",
+        content: "그냥 해봤어요",
         timestamp: "10:02",
       },
-      {
-        id: 4,
-        senderId: "me",
-        content: "어쩌라구요",
-        timestamp: "10:03",
-      },
-      {
-        id: 5,
-        senderId: "user1",
-        content: "ㅂㅂㅂ",
-        timestamp: "10:03",
-      },
+      { id: 4, senderId: "me", content: "어쩌라구요", timestamp: "10:03" },
+      { id: 5, senderId: "user1", content: "ㅂㅂㅂ", timestamp: "10:03" },
     ],
   },
   {
@@ -128,6 +101,19 @@ export const Chat: React.FC = () => {
   };
 
   const closeSendModal = () => {
+    setIsSendModalOpen(false);
+  };
+
+  const openChatModal = (userId: string) => {
+    const newChat: ChatData = {
+      id: chatList.length + 1,
+      userId,
+      lastMessage: "",
+      profileImg: "https://via.placeholder.com/40",
+      messages: [],
+    };
+    chatList.push(newChat);
+    setSelectedChat(newChat);
     setIsSendModalOpen(false);
   };
 
@@ -171,7 +157,11 @@ export const Chat: React.FC = () => {
           chat={selectedChat}
         />
       </Container>
-      <FindModal isOpen={isSendModalOpen} onClose={closeSendModal} />
+      <FindModal
+        isOpen={isSendModalOpen}
+        onClose={closeSendModal}
+        openChatModal={openChatModal}
+      />
     </>
   );
 };

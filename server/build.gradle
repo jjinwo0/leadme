@@ -42,9 +42,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
-	// MongoDB
-	implementation ('org.springframework.boot:spring-boot-starter-data-mongodb')
-
 	// 구글 api 관련
 	implementation 'com.google.api-client:google-api-client:1.33.0'
 	implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
@@ -58,8 +55,12 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-//	//mongo
-//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	//mongo
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	//feign
+	implementation 'org.sprsingframework.cloud:spring-cloud-starter-openfeign'
+	implementation group: 'io.github.openfeign', name: 'feign-gson', version: '11.0'
 }
 
 tasks.named('test') {

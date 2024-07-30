@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { accessTokenState } from "./../stores/authAtom";
+import { accessTokenState } from "stores/authAtom";
 import styled from "styled-components";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { LoginModal } from "./LoginModal";
+import { LoginModal } from "components/LoginModal";
 
 interface HeaderProps {
   stickyOnly?: boolean;

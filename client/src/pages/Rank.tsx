@@ -1,6 +1,6 @@
-import Header from "./../components/Header";
+import Header from "components/Header";
 import styled from "styled-components";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "components/SearchBar";
 
 interface TempData {
   rank: number;

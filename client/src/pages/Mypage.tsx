@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
+import Header from "components/Header";
 import styled from "styled-components";
-import img1 from "../assets/image/img1.png";
-import img2 from "../assets/image/img2.png";
-import ProfileModal from "../components/ProfileModal";
-import FollowModal from "../components/FollowModal"; // FollowModal import
+import img1 from "assets/image/img1.png";
+import img2 from "assets/image/img2.png";
+import ProfileModal from "components/ProfileModal";
+import FollowModal from "components/FollowModal"; // FollowModal import
 
 interface User {
   id: string;

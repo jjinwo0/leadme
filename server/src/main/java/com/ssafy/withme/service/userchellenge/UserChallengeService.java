@@ -54,7 +54,7 @@ public class UserChallengeService {
 
     private final String PERMANENT_DIRECTORY = "C:\\Users\\SSAFY\\Desktop\\Jun\\2024\\S11P12C109\\leadme\\video\\user";
 
-    static final String FAST_API_URL = "http://localhost:8000/upload";
+    static final String FAST_API_URL = "http://localhost:8000/upload/userFile";
 
     private final UserChallengeRepository userChallengeRepository;
 

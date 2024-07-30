@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { SiNaver } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
-
+import { baseUrl } from "axiosInstance/constants";
 interface LoginModalProps {
   onClose: () => void;
 }
@@ -18,6 +18,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             <RiKakaoTalkFill style={{ color: "#533030" }} />
           </IconWrapper>
           <span>
+            {/* <a href={`${baseUrl}/oauth2/authorization/kakao`}>Kakao 로그인</a> */}
             <a href="http://localhost:8080/oauth2/authorization/kakao">
               Kakao 로그인
             </a>

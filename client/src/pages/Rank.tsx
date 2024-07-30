@@ -100,6 +100,10 @@ const TableWrapper = styled.div`
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+
+  tbody > tr:last-child {
+    border-bottom: none;
+  }
 `;
 
 const TableRow = styled.tr`
@@ -117,5 +121,4 @@ const TableHeader = styled.th`
 const TableCell = styled.td`
   padding: 14px;
   font-size: 16px;
-  border-bottom: 1px solid #fff;
 `;

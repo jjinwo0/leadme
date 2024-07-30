@@ -75,6 +75,7 @@ public class YouTubeService {
         search.setVideoDuration(youTubeSearchRequest.getVideoDuration());
         search.setMaxResults(youTubeSearchRequest.getMaxResults());
         search.setPageToken(youTubeSearchRequest.getPageToken());
+        search.setVideoEmbeddable(youTubeSearchRequest.isVideoEmbeddable());
 
         SearchListResponse searchResponse = search.execute();
         String nextPageToken = searchResponse.getNextPageToken();

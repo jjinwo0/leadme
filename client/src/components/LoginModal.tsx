@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { SiNaver } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
-
+import { testUrl } from "axiosInstance/constants";
 interface LoginModalProps {
   onClose: () => void;
 }
@@ -18,9 +18,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             <RiKakaoTalkFill style={{ color: "#533030" }} />
           </IconWrapper>
           <span>
-            <a href="http://localhost:8080/oauth2/authorization/kakao">
-              Kakao 로그인
-            </a>
+            <a href={`${testUrl}/oauth2/authorization/kakao`}>Kakao 로그인</a>
           </span>
         </SNSBox>
 
@@ -33,7 +31,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           <span>
             <a
               style={{ color: "#ffffff" }}
-              href="http://localhost:8080/oauth2/authorization/naver"
+              href={`${testUrl}/oauth2/authorization/naver`}
             >
               Naver 로그인
             </a>
@@ -45,9 +43,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             <FcGoogle />
           </IconWrapper>
           <span>
-            <a href="http://localhost:8080/oauth2/authorization/google">
-              Google 로그인
-            </a>
+            <a href={`${testUrl}/oauth2/authorization/google`}>Google 로그인</a>
           </span>
         </SNSBox>
       </Container>
@@ -66,6 +62,7 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 10000;
+  min-width: 1120px;
 `;
 
 const Container = styled.div`

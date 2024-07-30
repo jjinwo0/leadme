@@ -1,21 +1,21 @@
 import React from "react";
 import theme from "./theme";
 import { Routes, Route } from "react-router-dom";
-import { MainCanvas } from "./components/MainCanvas";
-import { FixedDOM } from "./components/dom/FixedDOM";
+import { MainCanvas } from "components/MainCanvas";
+import { FixedDOM } from "components/dom/FixedDOM";
 import { ThemeProvider } from "styled-components";
-import { Search } from "./pages/Search";
-import { SearchResultDetail } from "./pages/SearchResultDetail";
-import { Chat } from "./pages/Chat";
+import { Search } from "pages/Search";
+import { SearchResultDetail } from "pages/SearchResultDetail";
+import { Chat } from "pages/Chat";
 import GlobalStyle from "./globalStyles";
 import styled from "styled-components";
-import Home from "./pages/Home";
-import Rank from "./pages/Rank";
-import Report from "./pages/Report";
-import Challenge from "./pages/Challenge";
-import Mypage from "./pages/Mypage";
-import Practice from "./pages/Practice";
-import Feed from "./pages/Feed";
+import Home from "pages/Home";
+import Rank from "pages/Rank";
+import Report from "pages/Report";
+import Challenge from "pages/Challenge";
+import Mypage from "pages/Mypage";
+import Practice from "pages/Practice";
+import Feed from "pages/Feed";
 
 const App: React.FC = () => {
   return (

@@ -1,51 +1,65 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsFillCaretRightFill } from "react-icons/bs";
-import youtubeButton from "../../assets/icons/youtubeButton.png";
-import tiktokButton from "../../assets/icons/tiktokButton.png";
-import instaButton from "../../assets/icons/instaButton.png";
-import playButton from "../../assets/icons/playButton.png";
+import youtubeButton from "assets/icons/youtubeButton.png";
+import tiktokButton from "assets/icons/tiktokButton.png";
+import instaButton from "assets/icons/instaButton.png";
+import playButton from "assets/icons/playButton.png";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-const API_KEY = "AIzaSyCu0oBuaDUV8ygWfz3bQca0jhcj_1AR7MQ";
-const BASE_URL = "https://www.googleapis.com/youtube/v3/search";
+import { axiosInstance } from "axiosInstance/apiClient";
+
+interface FetchVideosParams {
+  pageParam: string;
+  query: string;
+}
 
 interface SearchResultProps {
   platform: string;
 }
 
-interface YouTubeItem {
-  id: {
-    videoId: string;
-  };
-  snippet: {
-    title: string;
-    thumbnails: {
-      high: {
-        url: string;
-      };
-    };
+interface Thumbnail {
+  url: string;
+}
+
+interface Snippet {
+  title: string;
+  thumbnails: {
+    high: Thumbnail;
   };
 }
 
-const ITEMS_PER_PAGE = 4;
-const SLIDE_WIDTH = 266.5; // 슬라이더 이동 거리 (4개씩만 보이게 했을 때)
+interface VideoItem {
+  videoId: string;
+  nextPageToken: string;
+  snippet: Snippet;
+}
 
-const fetchVideos = async ({ pageParam = "", queryKey }: any) => {
-  const [_, query] = queryKey;
-  const { data } = await axios.get(BASE_URL, {
-    params: {
-      part: "snippet",
-      q: `${query} #shorts #챌린지 #춤 #${query} #dance #댄스챌린지`,
-      type: "video",
-      videoDuration: "short",
-      maxResults: 4,
-      pageToken: pageParam,
-      key: API_KEY,
-    },
+interface FetchVideosResponse {
+  code: number;
+  message: string;
+  data: VideoItem[];
+  errors: string[];
+  isSuccess: boolean;
+}
+
+const ITEMS_PER_PAGE = 4;
+const SLIDE_WIDTH = 266.5;
+
+const fetchVideos = async ({
+  pageParam,
+  query,
+}: FetchVideosParams): Promise<FetchVideosResponse> => {
+  const response = await axiosInstance.post("/api/v1/youtube", {
+    part: "snippet",
+    q: `${query} #shorts #챌린지 #춤 #dance #댄스챌린지`,
+    type: "video",
+    videoDuration: "short",
+    maxResults: 4,
+    pageToken: pageParam,
   });
-  return data;
+  console.log(response.data.data);
+  return response.data;
 };
 
 export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
@@ -53,6 +67,7 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
   const location = useLocation();
   const nav = useNavigate();
   const query = new URLSearchParams(location.search).get("q") || "";
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data,
@@ -64,8 +79,9 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
     error,
   } = useInfiniteQuery({
     queryKey: ["videos", query],
-    queryFn: fetchVideos,
-    getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+    queryFn: ({ pageParam }) => fetchVideos({ pageParam, query }),
+    initialPageParam: "",
+    getNextPageParam: (lastPage) => lastPage.data[0]?.nextPageToken,
   });
 
   const getImg = (pf: string): string => {
@@ -81,15 +97,30 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
     }
   };
 
-  const handleNext = () => {
-    const totalVideos = data?.pages.flatMap((page) => page.items).length || 0;
-    if (currentIndex + ITEMS_PER_PAGE >= totalVideos && hasNextPage) {
-      fetchNextPage();
+  const prefetchNextPage = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      const nextPageIndex = currentPage + 1;
+      const nextPageData = data?.pages[nextPageIndex];
+      if (!nextPageData) {
+        fetchNextPage();
+      }
     }
-    setCurrentIndex((prev) =>
-      Math.min(prev + ITEMS_PER_PAGE, totalVideos - ITEMS_PER_PAGE)
+  }, [currentPage, data, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    prefetchNextPage();
+  }, [prefetchNextPage]);
+
+  const handleNext = useCallback(() => {
+    const totalVideos = data?.pages.flatMap((page) => page.data).length || 0;
+    const nextIndex = Math.min(
+      currentIndex + ITEMS_PER_PAGE,
+      totalVideos - ITEMS_PER_PAGE
     );
-  };
+    setCurrentIndex(nextIndex);
+    setCurrentPage(Math.floor(nextIndex / ITEMS_PER_PAGE));
+    prefetchNextPage();
+  }, [currentIndex, data, prefetchNextPage]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - ITEMS_PER_PAGE, 0));
@@ -101,8 +132,9 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러: {(error as Error).message}</div>;
-  const videos = data?.pages.flatMap((page) => page.items) || [];
 
+  const videos = data?.pages.flatMap((page) => page.data) || [];
+  if (videos.length === 0) return <div>검색 결과가 없습니다.</div>;
   return (
     <Container>
       <Title>
@@ -121,10 +153,10 @@ export const SearchResult: React.FC<SearchResultProps> = ({ platform }) => {
         )}
         <SliderWrapper>
           <Slider $translateValue={-currentIndex * SLIDE_WIDTH}>
-            {videos.map((video: YouTubeItem) => (
+            {videos.map((video: VideoItem, index) => (
               <ContentSection
-                key={video.id.videoId}
-                onClick={() => handleThumbnailClick(video.id.videoId)}
+                key={`${video.videoId}-${index}`}
+                onClick={() => handleThumbnailClick(video.videoId)}
               >
                 <FeedImage src={video.snippet.thumbnails.high.url} />
                 <FeedTitle>{video.snippet.title}</FeedTitle>

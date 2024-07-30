@@ -3,6 +3,7 @@ package com.ssafy.withme.repository.user;
 import com.ssafy.withme.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface UserRepository extends JpaRepository<User,Long>, UserRepository
 
     @Override
     List<User> findByNameContaining(String name);
+
+    @Query("select u from users u where u.email =:email")
+    Optional<User> findByEmail(@Param("email") String email);
 }

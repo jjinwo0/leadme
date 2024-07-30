@@ -6,6 +6,8 @@ import com.ssafy.withme.domain.user.constant.UserStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @Slf4j
@@ -46,6 +48,30 @@ public class KakaoResponse implements OAuth2Response{
         return profile.get("nickname").toString();
     }
 
+    public String makeNickname() {
+        String name = getName();
+        return hashString(name);
+    }
+
+    private String hashString(String input) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] hash = digest.digest(input.getBytes());
+        StringBuilder hexString = new StringBuilder();
+
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+
+        return hexString.toString();
+    }
+
     @Override
     public User toEntity() {
 
@@ -58,6 +84,7 @@ public class KakaoResponse implements OAuth2Response{
                 .userStatus(UserStatus.ACTIVE)
                 .profileImg(profile.get("profile_image_url").toString())
                 .roleType(RoleType.USER)
+                .nickname(makeNickname())
                 .build();
     }
 }

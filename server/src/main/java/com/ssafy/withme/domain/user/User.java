@@ -51,12 +51,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Follow> fromFollowList = new ArrayList<>();
 
-    @Builder
-    public User(String email, String name) {
-        this.email = email;
-        this.name  = name;
-    }
-
     public User update(String name) {
         this.name = name;
         return this;

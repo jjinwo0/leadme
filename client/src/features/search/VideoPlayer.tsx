@@ -128,8 +128,8 @@ const ContentWrapper = styled.div`
 
 const VideoContent = styled.div`
   position: relative;
-  width: 39.375vh;
-  height: 70vh;
+  width: 38.3vh;
+  height: 68.2vh;
   display: flex;
   align-items: center;
   justify-content: center;

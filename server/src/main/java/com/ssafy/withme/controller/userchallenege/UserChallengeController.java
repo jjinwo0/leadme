@@ -7,6 +7,7 @@ import com.ssafy.withme.global.response.ApiResponse;
 import com.ssafy.withme.global.response.SuccessResponse;
 import com.ssafy.withme.service.userchellenge.UserChallengeService;
 import com.ssafy.withme.service.userchellenge.response.UserChallengeAnalyzeResponse;
+import com.ssafy.withme.service.userchellenge.response.UserChallengeSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,13 +28,13 @@ public class UserChallengeController {
     }
 
     @PostMapping("/api/v1/userChallenge/temporary/save")
-    public void saveTemporaryFile(@RequestBody UserChallengeSaveRequest request) {
-        userChallengeService.saveUserFile(request);
+    public SuccessResponse<UserChallengeSaveResponse> saveTemporaryFile(@RequestBody UserChallengeSaveRequest request) {
+        return SuccessResponse.of(userChallengeService.saveUserFile(request));
     }
 
     @PostMapping("/api/v1/userChallenge/temporary/delete")
-    public void deleteTemporaryFile(@RequestBody UserChallengeDeleteRequest request){
+    public SuccessResponse<Void> deleteTemporaryFile(@RequestBody UserChallengeDeleteRequest request){
         userChallengeService.deleteUserFile(request);
+        return SuccessResponse.empty();
     }
-
 }

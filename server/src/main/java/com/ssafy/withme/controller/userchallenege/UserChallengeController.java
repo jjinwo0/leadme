@@ -35,6 +35,7 @@ public class UserChallengeController {
     @PostMapping("/api/v1/userChallenge/temporary/delete")
     public SuccessResponse<Void> deleteTemporaryFile(@RequestBody UserChallengeDeleteRequest request){
         userChallengeService.deleteUserFile(request);
+        return SuccessResponse.empty();
     }
 
 }

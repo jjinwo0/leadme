@@ -7,6 +7,7 @@ import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.repository.challenge.ChallengeRepository;
 import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,7 +22,11 @@ import static com.ssafy.withme.global.error.ErrorCode.NOT_EXISTS_CHALLENGE;
 @Service
 public class ChallengeService {
 
-    static final String FAST_API_URL = "http://localhost:8000/videoUrl";
+    @Value("${python-server.url}")
+    String FAST_API_URL;
+
+    //static final String FAST_API_URL = "http://localhost:8000/videoUrl";
+
     private final ChallengeRepository challengeRepository;
 
     private final LandmarkRepository landmarkRepository;
@@ -47,9 +52,16 @@ public class ChallengeService {
         requestBody.put("url", challenge.getUrl());
         requestBody.put("youtubeId", challenge.getYoutubeId());
 
-
         HttpEntity<HashMap<String, String>> CreateLandMarkDataRequest = new HttpEntity<>(requestBody, httpHeaders);
-        restTemplate.postForEntity(FAST_API_URL, CreateLandMarkDataRequest, String.class);
+
+        String url = FAST_API_URL + "/videoUrl";
+        System.out.println(url + "   ----------------------------------------------------------------------------");
+        try {
+            restTemplate.postForEntity(url, CreateLandMarkDataRequest, String.class);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**

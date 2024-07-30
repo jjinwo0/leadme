@@ -31,4 +31,4 @@ logging:
 
 jwt:
   issuer: secretkey@gmail.com
-  secreat_key: leadme
+  secret_key: leadme

@@ -1,12 +1,15 @@
 package com.ssafy.withme.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
+//import com.ssafy.withme.global.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.withme.global.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.withme.global.config.oauth.OAuth2SuccessHandler;
 import com.ssafy.withme.global.config.oauth.OAuth2UserCustomService;
 import com.ssafy.withme.repository.user.RefreshTokenRepository;
 import com.ssafy.withme.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -21,14 +24,19 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @RequiredArgsConstructor
 @Configuration
+@Slf4j
 public class WebOAuthSecurityConfig {
 
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
+    private final ObjectMapper objectMapper;
 
     // 스프링 시큐리티 기능 비활성화
     @Bean
@@ -88,7 +96,8 @@ public class WebOAuthSecurityConfig {
     // exception message와 status code를 queryparam으로 전달
     private AuthenticationFailureHandler oAuth2FailureHandler() {
         return (request, response, exception) -> {
-            response.sendRedirect("/login?error=" + exception.getMessage() + "&code=" + response.getStatus());
+            String errorMessage = URLEncoder.encode("authorization_request_not_found", StandardCharsets.UTF_8);
+            response.sendRedirect("/login?error=" + errorMessage + "&code=" + response.getStatus());
         };
     }
 
@@ -97,7 +106,8 @@ public class WebOAuthSecurityConfig {
         return new OAuth2SuccessHandler(tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                userService
+                userService,
+                objectMapper
         );
     }
 

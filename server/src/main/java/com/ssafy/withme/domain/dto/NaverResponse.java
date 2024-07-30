@@ -1,6 +1,8 @@
 package com.ssafy.withme.domain.dto;
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.domain.user.constant.RoleType;
+import com.ssafy.withme.domain.user.constant.UserStatus;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -40,6 +42,8 @@ public class NaverResponse implements OAuth2Response{
         return User.builder()
                 .email(getEmail())
                 .name(getName())
+                .roleType(RoleType.USER)
+                .userStatus(UserStatus.ACTIVE)
                 .build();
     }
 }

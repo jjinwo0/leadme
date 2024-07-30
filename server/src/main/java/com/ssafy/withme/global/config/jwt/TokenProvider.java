@@ -1,12 +1,11 @@
 package com.ssafy.withme.global.config.jwt;
 
 import com.ssafy.withme.domain.user.User;
-import com.ssafy.withme.global.error.ErrorCode;
-import com.ssafy.withme.global.exception.BusinessException;
 import com.ssafy.withme.global.util.CryptoUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -26,9 +27,14 @@ public class TokenProvider {
 
     private final JwtProperties jwtProperties;
 
-    public String generateToken(User user, Duration expiredAt) {
+    public TokenDetails generateToken(User user, Duration expiredAt) {
         Date now = new Date();
-        return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
+        Date expiryDate = new Date(now.getTime() + expiredAt.toMillis());
+        String token = makeToken(expiryDate, user);
+
+        LocalDateTime expiryDateTime = expiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        return new TokenDetails(token, expiryDateTime);
     }
 
     // JWT 토큰 생성 메서드
@@ -60,6 +66,9 @@ public class TokenProvider {
             Jwts.parser()
                     .setSigningKey(jwtProperties.getSecretKey()) // 비밀키로 복호화
                     .parseClaimsJws(token); // 클레임이란 받아온 정보(토큰)를 jwt 페이로드에 넣는 것이다.
+
+            log.info("secret key: {}",jwtProperties.getSecretKey());
+
             return true;
         } catch(Exception e) {
             log.info("failed to validate token: {}", e.getMessage());
@@ -104,5 +113,5 @@ public class TokenProvider {
                 .getBody();
     }
 
-
+    public record TokenDetails(String token, LocalDateTime expireTime) {}
 }

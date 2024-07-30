@@ -6,11 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User,Long>, UserRepositoryCustom {
+
+//    @Query("select u from users u where u.email =:email")
+    Optional<User> findByEmail(String email);
+
+    @Override
+    List<User> findByNameContaining(String name);
 
     @Query("select u from users u where u.email =:email")
     Optional<User> findByEmail(@Param("email") String email);
-
 }

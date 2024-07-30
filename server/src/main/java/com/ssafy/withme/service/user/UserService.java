@@ -1,9 +1,12 @@
 package com.ssafy.withme.service.user;
 
 
+import com.ssafy.withme.domain.user.Follow;
 import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.domain.user.constant.UserStatus;
+import com.ssafy.withme.dto.UserInfoDto;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
+>>>>>>> server/src/main/java/com/ssafy/withme/service/user/UserService.java
 import com.ssafy.withme.global.error.ErrorCode;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.repository.user.UserRepository;
@@ -12,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,6 +27,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
+    public List<User> findAll() {
+
+        return userRepository.findAll();
+    }
+
 //    public Long save(AddUserRequest dto) {
 //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 //
@@ -30,6 +40,7 @@ public class UserService {
 //                .password(encoder.encode(dto.getPassword()))
 //                .build()).getId();
 //    }
+
     public User findById(Long id) {
 
         return userRepository.findById(id)
@@ -42,6 +53,17 @@ public class UserService {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
+
+    // find user list by name field
+    public List<User> findByNameContaining(String name) {
+
+        List<User> findUserList = userRepository.findByNameContaining(name);
+
+        if (findUserList.isEmpty())
+            throw new EntityNotFoundException(ErrorCode.USER_NOT_EXISTS);
+
+        return findUserList;
     }
 
     public User findUserIdByToken(String token) {

@@ -4,6 +4,9 @@ import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
@@ -29,8 +33,13 @@ public class UserController {
 
             userInfo = userService.findUserIdByToken(accessToken);
         }
+        UserInfoDto userDto = UserInfoDto.from(findUser);
 
-        return ResponseEntity.ok(userInfo);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        log.info("name: {}", name);
+
+        return SuccessResponse.of(userDto);
     }
 
 }

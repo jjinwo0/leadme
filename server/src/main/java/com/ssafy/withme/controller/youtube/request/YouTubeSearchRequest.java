@@ -13,9 +13,15 @@ public class YouTubeSearchRequest {
     private Long maxResults;
     private String pageToken;
     private final String videoEmbeddable = "true";
+    private final String videoSyndicated = "true";
 
     public String isVideoEmbeddable() {
         return this.videoEmbeddable;
     }
+
+    public String isVideoSyndicated() {
+        return this.videoSyndicated;
+    }
+
 
 }

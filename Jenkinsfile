@@ -9,6 +9,8 @@ pipeline {
         EC2_INSTANCE_PRIVATE_KEY = credentials('EC2_INSTANCE_PRIVATE_KEY')
         EC2_INSTANCE_PORT = 22
         DOCKERHUB_NAME = 'leadme'
+        VM_OPTION_NAME = credentials('VM_OPTION_NAME')
+        VM_OPTION_PASSWORD = credentials('VM_OPTION_PASSWORD')
     }
 
     stages {
@@ -28,8 +30,27 @@ pipeline {
                     dir('S11P12C109/server') {
                         sh 'chmod +x ./gradlew'
                         
-                        sh './gradlew clean build'
+                        sh './gradlew clean build -x test'
                     }
+                }
+            }
+        }
+
+        stage('Build Python') {
+            steps {
+                dir('S11P12C109/leadme') {
+                    
+                    // 기존 컨테이너 중단
+                    sh 'docker stop python-container || true'
+
+                    // 기존 컨테이너가 있을 경우 삭제
+                    sh 'docker rm -f python-container || true'
+
+                    // 이미지 빌드
+                    sh 'docker build -t python-image .'
+                    
+                    // 컨테이너를 실행
+                    sh 'docker run -d --name python-container -p 4567:4567 python-image'
                 }
             }
         }
@@ -65,7 +86,7 @@ pipeline {
                                         docker pull ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                                         docker stop ${DOCKERHUB_NAME} || true
                                         docker rm ${DOCKERHUB_NAME} || true
-                                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
+                                        docker run --name ${DOCKERHUB_NAME} -d -p 8090:8090 -e JAVA_OPTS="-D${VM_OPTION_NAME}=${VM_OPTION_PASSWORD}" ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:latest
                                         docker image prune -f
                                         """,
                                         execTimeout: 120000

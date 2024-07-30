@@ -32,6 +32,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
 };
 
 const Overlay = styled.div`
+  min-width: 1120px;
   position: fixed;
   top: 0;
   left: 0;

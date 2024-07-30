@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { accessTokenState } from "./../stores/authAtom";
+import { accessTokenState } from "stores/authAtom";
 import styled from "styled-components";
-import Header from "./../components/Header";
-import { SearchBar } from "../components/SearchBar";
-import img1 from "../assets/image/img1.png";
-import img2 from "../assets/image/img2.png";
+import Header from "components/Header";
+import { SearchBar } from "components/SearchBar";
+import img1 from "assets/image/img1.png";
+import img2 from "assets/image/img2.png";
 
 interface ImageData {
   src: string;

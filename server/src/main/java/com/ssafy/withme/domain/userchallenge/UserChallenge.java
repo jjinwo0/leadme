@@ -5,6 +5,7 @@ import com.ssafy.withme.domain.comment.Comment;
 import com.ssafy.withme.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,11 @@ public class UserChallenge {
     @OneToMany(mappedBy = "userChallenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;
 
+    @Builder
+    private UserChallenge(String name, String videoPath, Challenge challenge, User user) {
+        this.name = name;
+        this.videoPath = videoPath;
+        this.challenge = challenge;
+        this.user = user;
+    }
 }

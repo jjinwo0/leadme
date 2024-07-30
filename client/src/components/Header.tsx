@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { accessTokenState } from "./../stores/authAtom";
+import { accessTokenState } from "stores/authAtom";
 import styled from "styled-components";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { LoginModal } from "./LoginModal";
+import { LoginModal } from "components/LoginModal";
 
 interface HeaderProps {
   stickyOnly?: boolean;
@@ -84,9 +84,7 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
                   <LeftHoverBox>
                     <HoverLink to="/mypage">마이페이지</HoverLink>
                     <Hr />
-                    <HoverLink to="/report">분석 결과</HoverLink>
-                    <Hr />
-                    <HoverLink to="/chat">채팅 목록</HoverLink>
+                    <HoverLink to="/chat/test">메세지 목록</HoverLink>
                   </LeftHoverBox>
                 </Fake>
               </Mypage>

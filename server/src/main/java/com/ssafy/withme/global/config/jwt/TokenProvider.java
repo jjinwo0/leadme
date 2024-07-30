@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.Set;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 @Slf4j
 public class TokenProvider {
@@ -38,8 +40,7 @@ public class TokenProvider {
     }
 
     // JWT 토큰 생성 메서드
-    private String makeToken(Date expiry, User user) {
-        Date now = new Date();
+    private String makeAccessToken(Date expiry, User user) {
 
         String encryptedId;
 
@@ -53,7 +54,7 @@ public class TokenProvider {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더 타입은 JWT
                 .setIssuer(jwtProperties.getIssuer()) // 내용 : 프로퍼티에스에서 지정한 발급자명
-                .setIssuedAt(now) // 내용 issue at : 현재 시간
+                .setIssuedAt(new Date(System.currentTimeMillis())) // 내용 issue at : 현재 시간
                 .setExpiration(expiry) // 내용 exp : expiry 멤버 변수값
                 .setSubject(user.getEmail()) // 내용 sub : 유저의 이메일
                 .claim("id", encryptedId) // 클레임 id : 유저 id
@@ -64,7 +65,7 @@ public class TokenProvider {
     public boolean validToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecretKey()) // 비밀키로 복호화
+                    .setSigningKey(jwtProperties.getSecretKey()) // 명 검증
                     .parseClaimsJws(token); // 클레임이란 받아온 정보(토큰)를 jwt 페이로드에 넣는 것이다.
 
             log.info("secret key: {}",jwtProperties.getSecretKey());
@@ -74,6 +75,8 @@ public class TokenProvider {
             log.info("failed to validate token: {}", e.getMessage());
             return false;
         }
+
+        return true;
     }
 
     // 토큰 기반으로 스프링 시큐리티 인증 정보를 가져오는 메서드

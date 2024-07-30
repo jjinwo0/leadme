@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { IsEnteredAtom } from "../../stores";
+import { IsEnteredAtom } from "stores/index";
 import { useRef } from "react";
 import { Scroll, useScroll } from "@react-three/drei";
 import styled from "styled-components";
@@ -53,8 +53,8 @@ export const MovingDOM = () => {
       </ArticleWrapper>
       <ArticleWrapper ref={articleRef2}>
         <RightBox>
-          <H2>모든 플랫폼 검색을 한 번에</H2>
-          <P>유튜브, 인스타, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</P>
+          <H2>플랫폼 검색을 한 번에</H2>
+          <P>유튜브, 틱톡의 모든 숏츠 영상을 한 번의 검색으로</P>
         </RightBox>
       </ArticleWrapper>
       <ArticleWrapper ref={articleRef3}>

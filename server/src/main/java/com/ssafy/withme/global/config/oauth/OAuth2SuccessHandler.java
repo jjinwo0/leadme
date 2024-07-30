@@ -5,6 +5,7 @@ import com.ssafy.withme.domain.dto.AuthResponse;
 import com.ssafy.withme.domain.dto.CustomOAuth2User;
 import com.ssafy.withme.domain.user.RefreshToken;
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.dto.TokenDto;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
 import com.ssafy.withme.global.util.CookieUtil;
 import com.ssafy.withme.repository.user.RefreshTokenRepository;

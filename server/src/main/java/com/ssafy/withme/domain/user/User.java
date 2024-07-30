@@ -43,18 +43,17 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-//    @Builder
-//    public User(String email, String name) {
-//        this.email = email;
-//        this.name  = name;
-//    }
-//
-//    @Builder
-//    public User(String email, String password, String nickname) {
-//        this.email = email;
-//        this.password = password;
-//        this.nickname = nickname;
-//    }
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> toFollowList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Follow> fromFollowList = new ArrayList<>();
+
+    @Builder
+    public User(String email, String name) {
+        this.email = email;
+        this.name  = name;
+    }
 
     public User update(String name) {
         this.name = name;

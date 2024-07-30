@@ -9,9 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -33,13 +36,25 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 
+    public User findById(Long id) {
+
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_EXISTS));
+    }
+
     public User findByEmail(String email) {
-        System.out.println(email);
+
+        log.info("find by email: {}", email);
+
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 
-    public User findUserIdByToken(String token) {
-        return findById(tokenProvider.getUserId(token));
+    @Transactional
+    public void updateStatus(Long id, UserStatus status) {
+
+        User findUser = findById(id);
+
+        findUser.updateStatus(status);
     }
 }

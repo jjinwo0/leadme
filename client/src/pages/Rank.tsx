@@ -1,6 +1,6 @@
-import Header from "./../components/Header";
+import Header from "components/Header";
 import styled from "styled-components";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "components/SearchBar";
 
 interface TempData {
   rank: number;
@@ -26,9 +26,9 @@ const Rank: React.FC = () => {
   return (
     <>
       <Header />
-      <PageLayout>
+      <Container>
         <MainSection>
-          <SearchBar width={464} />
+          <SearchBar width={464} icon />
           <TableWrapper>
             <Table>
               <thead>
@@ -52,14 +52,15 @@ const Rank: React.FC = () => {
             </Table>
           </TableWrapper>
         </MainSection>
-      </PageLayout>
+      </Container>
     </>
   );
 };
 
 export default Rank;
 
-const PageLayout = styled.div`
+const Container = styled.div`
+  min-width: 1120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,7 +70,6 @@ const PageLayout = styled.div`
 
 const MainSection = styled.div`
   width: 1080px;
-  height: 600px;
   border-radius: 20px;
   background: linear-gradient(
     108deg,
@@ -81,7 +81,7 @@ const MainSection = styled.div`
   display: flex;
   flex-direction: column;
   padding: 35px;
-  gap: 40px;
+  gap: 35px;
 `;
 
 const TableWrapper = styled.div`
@@ -100,18 +100,25 @@ const TableWrapper = styled.div`
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+
+  tbody > tr:last-child {
+    border-bottom: none;
+  }
 `;
 
 const TableRow = styled.tr`
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 400;
   border-bottom: 1px solid #fff;
 `;
 
 const TableHeader = styled.th`
-  padding: 12px;
-  font-weight: bold;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
 `;
 
 const TableCell = styled.td`
-  padding: 12px;
-  border-bottom: 1px solid #fff;
+  padding: 14px;
+  font-size: 16px;
 `;

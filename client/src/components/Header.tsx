@@ -1,20 +1,28 @@
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { accessTokenState } from "stores/authAtom";
 import styled from "styled-components";
-import { FaInstagram } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { useState } from "react";
-import { LoginModal } from "../pages/LoginModal";
-const Header: React.FC = () => {
+import { LoginModal } from "components/LoginModal";
+
+interface HeaderProps {
+  stickyOnly?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
   const location = useLocation();
   const [loginModal, setLoginModal] = useState<boolean>(false);
+
+  const accessToken = useRecoilValue(accessTokenState);
+  const setAccessToken = useSetRecoilState(accessTokenState);
+  const isLogin = !!accessToken; // 로그인 상태를 accessToken 여부로 확인
 
   const getPageTitle = (path: string): string => {
     switch (path) {
       case "/home":
         return "LeadMe";
-      case "/search":
-        return "Search";
       case "/challenge":
         return "Challenge";
       case "/rank":
@@ -28,48 +36,77 @@ const Header: React.FC = () => {
     setLoginModal(false);
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("access_token");
+    setAccessToken(null);
+    window.location.reload();
+  };
+
   return (
     <>
       {loginModal ? <LoginModal onClose={handleCloseModal} /> : null}
-      <HeaderWrapper>
-        <Top>
-          <TopLeft>
-            Let's dance with
-            <br />
-            LeadMe
-          </TopLeft>
-          <TopCenter>{getPageTitle(location.pathname)} !</TopCenter>
-          <TopRight>
-            <div>
+      {!stickyOnly && (
+        <HeaderWrapper>
+          <Top>
+            <TopLeft>
+              Let's dance with
+              <br />
+              LeadMe
+            </TopLeft>
+            <TopCenter>
+              <a href="">{getPageTitle(location.pathname)} !</a>
+            </TopCenter>
+            <TopRight>
               <SnsBox>
-                Instagram
-                <FaInstagram />
+                YouTube
+                <FaYoutube />
               </SnsBox>
               <SnsBox>
                 TikTok
                 <FaTiktok />
               </SnsBox>
-              <SnsBox>
-                YouTube
-                <FaYoutube />
-              </SnsBox>
-            </div>
-            <LoginBtn
-              onClick={() => {
-                setLoginModal(!loginModal);
-              }}
-            >
-              Login
-            </LoginBtn>
-          </TopRight>
-        </Top>
-      </HeaderWrapper>
+            </TopRight>
+          </Top>
+        </HeaderWrapper>
+      )}
       <StickyNav>
         <NavContent>
           <StyledLink to="/home">home</StyledLink>
-          <StyledLink to="/search">search</StyledLink>
+          <StyledLink to="/feed">feed</StyledLink>
+          <StyledLink to="/practice">practice</StyledLink>
           <StyledLink to="/challenge">challenge</StyledLink>
           <StyledLink to="/rank">rank</StyledLink>
+          {isLogin ? (
+            <LeftContainer>
+              <Mypage>
+                mypage
+                <Fake>
+                  <LeftHoverBox>
+                    <HoverLink to="/mypage">마이페이지</HoverLink>
+                    <Hr />
+                    <HoverLink to="/chat/test">메세지 목록</HoverLink>
+                  </LeftHoverBox>
+                </Fake>
+              </Mypage>
+              <LeftBtn
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+                logout
+              </LeftBtn>
+            </LeftContainer>
+          ) : (
+            <LeftContainer>
+              <LeftBtn
+                onClick={() => {
+                  setLoginModal(!loginModal);
+                }}
+              >
+                login
+              </LeftBtn>
+            </LeftContainer>
+          )}
         </NavContent>
       </StickyNav>
     </>
@@ -77,13 +114,19 @@ const Header: React.FC = () => {
 };
 
 const HeaderWrapper = styled.header`
-  margin: 16px 20px -5px;
+  min-width: 1080px;
+  margin: 14px 20px -5px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 
 const Top = styled.div`
-  padding: 18px 30px 8px;
+  padding: 22px 30px 10px;
   color: #ee5050;
-  font-size: 19px;
+  font-size: 16px;
   font-family: "Rajdhani", sans-serif;
   display: flex;
   justify-content: space-between;
@@ -97,6 +140,7 @@ const Top = styled.div`
     4px 0 4px -4px rgba(0, 0, 0, 0.15), 0 -4px 4px -4px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
 `;
+
 const TopLeft = styled.div`
   width: 200px;
   text-align: left;
@@ -105,15 +149,17 @@ const TopLeft = styled.div`
 
 const TopCenter = styled.div`
   font-weight: 700;
-  font-size: 80px;
-  margin-top: 16px;
+  font-size: 76px;
+  margin: 2px 0 6px;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 const TopRight = styled.div`
   width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   text-align: right;
   font-weight: 600;
 `;
@@ -126,21 +172,86 @@ const SnsBox = styled.div`
   gap: 10px;
 `;
 
-const LoginBtn = styled.button`
-  width: 72px;
-  padding: 1px 0;
+const LeftContainer = styled.div`
+  position: absolute;
+  right: 22px;
+
+  display: flex;
+  flex-direction: row;
+`;
+
+const LeftBtn = styled.div`
+  font-family: "Noto Sans", sans-serif;
+  font-size: 15px;
   color: #ee5050;
-  font-size: 19px;
-  font-weight: 600;
-  font-family: "Rajdhani", sans-serif;
-  border: 1px solid #ee5050;
-  border-radius: 4px;
-  background-color: #ffffff;
-  margin: 4px 0 6px;
+  border: none;
+  padding: 9px 12px;
+  background-color: inherit;
+  text-decoration: none;
+  margin: 0 12px;
+  position: relative;
   cursor: pointer;
+
+  &:hover {
+    color: #ff7676;
+    text-decoration: underline;
+  }
+`;
+
+const Mypage = styled.div`
+  font-family: "Noto Sans", sans-serif;
+  font-size: 15px;
+  color: #ee5050;
+  border: none;
+  padding: 9px 14px;
+  background-color: inherit;
+  text-decoration: none;
+  margin: 0 12px;
+  position: relative;
+  cursor: default;
+
+  &:hover {
+    div {
+      display: block;
+    }
+  }
+`;
+
+const Fake = styled.div`
+  display: none;
+  position: absolute;
+  left: -44px;
+  top: 30px;
+  padding: 16px;
+`;
+
+const LeftHoverBox = styled.div`
+  width: 135px;
+  top: 48px;
+  z-index: 9999;
+  padding: 1px 0;
+
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(25px);
+
+  cursor: default;
+`;
+
+const HoverLink = styled(Link)`
+  display: block;
+  color: #ee5050;
+  text-align: center;
+  font-size: 15px;
+  font-family: "Noto Sans KR", sans-serif;
+  text-decoration: none;
+  padding: 8px;
+  margin: 6px;
 `;
 
 const StickyNav = styled.nav`
+  min-width: 1080px;
   position: sticky;
   top: 0px;
   z-index: 999;
@@ -150,12 +261,19 @@ const StickyNav = styled.nav`
     rgba(255, 255, 255, 1) 80%,
     rgba(255, 255, 255, 0) 100%
   );
+  border-radius: 0 0 20px 20px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 
 const NavContent = styled.div`
   display: flex;
   justify-content: center;
-  padding: 5px 0;
+  align-items: center;
+  padding: 2.5px 0;
   background: linear-gradient(
     108deg,
     rgba(255, 255, 255, 0.26) 0%,
@@ -164,20 +282,26 @@ const NavContent = styled.div`
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 0 0 20px 20px;
+  position: relative;
 `;
 
 const StyledLink = styled(Link)`
   color: #ee5050;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Noto Sans", sans-serif;
   text-decoration: none;
   padding: 9px 14px;
-  margin: 0 18px;
+  margin: 0 16px;
 
   &:hover {
     color: #ff7676;
     text-decoration: underline;
   }
+`;
+
+const Hr = styled.hr`
+  border: 1px solid white;
+  margin: 0;
 `;
 
 export default Header;

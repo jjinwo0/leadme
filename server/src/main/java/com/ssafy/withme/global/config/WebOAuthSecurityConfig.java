@@ -23,6 +23,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -66,6 +72,9 @@ public class WebOAuthSecurityConfig {
                         // 이외에는 모두 허가
                         .anyRequest().permitAll()
                 )
+                .csrf((csrf) -> csrf.disable())
+                .httpBasic((httpBasic) -> httpBasic.disable())
+                .formLogin((formLogin) -> formLogin.disable());
 
                 // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영
                 .oauth2Login(oauth2 -> oauth2
@@ -109,23 +118,5 @@ public class WebOAuthSecurityConfig {
                 userService,
                 objectMapper
         );
-    }
-
-
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
-
-
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-    }
-
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

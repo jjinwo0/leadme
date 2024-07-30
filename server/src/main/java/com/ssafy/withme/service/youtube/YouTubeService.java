@@ -46,7 +46,7 @@ public class YouTubeService {
                 youTubeSearchResponses = callYoutubeApi(youTubeSearchRequest, apiKey);
                 break;
             } catch(Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
             // 아토믹하게 1씩 증가시킨다.

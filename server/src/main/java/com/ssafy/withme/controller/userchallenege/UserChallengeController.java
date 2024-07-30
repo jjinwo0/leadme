@@ -37,5 +37,4 @@ public class UserChallengeController {
         userChallengeService.deleteUserFile(request);
         return SuccessResponse.empty();
     }
-
 }

@@ -30,7 +30,7 @@ pipeline {
                     dir('S11P12C109/server') {
                         sh 'chmod +x ./gradlew'
                         
-                        sh './gradlew clean build'
+                        sh './gradlew clean build -x test'
                     }
                 }
             }

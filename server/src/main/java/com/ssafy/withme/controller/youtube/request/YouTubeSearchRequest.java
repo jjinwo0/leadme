@@ -12,4 +12,10 @@ public class YouTubeSearchRequest {
     private String videoDuration;
     private Long maxResults;
     private String pageToken;
+    private final String videoEmbeddable = "true";
+
+    public String isVideoEmbeddable() {
+        return this.videoEmbeddable;
+    }
+
 }

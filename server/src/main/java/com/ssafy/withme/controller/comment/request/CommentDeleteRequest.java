@@ -9,4 +9,6 @@ public class CommentDeleteRequest {
 
     private Long commentId;
 
+    private Long userId;
+
 }

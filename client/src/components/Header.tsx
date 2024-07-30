@@ -84,8 +84,6 @@ const Header: React.FC<HeaderProps> = ({ stickyOnly = false }) => {
                   <LeftHoverBox>
                     <HoverLink to="/mypage">마이페이지</HoverLink>
                     <Hr />
-                    <HoverLink to="/report">분석 결과</HoverLink>
-                    <Hr />
                     <HoverLink to="/chat/test">메세지 목록</HoverLink>
                   </LeftHoverBox>
                 </Fake>

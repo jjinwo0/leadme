@@ -1,29 +1,116 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { testUrl } from "axiosInstance/constants";
 
 interface SendModalProps {
   isOpen: boolean;
   onClose: () => void;
+  openChatModal: (userId: string) => void;
 }
 
-const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
+interface ResponseData {
+  id: number;
+  name: string;
+}
+
+const FindModal: React.FC<SendModalProps> = ({
+  isOpen,
+  onClose,
+  openChatModal,
+}) => {
+  const [inputValue, setInputValue] = useState("");
+  const [searchResults, setSearchResults] = useState<ResponseData[]>([]);
+
+  const mutation = useMutation<ResponseData[], Error, string>({
+    mutationFn: async (value: string): Promise<ResponseData[]> => {
+      const response = await axios.get<ResponseData[]>(`${testUrl}/user`, {
+        params: { nickname: value },
+      });
+      return response.data;
+    },
+    onSuccess: (data: ResponseData[]) => {
+      setSearchResults(data);
+      console.log(data);
+    },
+    onError: (error: Error) => {
+      console.error("Error fetching data:", error);
+    },
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    console.log(value);
+    setInputValue(value);
+    mutation.mutate(value);
+  };
+
+  const handleResultItemClick = (name: string) => {
+    setInputValue(name);
+  };
+
+  const handleStartClick = () => {
+    if (
+      inputValue.length > 0 &&
+      searchResults.some((result) => result.name === inputValue)
+    ) {
+      openChatModal(inputValue);
+      handleClose();
+    }
+  };
+
+  const handleClose = () => {
+    setInputValue("");
+    setSearchResults([]);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      handleClose();
     }
   };
+
+  const isButtonDisabled =
+    inputValue.length === 0 ||
+    !searchResults.some((result) => result.name === inputValue);
 
   return (
     <Overlay onClick={handleOverlayClick}>
       <Container onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <CloseButton onClick={handleClose}>&times;</CloseButton>
         <Title>New Chat</Title>
         <Form>
-          <input type="text" placeholder="받는 사람" />
-          <div>계정을 찾을 수 없습니다.</div>
-          <button>start</button>
+          <input
+            type="text"
+            placeholder="받는 사람"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          {searchResults.length === 0 ? (
+            <ResultNo>계정을 찾을 수 없습니다.</ResultNo>
+          ) : (
+            <ResultsList>
+              {searchResults.map((result) => (
+                <ResultItem
+                  key={result.id}
+                  onClick={() => handleResultItemClick(result.name)}
+                >
+                  {result.name}
+                </ResultItem>
+              ))}
+            </ResultsList>
+          )}
+          <StartButton
+            type="button"
+            onClick={handleStartClick}
+            disabled={isButtonDisabled}
+          >
+            start
+          </StartButton>
         </Form>
       </Container>
     </Overlay>
@@ -108,32 +195,72 @@ const Form = styled.form`
     font-size: 16px;
     font-weight: 400;
   }
+`;
 
-  button {
-    color: #ee5050;
-    font-size: 21px;
-    font-weight: 500;
-    font-family: "Noto Sans", sans-serif;
-    width: 100%;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 0;
-    margin: 8px 0;
-    background-color: #f3f3f3;
-    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
+const StartButton = styled.button<{ disabled: boolean }>`
+  color: ${({ disabled }) => (disabled ? "#c0c0c0" : "#ee5050")};
+  font-size: 21px;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 0;
+  margin: 8px 0;
+  background-color: ${({ disabled }) => (disabled ? "#f3f3f3" : "#f3f3f3")};
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+`;
+
+const ResultNo = styled.div`
+  width: 100%;
+  height: 130px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 15px;
+  color: #c0c0c0;
+`;
+
+const ResultsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 348px;
+  height: 130px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 15px;
   }
 
-  div {
-    width: 100%;
-    height: 130px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Noto Sans KR", sans-serif;
-    font-size: 15px;
-    color: #c0c0c0;
+  &::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    cursor: pointer;
+  }
+`;
+
+const ResultItem = styled.div`
+  width: 100%;
+  color: #767676;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  text-align: left;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
   }
 `;
 

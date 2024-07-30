@@ -4,10 +4,10 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    host: "127.0.0.1", // 원하는 IP 주소
-    port: 3000, // 원하는 포트 번호
-  },
+  // server: {
+  //   host: "127.0.0.1", // 원하는 IP 주소
+  //   port: 3000, // 원하는 포트 번호
+  // },
   resolve: {
     alias: {
       components: path.resolve(__dirname, "./src/components"),

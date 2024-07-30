@@ -1,6 +1,8 @@
 package com.ssafy.withme.controller.user;
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.dto.UserInfoDto;
+import com.ssafy.withme.global.response.SuccessResponse;
 import com.ssafy.withme.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/me")
-    public ResponseEntity<?> getInfo(HttpServletRequest request) {
+    public SuccessResponse<?> getInfo(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         User userInfo = null;
         if (authorization != null && authorization.startsWith("Bearer ")) {
@@ -33,7 +35,7 @@ public class UserController {
 
             userInfo = userService.findUserIdByToken(accessToken);
         }
-        UserInfoDto userDto = UserInfoDto.from(findUser);
+        UserInfoDto userDto = UserInfoDto.from(userInfo);
 
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
 

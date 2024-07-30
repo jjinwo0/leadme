@@ -1,12 +1,8 @@
 package com.ssafy.withme.service.user;
 
-
-import com.ssafy.withme.domain.user.Follow;
 import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.domain.user.constant.UserStatus;
-import com.ssafy.withme.dto.UserInfoDto;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
->>>>>>> server/src/main/java/com/ssafy/withme/service/user/UserService.java
 import com.ssafy.withme.global.error.ErrorCode;
 import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.repository.user.UserRepository;
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

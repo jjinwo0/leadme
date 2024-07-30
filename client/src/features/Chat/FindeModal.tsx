@@ -2,25 +2,32 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { testUrl } from "axiosInstance/constants";
 
 interface SendModalProps {
   isOpen: boolean;
   onClose: () => void;
+  openChatModal: (userId: string) => void;
 }
 
 interface ResponseData {
-  // 응답 데이터 타입 정의 (예시)
   id: number;
   name: string;
 }
 
-const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
+const FindModal: React.FC<SendModalProps> = ({
+  isOpen,
+  onClose,
+  openChatModal,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const [searchResults, setSearchResults] = useState<ResponseData[]>([]);
 
   const mutation = useMutation<ResponseData[], Error, string>({
     mutationFn: async (value: string): Promise<ResponseData[]> => {
-      const response = await axios.post<ResponseData[]>(``, { query: value }); // 요청 주소를 여기에 입력
+      const response = await axios.get<ResponseData[]>(`${testUrl}/user`, {
+        params: { nickname: value },
+      });
       return response.data;
     },
     onSuccess: (data: ResponseData[]) => {
@@ -34,6 +41,7 @@ const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    console.log(value);
     setInputValue(value);
     mutation.mutate(value);
   };
@@ -43,21 +51,37 @@ const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleStartClick = () => {
-    console.log(`${inputValue}와 대화 시작`);
+    if (
+      inputValue.length > 0 &&
+      searchResults.some((result) => result.name === inputValue)
+    ) {
+      openChatModal(inputValue);
+      handleClose();
+    }
+  };
+
+  const handleClose = () => {
+    setInputValue("");
+    setSearchResults([]);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      handleClose();
     }
   };
+
+  const isButtonDisabled =
+    inputValue.length === 0 ||
+    !searchResults.some((result) => result.name === inputValue);
 
   return (
     <Overlay onClick={handleOverlayClick}>
       <Container onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <CloseButton onClick={handleClose}>&times;</CloseButton>
         <Title>New Chat</Title>
         <Form>
           <input
@@ -80,9 +104,13 @@ const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
               ))}
             </ResultsList>
           )}
-          <button type="button" onClick={handleStartClick}>
+          <StartButton
+            type="button"
+            onClick={handleStartClick}
+            disabled={isButtonDisabled}
+          >
             start
-          </button>
+          </StartButton>
         </Form>
       </Container>
     </Overlay>
@@ -167,21 +195,21 @@ const Form = styled.form`
     font-size: 16px;
     font-weight: 400;
   }
+`;
 
-  button {
-    color: #ee5050;
-    font-size: 21px;
-    font-weight: 500;
-    font-family: "Noto Sans", sans-serif;
-    width: 100%;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 0;
-    margin: 8px 0;
-    background-color: #f3f3f3;
-    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-  }
+const StartButton = styled.button<{ disabled: boolean }>`
+  color: ${({ disabled }) => (disabled ? "#c0c0c0" : "#ee5050")};
+  font-size: 21px;
+  font-weight: 500;
+  font-family: "Noto Sans", sans-serif;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 0;
+  margin: 8px 0;
+  background-color: ${({ disabled }) => (disabled ? "#f3f3f3" : "#f3f3f3")};
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;
 
 const ResultNo = styled.div`

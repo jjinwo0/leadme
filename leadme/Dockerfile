@@ -28,6 +28,9 @@ ENV FILE_STORAGE_PATH=/app/video
 # 파일 저장을 위한 볼륨 생성
 VOLUME ["/app/video"]
 
+# ffmpeg 다운로드
+RUN apt-get update && apt-get install -y ffmpeg
+
 # 필요한 디렉토리 생성 및 권한 설정
 RUN mkdir -p /app/video && chmod 777 /app/video
 

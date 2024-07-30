@@ -10,7 +10,7 @@ mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 
 # MongoDB 연결 설정
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb://i11c109.p.ssafy.io:27017/')
 db = client['local']  # 'local' 데이터베이스 이름 설정
 collection = db['landmarks']  # 'landmarks' 컬렉션 이름 설정
 

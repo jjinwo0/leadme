@@ -22,6 +22,7 @@ import com.ssafy.withme.repository.landmark.LandmarkRepository;
 import com.ssafy.withme.repository.user.UserRepository;
 import com.ssafy.withme.repository.userchallenge.UserChallengeRepository;
 import com.ssafy.withme.service.userchellenge.response.UserChallengeAnalyzeResponse;
+import com.ssafy.withme.service.userchellenge.response.UserChallengeSaveResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -154,7 +155,7 @@ public class UserChallengeService {
      * uuid와 fileName을 받아 임시저장 파일에서 해당 영상을 찾아 영구저장 파일로 이동시키고 파일 이름을 변경하여 영구저장한다.
      * @param request
      */
-    public void saveUserFile(UserChallengeSaveRequest request) {
+    public UserChallengeSaveResponse saveUserFile(UserChallengeSaveRequest request) {
         Challenge challenge = challengeRepository.findById(request.getChallengeId()).orElse(null);
 //        User user = userRepository.findById(request.getUserId()).get();
         Path tempVideoPath = Paths.get(TEMP_DIRECTORY, request.getUuid() + ".mp4");
@@ -174,11 +175,12 @@ public class UserChallengeService {
                     .challenge(challenge)
                     .videoPath(PERMANENT_DIRECTORY+"/"+finalFileName)
                     .build();
-            userChallengeRepository.save(userChallenge);
+            UserChallenge savedUserChallenge = userChallengeRepository.save(userChallenge);
+            return UserChallengeSaveResponse.ofResponse(savedUserChallenge);
         } catch(IOException e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 
     /**

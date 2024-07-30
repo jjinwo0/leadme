@@ -52,16 +52,9 @@ public class ChallengeService {
         requestBody.put("url", challenge.getUrl());
         requestBody.put("youtubeId", challenge.getYoutubeId());
 
+
         HttpEntity<HashMap<String, String>> CreateLandMarkDataRequest = new HttpEntity<>(requestBody, httpHeaders);
-
-        String url = FAST_API_URL + "/videoUrl";
-        System.out.println(url + "   ----------------------------------------------------------------------------");
-        try {
-            restTemplate.postForEntity(url, CreateLandMarkDataRequest, String.class);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
+        restTemplate.postForEntity(FAST_API_URL, CreateLandMarkDataRequest, String.class);
     }
 
     /**

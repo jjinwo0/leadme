@@ -36,6 +36,20 @@ pipeline {
             }
         }
 
+        stage('Build Python') {
+            steps {
+                dir('S11P12C109/leadme') {
+                    sh 'docker build -t python-app .'
+
+                    // 기존 컨테이너가 있을 경우 삭제
+                    sh 'docker rm -f python-app || true'
+                    
+                    // 컨테이너를 실행 (선택 사항)
+                    sh 'docker run -d --name my-python-container -p 4567:4567 python-app'
+                }
+            }
+        }
+
         stage('Docker Build and Push') {
             steps {
                 script {

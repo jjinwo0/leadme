@@ -1,12 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 
 interface SendModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface ResponseData {
+  // 응답 데이터 타입 정의 (예시)
+  id: number;
+  name: string;
+}
+
 const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
+  const [inputValue, setInputValue] = useState("");
+  const [searchResults, setSearchResults] = useState<ResponseData[]>([]);
+
+  const mutation = useMutation<ResponseData[], Error, string>({
+    mutationFn: async (value: string): Promise<ResponseData[]> => {
+      const response = await axios.post<ResponseData[]>(``, { query: value }); // 요청 주소를 여기에 입력
+      return response.data;
+    },
+    onSuccess: (data: ResponseData[]) => {
+      setSearchResults(data);
+      console.log(data);
+    },
+    onError: (error: Error) => {
+      console.error("Error fetching data:", error);
+    },
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    mutation.mutate(value);
+  };
+
+  const handleResultItemClick = (name: string) => {
+    setInputValue(name);
+  };
+
+  const handleStartClick = () => {
+    console.log(`${inputValue}와 대화 시작`);
+  };
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -21,9 +60,29 @@ const FindModal: React.FC<SendModalProps> = ({ isOpen, onClose }) => {
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Title>New Chat</Title>
         <Form>
-          <input type="text" placeholder="받는 사람" />
-          <div>계정을 찾을 수 없습니다.</div>
-          <button>start</button>
+          <input
+            type="text"
+            placeholder="받는 사람"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          {searchResults.length === 0 ? (
+            <ResultNo>계정을 찾을 수 없습니다.</ResultNo>
+          ) : (
+            <ResultsList>
+              {searchResults.map((result) => (
+                <ResultItem
+                  key={result.id}
+                  onClick={() => handleResultItemClick(result.name)}
+                >
+                  {result.name}
+                </ResultItem>
+              ))}
+            </ResultsList>
+          )}
+          <button type="button" onClick={handleStartClick}>
+            start
+          </button>
         </Form>
       </Container>
     </Overlay>
@@ -123,17 +182,57 @@ const Form = styled.form`
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
     cursor: pointer;
   }
+`;
 
-  div {
-    width: 100%;
-    height: 130px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Noto Sans KR", sans-serif;
-    font-size: 15px;
-    color: #c0c0c0;
+const ResultNo = styled.div`
+  width: 100%;
+  height: 130px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 15px;
+  color: #c0c0c0;
+`;
+
+const ResultsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 348px;
+  height: 130px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    cursor: pointer;
+  }
+`;
+
+const ResultItem = styled.div`
+  width: 100%;
+  color: #767676;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  text-align: left;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
   }
 `;
 

@@ -2,16 +2,17 @@ package com.ssafy.withme.service.user;
 
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.domain.user.constant.UserStatus;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
+import com.ssafy.withme.global.error.ErrorCode;
+import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -29,13 +30,6 @@ public class UserService {
 //                .password(encoder.encode(dto.getPassword()))
 //                .build()).getId();
 //    }
-
-    public User findById(Long userId) {
-        log.info("user id is {}", userId);
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
-    }
-
     public User findById(Long id) {
 
         return userRepository.findById(id)
@@ -48,6 +42,13 @@ public class UserService {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
+
+    public User findUserIdByToken(String token) {
+
+        Long userId = tokenProvider.getUserId(token);
+
+        return findById(userId);
     }
 
     @Transactional

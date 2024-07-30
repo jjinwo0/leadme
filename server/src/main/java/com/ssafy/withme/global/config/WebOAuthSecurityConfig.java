@@ -2,7 +2,6 @@ package com.ssafy.withme.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
-//import com.ssafy.withme.global.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.withme.global.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.withme.global.config.oauth.OAuth2SuccessHandler;
 import com.ssafy.withme.global.config.oauth.OAuth2UserCustomService;
@@ -74,7 +73,7 @@ public class WebOAuthSecurityConfig {
                 )
                 .csrf((csrf) -> csrf.disable())
                 .httpBasic((httpBasic) -> httpBasic.disable())
-                .formLogin((formLogin) -> formLogin.disable());
+                .formLogin((formLogin) -> formLogin.disable())
 
                 // OAuth 로그인 후 쿠키 세팅 및 유저 레포지토리에 반영
                 .oauth2Login(oauth2 -> oauth2
@@ -118,5 +117,15 @@ public class WebOAuthSecurityConfig {
                 userService,
                 objectMapper
         );
+    }
+
+    @Bean
+    public TokenAuthenticationFilter tokenAuthenticationFilter() {
+        return new TokenAuthenticationFilter(tokenProvider);
+    }
+
+    @Bean
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 }

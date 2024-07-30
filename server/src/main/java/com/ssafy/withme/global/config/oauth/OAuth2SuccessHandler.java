@@ -7,6 +7,7 @@ import com.ssafy.withme.domain.user.RefreshToken;
 import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.dto.TokenDto;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
+import com.ssafy.withme.global.config.jwt.constant.TokenType;
 import com.ssafy.withme.global.util.CookieUtil;
 import com.ssafy.withme.repository.user.RefreshTokenRepository;
 import com.ssafy.withme.service.user.UserService;
@@ -75,7 +76,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userService.findByEmail(email);
 
         // 1. 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
-        TokenProvider.TokenDetails refreshTokenDetails = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+        TokenProvider.TokenDetails refreshTokenDetails = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION, TokenType.REFRESH);
         String refreshToken = refreshTokenDetails.token();
         // 데이터 베이스에 유저아이디와 리프레시 토큰을 저장
         saveRefreshToken(user, refreshToken);
@@ -84,7 +85,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 2. 액세스 토큰 생성 -> 패스에 액세스 토큰을 추가
         // 토큰 제공자를 사용해 액세스 토큰을 만든 뒤
-        TokenProvider.TokenDetails accessTokenDetails = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+        TokenProvider.TokenDetails accessTokenDetails = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION, TokenType.ACCESS);
         String accessToken = accessTokenDetails.token();
 
         // 쿠키에서 리다이렉트 경로가 담긴 값을 가져와 쿼리파라미터에 액세스 토큰을 추가함

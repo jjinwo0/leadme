@@ -1,6 +1,7 @@
 package com.ssafy.withme.global.config.jwt;
 
 import com.ssafy.withme.domain.user.User;
+import com.ssafy.withme.global.config.jwt.constant.TokenType;
 import com.ssafy.withme.global.util.CryptoUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -24,19 +25,26 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@Slf4j
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
 
-    public TokenDetails generateToken(User user, Duration expiredAt) {
+    public TokenDetails generateToken(User user, Duration expiredAt, TokenType tokenType) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiredAt.toMillis());
-        String token = makeToken(expiryDate, user);
+        String token = makeToken(expiryDate, user, tokenType);
 
         LocalDateTime expiryDateTime = expiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         return new TokenDetails(token, expiryDateTime);
+    }
+
+    private String makeToken(Date expiryDate, User user, TokenType tokenType) {
+
+        if (TokenType.isAccessToken(tokenType.name()))
+            return makeAccessToken(expiryDate, user);
+
+        return makeRefereshToken(expiryDate, user);
     }
 
     // JWT 토큰 생성 메서드
@@ -56,7 +64,28 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer()) // 내용 : 프로퍼티에스에서 지정한 발급자명
                 .setIssuedAt(new Date(System.currentTimeMillis())) // 내용 issue at : 현재 시간
                 .setExpiration(expiry) // 내용 exp : expiry 멤버 변수값
-                .setSubject(user.getEmail()) // 내용 sub : 유저의 이메일
+                .setSubject(TokenType.ACCESS.name()) // 내용 sub : 유저의 이메일
+                .claim("id", encryptedId) // 클레임 id : 유저 id
+                .compact();
+    }
+
+    private String makeRefereshToken(Date expiry, User user) {
+
+        String encryptedId;
+
+        // user id 암호화
+        try {
+            encryptedId = CryptoUtils.encrypt(String.valueOf(user.getId()));
+        } catch (Exception e){
+            throw new RuntimeException("Error encrypting user id", e);
+        }
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더 타입은 JWT
+                .setIssuer(jwtProperties.getIssuer()) // 내용 : 프로퍼티에스에서 지정한 발급자명
+                .setIssuedAt(new Date(System.currentTimeMillis())) // 내용 issue at : 현재 시간
+                .setExpiration(expiry) // 내용 exp : expiry 멤버 변수값
+                .setSubject(TokenType.REFRESH.name()) // 내용 sub : 유저의 이메일
                 .claim("id", encryptedId) // 클레임 id : 유저 id
                 .compact();
     }
@@ -75,8 +104,6 @@ public class TokenProvider {
             log.info("failed to validate token: {}", e.getMessage());
             return false;
         }
-
-        return true;
     }
 
     // 토큰 기반으로 스프링 시큐리티 인증 정보를 가져오는 메서드

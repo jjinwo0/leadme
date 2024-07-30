@@ -32,8 +32,8 @@ public class ChallengeController extends BaseEntity {
      * @return
      */
     @GetMapping("/api/v1/challenge/{youtubeId}")
-    public Landmark findLandMarkByVideoName(@PathVariable String youtubeId) throws Exception {
-        return challengeService.getLandMarkByYoutubeId(youtubeId);
+    public SuccessResponse<Landmark> findLandMarkByVideoName(@PathVariable String youtubeId) throws Exception {
+        return SuccessResponse.of(challengeService.getLandMarkByYoutubeId(youtubeId));
     }
 
 

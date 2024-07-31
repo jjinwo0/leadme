@@ -1,13 +1,18 @@
 package com.ssafy.withme.service.chat.message;
 
 import com.ssafy.withme.domain.chat.constant.MessageType;
+import com.ssafy.withme.domain.chat.constant.UserIdentity;
 import com.ssafy.withme.dto.ChatMessageDto;
+import com.ssafy.withme.dto.ChatRoomGetResponse;
 import com.ssafy.withme.repository.chat.ChatRoomRedisRepository;
 import com.ssafy.withme.service.chat.RedisPublisher;
 import com.ssafy.withme.service.chat.chatroom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +35,72 @@ public class ChatService {
 
         // 1. 채팅방이 삭제되는 것이라면 delete를 해준다.
         if (chatMessage.getType().equals(MessageType.DELETE)) {
-            chatRoomService.
+            chatRoomService.deleteChatRoom(accessToken, chatMessage.getRoomId(), userId);
         }
+        // 2. 채팅방 리스트에 새로운 채팅방 정보가 없다면, 넣어준다. 마지막 메시지도 같이 담는다. 상대방 redis에도 업데이트 해준다.
+        ChatRoomGetResponse newChatRoom = null;
+        if (chatRoomRedisRepository.existChatRoom(userId, chatMessage.getRoomId())) {
+            newChatRoom = chatRoomRedisRepository.getChatRoom(userId, chatMessage.getRoomId());
+        } else {
+            newChatRoom = chatRoomService.getChatRoomInfo(accessToken, chatMessage.getRoomId());
+        }
+
+        partnerId = getPartnerId(chatMessage, newChatRoom);
+
+    }
+
+    private Long getPartnerId(ChatMessageDto chatMessageDto, ChatRoomGetResponse my) {
+//        Long partnerId;
+        if (my.getBuyerId() == chatMessageDto.getUserId()) {
+            return my.getSellerId();
+        }
+
+        return my.getBuyerId();
+    }
+
+    /**
+     * redis에 채팅방 정보가 없는 경우 새로 저장
+     * @param chatMessage
+     */
+    private void setNewChatRoomInfo(ChatMessageDto chatMessage, ChatRoomGetResponse newChatRoom) {
+        newChatRoom.updateChatMessageDto(chatMessage);
+
+        // 상대방 채팅 리스트와 내 채팅 리스트 둘다 채팅방을 저장한다.
+        // 1. 로그인 유저가 seller라면 지금 전송한 메시지를 레디스에 최신메시지로 저장한다.
+        if (newChatRoom.getLoginUserIdentity().equals(UserIdentity.SELLER)) {
+            if (!chatMessage.getType().equals(MessageType.DELETE)) {
+                chatRoomRedisRepository.setChatRoom(newChatRoom.getSellerId(),
+                        chatMessage.getRoomId(), newChatRoom);
+            }
+            newChatRoom.changePartnerInfo(); // 닉네임 체인지
+            chatRoomRedisRepository.setChatRoom(newChatRoom.getBuyerId(),
+                    chatMessage.getRoomId(), newChatRoom);
+        } else if (newChatRoom.getLoginUserIdentity().equals(UserIdentity.BUYER)) {
+            if (!chatMessage.getType().equals(MessageType.DELETE)) {
+                chatRoomRedisRepository.setChatRoom(newChatRoom.getBuyerId(),
+                        chatMessage.getRoomId(), newChatRoom);
+            }
+
+            newChatRoom.changePartnerInfo(); //닉네임 체인지
+            chatRoomRedisRepository.setChatRoom(newChatRoom.getSellerId(),
+                    chatMessage.getRoomId(), newChatRoom);
+        }
+
+        // 다시 원상태로 복귀
+        newChatRoom.changePartnerInfo();
+    }
+
+    // redis에서 채팅방 리스트 불러오는 로직
+    private List<ChatRoomGetResponse> getChatRoomListByPartnerId(Long userId) {
+        List<ChatRoomGetResponse> chatRoomListGetResponseList = new ArrayList<>();
+
+        if (chatRoomRedisRepository.existChatRoomList(userId)) {
+            chatRoomListGetResponseList = chatRoomRedisRepository.getChatRoomList(userId);
+            for (ChatRoomGetResponse chatRoomListGetResponse : chatRoomListGetResponseList) {
+                chatRoomService.setListChatLastMessage(chatRoomListGetResponse);
+            }
+        }
+
+        return chatRoomListGetResponseList;
     }
 }

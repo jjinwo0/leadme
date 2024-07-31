@@ -1,5 +1,6 @@
 package com.ssafy.withme.repository.chat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.dto.ChatMessageDto;
 import com.ssafy.withme.dto.ChatRoomGetResponse;

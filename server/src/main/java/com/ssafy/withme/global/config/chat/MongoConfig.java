@@ -11,8 +11,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @RequiredArgsConstructor
-// 여기 설정 해줘야함!
-@EnableMongoRepositories(basePackages = "com")
 public class MongoConfig {
 
     private final MongoProperties mongoProperties;
@@ -24,6 +22,7 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongoClient(), mongoProperties.getDatabase());
+//        return new MongoTemplate(mongoClient(), mongoProperties.getDatabase());
+        return new MongoTemplate(mongoClient(), "test");
     }
 }

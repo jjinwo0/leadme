@@ -4,6 +4,7 @@ import com.ssafy.withme.domain.chat.constant.MessageType;
 import com.ssafy.withme.domain.chat.constant.UserIdentity;
 import com.ssafy.withme.dto.ChatMessageDto;
 import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.dto.MessageSubDto;
 import com.ssafy.withme.repository.chat.ChatRoomRedisRepository;
 import com.ssafy.withme.service.chat.RedisPublisher;
 import com.ssafy.withme.service.chat.chatroom.ChatRoomService;
@@ -46,15 +47,33 @@ public class ChatService {
         }
 
         partnerId = getPartnerId(chatMessage, newChatRoom);
+        setNewChatRoomInfo(chatMessage, newChatRoom);
+
+        // 3. 마지막 메시지들이 담긴 채팅방 리스트들을 가져온다.
+        // 4. 파트너 채팅방 리스트도 가져온다. (파트너는 userId로 가져옴)
+        List<ChatRoomGetResponse> chatRoomList = chatRoomService.getChatRoomList(userId, accessToken);
+        List<ChatRoomGetResponse> partnerChatRoomList = getChatRoomListByPartnerId(partnerId);
+
+        // 5. 마지막 메시지 기준으로 정렬 채팅방 리스트 정렬
+        chatRoomList = chatRoomService.sortChatRoomListLatest(chatRoomList);
+        partnerChatRoomList = chatRoomService.sortChatRoomListLatest(partnerChatRoomList);
+
+        MessageSubDto messageSubDto = MessageSubDto.builder()
+                .userId(userId)
+                .partnerId(partnerId)
+                .chatMessageDto(chatMessage)
+                .list(chatRoomList)
+                .partnerList(partnerChatRoomList)
+                .build();
+
+        redisPublisher.publish(messageSubDto);
 
     }
 
     private Long getPartnerId(ChatMessageDto chatMessageDto, ChatRoomGetResponse my) {
-//        Long partnerId;
         if (my.getBuyerId() == chatMessageDto.getUserId()) {
             return my.getSellerId();
         }
-
         return my.getBuyerId();
     }
 

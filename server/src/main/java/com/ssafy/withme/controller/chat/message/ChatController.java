@@ -1,4 +1,4 @@
-package com.ssafy.withme.controller.chat;
+package com.ssafy.withme.controller.chat.message;
 
 import com.ssafy.withme.dto.ChatMessageDto;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RequiredArgsConstructor
 @Controller

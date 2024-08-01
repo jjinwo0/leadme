@@ -25,6 +25,8 @@ public class ChatController {
     public void message(ChatMessageDto message,
                         @Header("Authorization") String accessToken
     ) {
+        log.info("message : {}", message);
+        log.info("accessToken: {}", accessToken);
         ChatMessageDto chatMessageDto = chatMongoService.save(message);
         chatService.sendChatMessage(chatMessageDto, accessToken); // RedisPublisher 호출
     }

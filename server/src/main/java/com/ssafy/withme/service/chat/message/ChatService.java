@@ -34,6 +34,8 @@ public class ChatService {
         Long userId = chatMessage.getUserId();
         Long partnerId;
 
+        log.info("userId : {}", userId);
+
         // 1. 채팅방이 삭제되는 것이라면 delete를 해준다.
         if (chatMessage.getType().equals(MessageType.DELETE)) {
             chatRoomService.deleteChatRoom(accessToken, chatMessage.getRoomId(), userId);
@@ -43,10 +45,12 @@ public class ChatService {
         if (chatRoomRedisRepository.existChatRoom(userId, chatMessage.getRoomId())) {
             newChatRoom = chatRoomRedisRepository.getChatRoom(userId, chatMessage.getRoomId());
         } else {
-            newChatRoom = chatRoomService.getChatRoomInfo(accessToken, chatMessage.getRoomId());
+            newChatRoom = chatRoomService.getChatRoomInfo(accessToken, userId, chatMessage.getRoomId());
         }
 
         partnerId = getPartnerId(chatMessage, newChatRoom);
+        log.info("newChatRoom : {}", newChatRoom);
+        log.info("partnerId : {}", partnerId);
         setNewChatRoomInfo(chatMessage, newChatRoom);
 
         // 3. 마지막 메시지들이 담긴 채팅방 리스트들을 가져온다.
@@ -66,6 +70,7 @@ public class ChatService {
                 .partnerList(partnerChatRoomList)
                 .build();
 
+        log.info("messageSubDto : {}", messageSubDto);
         redisPublisher.publish(messageSubDto);
 
     }

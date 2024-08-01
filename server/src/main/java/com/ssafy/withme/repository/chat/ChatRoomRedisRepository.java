@@ -73,6 +73,8 @@ public class ChatRoomRedisRepository {
 
 
     public void setLastChatMessage(String roomId, ChatMessageDto chatMessageDto) {
+        log.info("Set last chat message: {}", chatMessageDto);
+        log.info("roomId: {}", roomId);
         opsHashLastChatMessage.put(CHAT_ROOM, roomId, chatMessageDto);
     }
 

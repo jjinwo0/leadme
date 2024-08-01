@@ -24,13 +24,19 @@ public class ChatRoomService {
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatMongoService chatMongoService;
 
-    public ChatRoomGetResponse getChatRoomInfo(String accessToken, String roomId) {
-        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
+    public ChatRoomGetResponse getChatRoomInfo(String accessToken, Long userId, String roomId) {
+//        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
+        return chatRoomRedisRepository.getChatRoom(userId, roomId);
     }
 
     public List<ChatRoomGetResponse> getChatRoomListByFeign(Long userId, String accessToken) {
         // 처음 HTTP 요청에서는 무조건 레디스 초기화 진행하도록 로직 수정
-        List<ChatRoomGetResponse> chatRoomListGetResponseList = mainFeignClient.getChatRoomList(accessToken);
+
+        // Feign Client를 사용하는 것이 아닌 직접 redis에서 채팅내역 조회
+        List<ChatRoomGetResponse> chatRoomListGetResponseList = chatRoomRedisRepository.getChatRoomList(userId);
+//        List<ChatRoomGetResponse> chatRoomListGetResponseList = mainFeignClient.getChatRoomList(accessToken);
+
+        log.info("chatRoomListGetResponseList: {}", chatRoomListGetResponseList);
         chatRoomListGetResponseList.forEach(this::setListChatLastMessage);
         chatRoomRedisRepository.initChatRoomList(userId, chatRoomListGetResponseList);
         return sortChatRoomListLatest(chatRoomListGetResponseList);
@@ -44,7 +50,8 @@ public class ChatRoomService {
 
         } else {
             // 채팅방이 레디스에 없으면 페인 사용해서 불러온다!
-            chatRoomListGetResponseList = mainFeignClient.getChatRoomList(accessToken);
+            // -> 레디스에 없으면 그냥 만들자
+//            chatRoomListGetResponseList = mainFeignClient.getChatRoomList(accessToken);
             chatRoomRedisRepository.initChatRoomList(userId, chatRoomListGetResponseList);
         }
 
@@ -102,7 +109,10 @@ public class ChatRoomService {
     public void deleteChatRoom(String accessToken, String roomId, Long userId) {
         log.info("=>> 채팅방 삭제 {} start ", roomId);
         SuccessMessage message = mainFeignClient.deleteChatRoom(accessToken, roomId);
+
+        // feign으로 삭제할 게 아니라 service로직에서 직접 삭제해주기
         chatRoomRedisRepository.deleteChatRoom(userId, roomId);
         log.info("=>> 채팅방 삭제 {} Msg : {}", roomId, message.Message());
     }
+
 }

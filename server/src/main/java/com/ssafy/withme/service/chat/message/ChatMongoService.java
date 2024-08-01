@@ -36,9 +36,9 @@ public class ChatMongoService {
         if (chatMessageDto.getType() == MessageType.ENTER ||
                 chatMessageDto.getType() == MessageType.TALK ||
                 chatMessageDto.getType() == MessageType.QUIT) {
-
         }
 
+        log.info("chatMessageDto: {}", chatMessageDto);
         ChatMessage chatMessage = chatMessageRepository.save(ChatMessage.of(chatMessageDto));
         log.info("save success : {}", chatMessage.getMessage());
         return ChatMessageDto.fromEntity(chatMessage);

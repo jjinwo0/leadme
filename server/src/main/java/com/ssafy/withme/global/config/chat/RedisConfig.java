@@ -1,26 +1,37 @@
 package com.ssafy.withme.global.config.chat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.withme.service.chat.RedisSubscriber;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@RequiredArgsConstructor
 @Configuration
+@EnableRedisRepositories
 public class RedisConfig {
 
     // yml 파일 redis 설정 불러오기
-    private final RedisProperties redisProperties;
+//    private final RedisProperties redisProperties;
+
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.data.redis.port}")
+    private int redisPort;
+
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
 
     // 단일 Topic 사용을 위한 Bean 설정
     @Bean
@@ -28,12 +39,35 @@ public class RedisConfig {
         return new ChannelTopic("chatroom");
     }
 
+//    @Bean
+//    public JedisConnectionFactory jedisConnectionFactory() {
+//        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
+//        redisStandaloneConfiguration.setPassword(RedisPassword.of("yourRedisPasswordIfAny"));
+//        return new JedisConnectionFactory(redisStandaloneConfiguration);
+//    }
+
+    // deprecated 됐다고해서 위에 방법 사용 추천
+//    @Bean
+//    public RedisConnectionFactory redisConnectionFactory() {
+//
+//        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
+//
+//        lettuceConnectionFactory.setHostName(redisHost);
+//        lettuceConnectionFactory.setPort(Integer.parseInt(redisPort));
+//        lettuceConnectionFactory.setPassword(redisPassword);
+//
+//        return lettuceConnectionFactory;
+//    }
+
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
-        lettuceConnectionFactory.setHostName(redisProperties.getHost());
-        lettuceConnectionFactory.setPort(redisProperties.getPort());
-        return lettuceConnectionFactory;
+    public LettuceConnectionFactory redisConnectionFactory() {
+
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost); // Redis 서버 호스트명
+        redisStandaloneConfiguration.setPort(redisPort); // Redis 서버 포트
+        redisStandaloneConfiguration.setPassword(redisPassword); // Redis 서버 비밀번호
+
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
     /**
@@ -80,10 +114,19 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
+
+        // 일반적인 key : value의 경우 직렬화
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericToStringSerializer<>(Object.class));
+
+        // Has를 사용할 경우 직렬화
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+
+        // 모든 경우
+        template.setDefaultSerializer(new StringRedisSerializer());
+
         return template;
     }
-
 
 }

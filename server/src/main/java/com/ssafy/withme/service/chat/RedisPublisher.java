@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RedisPublisher {
     private final ChannelTopic channelTopic;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public void publish(MessageSubDto message) {
         log.info("RedisPublisher publishing : {}", message.getChatMessageDto().getMessage());

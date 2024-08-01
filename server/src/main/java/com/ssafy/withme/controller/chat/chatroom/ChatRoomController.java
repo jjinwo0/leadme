@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/chat/room")
+@RequestMapping("/api/v1/chat/room")
 @RequiredArgsConstructor
 public class ChatRoomController {
 
@@ -25,9 +25,10 @@ public class ChatRoomController {
     @GetMapping("/info")
     public ChatRoomGetResponse getChatRoom(
             @RequestHeader("Authorization") String accessToken,
+            @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "roomId") String roomId
     ) {
-        return chatRoomService.getChatRoomInfo(accessToken, roomId);
+        return chatRoomService.getChatRoomInfo(accessToken, userId, roomId);
     }
 
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/chat")
+@RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
 @Slf4j
 public class ChatFindController {

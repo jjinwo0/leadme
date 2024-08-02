@@ -1,7 +1,10 @@
 package com.ssafy.withme.dto.chat;
 
 import com.ssafy.withme.domain.chat.ChatMessage;
+import com.ssafy.withme.domain.chat.constant.MessageStatus;
 import com.ssafy.withme.domain.chat.constant.MessageType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.io.Serializable;
@@ -20,6 +23,12 @@ public class ChatMessageDto implements Serializable {
     private String nickname;
     private String message; // 메시지
     private String time;
+    @Enumerated(EnumType.STRING)
+    private MessageStatus status;
+
+    public void updateStatus(MessageStatus status) {
+        this.status = status;
+    }
 
     public static ChatMessageDto fromEntity(ChatMessage chatMessage) {
         return ChatMessageDto.builder()
@@ -29,6 +38,7 @@ public class ChatMessageDto implements Serializable {
                 .roomId(chatMessage.getRoomId())
                 .time(chatMessage.getTime())
                 .message(chatMessage.getMessage())
+                .status(chatMessage.getStatus())
                 .build();
     }
 

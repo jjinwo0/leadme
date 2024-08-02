@@ -1,5 +1,6 @@
 package com.ssafy.withme.controller.chat.message;
 
+import com.ssafy.withme.domain.chat.constant.MessageStatus;
 import com.ssafy.withme.dto.chat.ChatMessageDto;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
 import com.ssafy.withme.service.chat.message.ChatService;
@@ -25,7 +26,11 @@ public class ChatController {
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto message) {
+
+        message.updateStatus(MessageStatus.UNREAD);
+
         log.info("message : {}", message);
+
         ChatMessageDto chatMessageDto = chatMongoService.save(message);
         chatService.sendChatMessage(chatMessageDto); // RedisPublisher 호출
     }

@@ -1,7 +1,10 @@
 package com.ssafy.withme.domain.chat;
 
+import com.ssafy.withme.domain.chat.constant.MessageStatus;
 import com.ssafy.withme.domain.chat.constant.MessageType;
 import com.ssafy.withme.dto.chat.ChatMessageDto;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +23,8 @@ public class ChatMessage {
     private String nickname;
     private String message; // 메시지
     private String time; // 메시지 보낸 시간
+    @Enumerated(EnumType.STRING)
+    private MessageStatus status;
 
     public static ChatMessage of(ChatMessageDto dto) {
         return ChatMessage.builder()
@@ -29,6 +34,7 @@ public class ChatMessage {
                 .userId(dto.getUserId())
                 .message(dto.getMessage())
                 .time(LocalDateTime.now().toString())
+                .status(dto.getStatus())
                 .build();
     }
 }

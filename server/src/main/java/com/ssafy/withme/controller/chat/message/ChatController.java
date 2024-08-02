@@ -5,9 +5,11 @@ import com.ssafy.withme.service.chat.message.ChatMongoService;
 import com.ssafy.withme.service.chat.message.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RequiredArgsConstructor
 @Controller
@@ -22,13 +24,10 @@ public class ChatController {
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
      */
     @MessageMapping("/chat/message")
-    public void message(ChatMessageDto message,
-                        @Header("Authorization") String accessToken
-    ) {
+    public void message(ChatMessageDto message) {
         log.info("message : {}", message);
-        log.info("accessToken: {}", accessToken);
         ChatMessageDto chatMessageDto = chatMongoService.save(message);
-        chatService.sendChatMessage(chatMessageDto, accessToken); // RedisPublisher 호출
+        chatService.sendChatMessage(chatMessageDto); // RedisPublisher 호출
     }
 
     /**

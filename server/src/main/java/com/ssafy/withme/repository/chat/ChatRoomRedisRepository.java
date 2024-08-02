@@ -41,12 +41,13 @@ public class ChatRoomRedisRepository {
     }
 
     public void initChatRoomList(Long userId, List<ChatRoomGetResponse> list) {
-        if (redisTemplate.hasKey(getChatRoomKey(userId))) {
-            redisTemplate.delete(getChatRoomKey(userId));
+        if (redisTemplate.hasKey(getChatRoomKey(userId))) { // 같은 키로 되어있는 방이 있으면
+            redisTemplate.delete(getChatRoomKey(userId)); // 없애고
         }
 
-        opsHashChatRoom = redisTemplate.opsForHash();
+        opsHashChatRoom = redisTemplate.opsForHash(); // 빈 방 생성
         for (ChatRoomGetResponse chatRoomListGetRes : list) {
+            // 빈 방을 리스트에 박아줌
             setChatRoom(userId, chatRoomListGetRes.getChatRoomNumber(), chatRoomListGetRes);
         }
     }

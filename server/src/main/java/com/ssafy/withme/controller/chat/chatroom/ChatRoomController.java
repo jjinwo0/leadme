@@ -30,7 +30,7 @@ public class ChatRoomController {
      * @return
      */
     @GetMapping("/list")
-    public List<ChatRoomGetResponse> getChatRoomList(
+    public SuccessResponse<List> getChatRoomList(
             @RequestHeader("Authorization") String authorization
     ) {
 
@@ -38,13 +38,14 @@ public class ChatRoomController {
 
         Long findUserId = tokenProvider.getUserId(accessToken);
 
-        return chatRoomService.getChatRoomListByUserId(findUserId);
+        List<ChatRoomGetResponse> chatRoomList = chatRoomService.getChatRoomListByUserId(findUserId);
+
+        return SuccessResponse.of(chatRoomList);
     }
 
     /**
      * 채팅방 정보를 불러오는 API
      * - accessToken 파라미터 제거하고 유저 정보를 토큰에서 제공받는 로직으로 수정
-     * @param authorization
      * @param roomId
      * @return
      */

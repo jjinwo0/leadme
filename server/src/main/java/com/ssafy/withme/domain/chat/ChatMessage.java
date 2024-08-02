@@ -17,6 +17,7 @@ public class ChatMessage {
     private MessageType type; // 메시지 타입
     private String roomId; // 방 번호
     private Long userId; // 채팅 보낸 userId
+    private String nickname;
     private String message; // 메시지
     private String time; // 메시지 보낸 시간
 
@@ -24,6 +25,7 @@ public class ChatMessage {
         return ChatMessage.builder()
                 .type(dto.getType())
                 .roomId(dto.getRoomId())
+                .nickname(dto.getNickname())
                 .userId(dto.getUserId())
                 .message(dto.getMessage())
                 .time(LocalDateTime.now().toString())

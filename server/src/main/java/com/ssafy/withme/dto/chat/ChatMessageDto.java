@@ -17,14 +17,15 @@ public class ChatMessageDto implements Serializable {
     private MessageType type; // 메시지 타입
     private String roomId; // 방 번호
     private Long userId;
+    private String nickname;
     private String message; // 메시지
     private String time;
-    private long userCount; // 채팅방 인원수
 
     public static ChatMessageDto fromEntity(ChatMessage chatMessage) {
         return ChatMessageDto.builder()
                 .type(chatMessage.getType())
                 .userId(chatMessage.getUserId())
+                .nickname(chatMessage.getNickname())
                 .roomId(chatMessage.getRoomId())
                 .time(chatMessage.getTime())
                 .message(chatMessage.getMessage())

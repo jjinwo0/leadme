@@ -12,4 +12,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatR
 
     @Override
     List<ChatRoom> findByUserId(Long userId);
+
+    @Override
+    ChatRoom findByUserIdAndRoomId(Long userId, String roomId);
 }

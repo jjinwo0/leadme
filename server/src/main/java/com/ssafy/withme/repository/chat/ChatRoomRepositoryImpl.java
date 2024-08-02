@@ -7,6 +7,7 @@ import com.ssafy.withme.domain.user.QUser;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.withme.domain.chat.QChatRoom.chatRoom;
 import static com.ssafy.withme.domain.user.QUser.user;
@@ -22,5 +23,13 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom{
         return qf.selectFrom(chatRoom)
                 .where(user.id.eq(userId))
                 .fetch();
+    }
+
+    @Override
+    public ChatRoom findByUserIdAndRoomId(Long userId, String roomId) {
+
+        return qf.selectFrom(chatRoom)
+                .where(chatRoom.user.id.eq(userId), chatRoom.roomId.eq(roomId))
+                .fetch().get(0);
     }
 }

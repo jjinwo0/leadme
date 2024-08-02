@@ -80,7 +80,6 @@ public class ChatService {
         if (my.getPartnerId() == chatMessageDto.getUserId()) {
             return my.getUserId();
         }
-
         return my.getPartnerId();
     }
 
@@ -89,7 +88,6 @@ public class ChatService {
      * @param chatMessage
      */
     private void setNewChatRoomInfo(ChatMessageDto chatMessage, ChatRoomGetResponse newChatRoom) {
-
         newChatRoom.updateChatMessageDto(chatMessage);
     }
 

@@ -13,7 +13,11 @@ public class ChatRoomGetResponse {
 
     private Long userId;
 
+    private String userNickname;
+
     private Long partnerId;
+
+    private String partnerNickname;
 //    private Long buyerId; // 구매자니까 채팅 신청한사람?
 //    private Long sellerId; // 판매자니까 채팅 신청 받은사람?
 
@@ -27,8 +31,10 @@ public class ChatRoomGetResponse {
 
         return ChatRoomGetResponse.builder()
                 .chatRoomNumber(chatRoom.getRoomId())
-                .userId(chatRoom.getUserId())
-                .partnerId(chatRoom.getPartnerId())
+                .userNickname(chatRoom.getUser().getNickname())
+                .userId(chatRoom.getUser().getId())
+                .partnerNickname(chatRoom.getPartner().getNickname())
+                .partnerId(chatRoom.getPartner().getId())
                 .build();
     }
 }

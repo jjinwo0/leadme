@@ -2,6 +2,7 @@ package com.ssafy.withme.service.chat.chatroom;
 
 import com.ssafy.withme.domain.chat.ChatMessage;
 import com.ssafy.withme.domain.chat.ChatRoom;
+import com.ssafy.withme.domain.user.User;
 import com.ssafy.withme.dto.chat.ChatMessageDto;
 import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
 import com.ssafy.withme.dto.chat.request.ChatRoomCreateRequest;
@@ -11,6 +12,7 @@ import com.ssafy.withme.global.response.SuccessMessage;
 import com.ssafy.withme.repository.chat.ChatRoomRedisRepository;
 import com.ssafy.withme.repository.chat.ChatRoomRepository;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
+import com.ssafy.withme.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,14 @@ public class ChatRoomService {
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatMongoService chatMongoService;
     private final ChatRoomRepository chatRoomRepository;
+    private final UserService userService;
 
-//    public ChatRoomGetResponse getChatRoomInfo(Long userId, String roomId) {
-////        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
-//        return chatRoomRedisRepository.getChatRoom(userId, roomId);
-//    }
+    public ChatRoomGetResponse getChatRoomInfo(Long userId, String roomId) {
+//        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
+        ChatRoom findRoom = chatRoomRepository.findByUserIdAndRoomId(userId, roomId);
+
+        return ChatRoomGetResponse.from(findRoom);
+    }
 
     public List<ChatRoomGetResponse> getChatRoomListByUserId(Long userId) {
         // 처음 HTTP 요청에서는 무조건 레디스 초기화 진행하도록 로직 수정
@@ -134,11 +139,14 @@ public class ChatRoomService {
     @Transactional
     public ChatRoom createChatRoom(ChatRoomCreateRequest chatRoomCreateRequest) {
 
+        User user = userService.findById(chatRoomCreateRequest.getUserId());
+        User partner = userService.findById(chatRoomCreateRequest.getPartnerId());
+
         ChatRoom chatRoom = chatRoomRepository.findByUserIdAndPartnerId(
                         chatRoomCreateRequest.getUserId(),
                         chatRoomCreateRequest.getPartnerId()
                 )
-                .orElse(ChatRoom.create(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId()));
+                .orElse(ChatRoom.create(user, partner));
 
         chatRoomRepository.save(chatRoom);
 

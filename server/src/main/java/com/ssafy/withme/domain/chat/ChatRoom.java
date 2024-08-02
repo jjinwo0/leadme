@@ -19,17 +19,22 @@ public class ChatRoom {
     @Column(name = "chat_room_id")
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_chatroom_user"))
+    private User user;
 
-    private Long partnerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partner_id", foreignKey = @ForeignKey(name = "fk_chatroom_partner"))
+    private User partner;
 
     private String roomId; // 방 이름
 
-    public static ChatRoom create(Long userId, Long partnerId) {
-        String roomName = userId + "-" + partnerId;
+    public static ChatRoom create(User user, User partner) {
+        String roomName = user.getId() + "-" + partner.getId();
+
         return ChatRoom.builder()
-                .userId(userId)
-                .partnerId(partnerId)
+                .user(user)
+                .partner(partner)
                 .roomId(roomName)
                 .build();
     }

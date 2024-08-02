@@ -1,6 +1,9 @@
 package com.ssafy.withme.controller.chat.chatroom;
 
-import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.domain.chat.ChatRoom;
+import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
+import com.ssafy.withme.dto.chat.request.ChatRoomCreateRequest;
+import com.ssafy.withme.global.response.SuccessResponse;
 import com.ssafy.withme.service.chat.chatroom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,15 @@ public class ChatRoomController {
             @RequestParam(name = "roomId") String roomId
     ) {
         return chatRoomService.getChatRoomInfo(accessToken, userId, roomId);
+    }
+
+    @PostMapping("/create")
+    public SuccessResponse<?> createChatRoom(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody ChatRoomCreateRequest chatRoomCreateRequest
+    ) {
+        ChatRoom chatRoom = chatRoomService.createChatRoom(chatRoomCreateRequest);
+        return SuccessResponse.of(chatRoom);
     }
 
 

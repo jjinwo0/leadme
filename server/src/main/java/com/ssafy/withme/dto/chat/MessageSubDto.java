@@ -1,4 +1,4 @@
-package com.ssafy.withme.dto;
+package com.ssafy.withme.dto.chat;
 
 import lombok.Builder;
 import lombok.Getter;

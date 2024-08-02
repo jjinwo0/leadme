@@ -1,6 +1,6 @@
 package com.ssafy.withme.domain.chat.feign;
 
-import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
 import com.ssafy.withme.global.config.chat.FeignConfig;
 import com.ssafy.withme.global.response.SuccessMessage;
 import org.springframework.cloud.openfeign.FeignClient;

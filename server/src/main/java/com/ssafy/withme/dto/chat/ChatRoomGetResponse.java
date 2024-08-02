@@ -1,4 +1,4 @@
-package com.ssafy.withme.dto;
+package com.ssafy.withme.dto.chat;
 
 import com.ssafy.withme.domain.chat.constant.UserIdentity;
 import lombok.*;

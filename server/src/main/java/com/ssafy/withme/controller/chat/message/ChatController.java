@@ -1,6 +1,6 @@
 package com.ssafy.withme.controller.chat.message;
 
-import com.ssafy.withme.dto.ChatMessageDto;
+import com.ssafy.withme.dto.chat.ChatMessageDto;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
 import com.ssafy.withme.service.chat.message.ChatService;
 import lombok.RequiredArgsConstructor;

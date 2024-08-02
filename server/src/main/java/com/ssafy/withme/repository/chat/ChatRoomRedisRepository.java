@@ -2,8 +2,8 @@ package com.ssafy.withme.repository.chat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.withme.dto.ChatMessageDto;
-import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.dto.chat.ChatMessageDto;
+import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

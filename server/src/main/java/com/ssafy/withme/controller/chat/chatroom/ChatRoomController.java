@@ -1,7 +1,9 @@
 package com.ssafy.withme.controller.chat.chatroom;
 
-import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.domain.chat.ChatRoom;
+import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
 import com.ssafy.withme.global.config.jwt.TokenProvider;
+import com.ssafy.withme.dto.chat.request.ChatRoomCreateRequest;
 import com.ssafy.withme.global.response.SuccessResponse;
 import com.ssafy.withme.service.chat.chatroom.ChatRoomService;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
@@ -60,10 +62,20 @@ public class ChatRoomController {
 
     @GetMapping("/message/list")
     public SuccessResponse<?> roomFindInfo(
-            @RequestHeader("Authorization") String accessToken,
-            @RequestParam(name = "id") String id,
+            @RequestParam(name = "roomId") String roomId,
             @RequestParam(name = "page") Integer pageNumber
     ) {
-        return SuccessResponse.of(chatMongoService.findAll(id, pageNumber));
+        return SuccessResponse.of(chatMongoService.findAll(roomId, pageNumber));
     }
+
+    @PostMapping("/create")
+    public SuccessResponse<?> createChatRoom(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody ChatRoomCreateRequest chatRoomCreateRequest
+    ) {
+        ChatRoom chatRoom = chatRoomService.createChatRoom(chatRoomCreateRequest);
+        return SuccessResponse.of(chatRoom);
+    }
+
+
 }

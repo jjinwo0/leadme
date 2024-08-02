@@ -1,6 +1,6 @@
 package com.ssafy.withme.service.chat;
 
-import com.ssafy.withme.dto.MessageSubDto;
+import com.ssafy.withme.dto.chat.MessageSubDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

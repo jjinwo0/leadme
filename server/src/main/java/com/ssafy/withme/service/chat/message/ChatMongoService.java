@@ -2,7 +2,7 @@ package com.ssafy.withme.service.chat.message;
 
 import com.ssafy.withme.domain.chat.ChatMessage;
 import com.ssafy.withme.domain.chat.constant.MessageType;
-import com.ssafy.withme.dto.ChatMessageDto;
+import com.ssafy.withme.dto.chat.ChatMessageDto;
 import com.ssafy.withme.repository.chat.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

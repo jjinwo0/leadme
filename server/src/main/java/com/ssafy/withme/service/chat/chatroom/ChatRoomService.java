@@ -1,15 +1,19 @@
 package com.ssafy.withme.service.chat.chatroom;
 
 import com.ssafy.withme.domain.chat.ChatMessage;
+import com.ssafy.withme.domain.chat.ChatRoom;
 import com.ssafy.withme.domain.chat.feign.MainFeignClient;
-import com.ssafy.withme.dto.ChatMessageDto;
-import com.ssafy.withme.dto.ChatRoomGetResponse;
+import com.ssafy.withme.dto.chat.ChatMessageDto;
+import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
+import com.ssafy.withme.dto.chat.request.ChatRoomCreateRequest;
 import com.ssafy.withme.global.response.SuccessMessage;
 import com.ssafy.withme.repository.chat.ChatRoomRedisRepository;
+import com.ssafy.withme.repository.chat.ChatRoomRepository;
 import com.ssafy.withme.service.chat.message.ChatMongoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +27,7 @@ public class ChatRoomService {
     private final MainFeignClient mainFeignClient;
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatMongoService chatMongoService;
+    private final ChatRoomRepository chatRoomRepository;
 
     public ChatRoomGetResponse getChatRoomInfo(Long userId, String roomId) {
 //        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
@@ -122,6 +127,22 @@ public class ChatRoomService {
                 roomId,
                 SuccessMessage.createSuccessMessage("채팅방이 삭제되었습니다.")
         );
+    }
+
+
+    @Transactional
+    public ChatRoom createChatRoom(ChatRoomCreateRequest chatRoomCreateRequest) {
+        ChatRoom chatRoom = chatRoomRepository.findByUserIdAndPartnerId(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId());
+        if (chatRoom != null) {
+            // 기존 채팅방이 존재할 경우
+            // 기존 채팅방 정보 return
+            return chatRoom;
+        }
+
+        chatRoom = ChatRoom.create(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId());
+        chatRoomRepository.save(chatRoom);
+
+        return chatRoom;
     }
 
 }

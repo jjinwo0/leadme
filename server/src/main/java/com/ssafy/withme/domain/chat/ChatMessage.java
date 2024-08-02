@@ -1,7 +1,7 @@
 package com.ssafy.withme.domain.chat;
 
 import com.ssafy.withme.domain.chat.constant.MessageType;
-import com.ssafy.withme.dto.ChatMessageDto;
+import com.ssafy.withme.dto.chat.ChatMessageDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

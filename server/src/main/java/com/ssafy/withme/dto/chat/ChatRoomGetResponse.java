@@ -1,5 +1,6 @@
 package com.ssafy.withme.dto.chat;
 
+import com.ssafy.withme.domain.chat.ChatRoom;
 import lombok.*;
 
 @Builder
@@ -20,5 +21,14 @@ public class ChatRoomGetResponse {
 
     public void updateChatMessageDto(ChatMessageDto chatMessageDto) {
         this.lastChatMessageDto = chatMessageDto;
+    }
+
+    public static ChatRoomGetResponse from(ChatRoom chatRoom) {
+
+        return ChatRoomGetResponse.builder()
+                .chatRoomNumber(chatRoom.getRoomId())
+                .userId(chatRoom.getUserId())
+                .partnerId(chatRoom.getPartnerId())
+                .build();
     }
 }

@@ -4,8 +4,12 @@ import com.ssafy.withme.domain.chat.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
+public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatRoomRepositoryCustom {
 
-    ChatRoom findByUserIdAndPartnerId(Long userId, Long partnerId);
+    Optional<ChatRoom> findByUserIdAndPartnerId(Long userId, Long partnerId);
+
+    @Override
+    List<ChatRoom> findByUserId(Long userId);
 }

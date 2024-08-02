@@ -2,10 +2,11 @@ package com.ssafy.withme.service.chat.chatroom;
 
 import com.ssafy.withme.domain.chat.ChatMessage;
 import com.ssafy.withme.domain.chat.ChatRoom;
-import com.ssafy.withme.domain.chat.feign.MainFeignClient;
 import com.ssafy.withme.dto.chat.ChatMessageDto;
 import com.ssafy.withme.dto.chat.ChatRoomGetResponse;
 import com.ssafy.withme.dto.chat.request.ChatRoomCreateRequest;
+import com.ssafy.withme.global.error.ErrorCode;
+import com.ssafy.withme.global.exception.EntityNotFoundException;
 import com.ssafy.withme.global.response.SuccessMessage;
 import com.ssafy.withme.repository.chat.ChatRoomRedisRepository;
 import com.ssafy.withme.repository.chat.ChatRoomRepository;
@@ -24,23 +25,24 @@ import java.util.List;
 @Slf4j
 public class ChatRoomService {
 
-    private final MainFeignClient mainFeignClient;
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatMongoService chatMongoService;
     private final ChatRoomRepository chatRoomRepository;
 
-    public ChatRoomGetResponse getChatRoomInfo(Long userId, String roomId) {
-//        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
-        return chatRoomRedisRepository.getChatRoom(userId, roomId);
-    }
+//    public ChatRoomGetResponse getChatRoomInfo(Long userId, String roomId) {
+////        return mainFeignClient.getChatRoomInfo(accessToken, roomId);
+//        return chatRoomRedisRepository.getChatRoom(userId, roomId);
+//    }
 
     public List<ChatRoomGetResponse> getChatRoomListByUserId(Long userId) {
         // 처음 HTTP 요청에서는 무조건 레디스 초기화 진행하도록 로직 수정
 
         // Feign Client를 사용하는 것이 아닌 직접 redis에서 채팅내역 조회
         // TODO: Redis -> RDBMS
-        List<ChatRoomGetResponse> chatRoomListGetResponseList = chatRoomRedisRepository.getChatRoomList(userId);
-//        List<ChatRoomGetResponse> chatRoomListGetResponseList = mainFeignClient.getChatRoomList(accessToken);
+        List<ChatRoomGetResponse> chatRoomListGetResponseList =
+                chatRoomRepository.findByUserId(userId).stream()
+                        .map(ChatRoomGetResponse::from)
+                        .toList();
 
         log.info("chatRoomListGetResponseList: {}", chatRoomListGetResponseList);
         chatRoomListGetResponseList.forEach(this::setListChatLastMessage);
@@ -110,7 +112,6 @@ public class ChatRoomService {
 
     /**
      * 채팅방 삭제 로직
-     * @param accessToken
      * @param roomId
      */
     public void deleteChatRoom(String roomId, Long userId) {
@@ -132,14 +133,13 @@ public class ChatRoomService {
 
     @Transactional
     public ChatRoom createChatRoom(ChatRoomCreateRequest chatRoomCreateRequest) {
-        ChatRoom chatRoom = chatRoomRepository.findByUserIdAndPartnerId(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId());
-        if (chatRoom != null) {
-            // 기존 채팅방이 존재할 경우
-            // 기존 채팅방 정보 return
-            return chatRoom;
-        }
 
-        chatRoom = ChatRoom.create(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId());
+        ChatRoom chatRoom = chatRoomRepository.findByUserIdAndPartnerId(
+                        chatRoomCreateRequest.getUserId(),
+                        chatRoomCreateRequest.getPartnerId()
+                )
+                .orElse(ChatRoom.create(chatRoomCreateRequest.getUserId(), chatRoomCreateRequest.getPartnerId()));
+
         chatRoomRepository.save(chatRoom);
 
         return chatRoom;

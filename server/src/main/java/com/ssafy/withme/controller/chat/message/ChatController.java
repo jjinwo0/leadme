@@ -24,15 +24,16 @@ public class ChatController {
     /**
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
      */
-    @MessageMapping("/chat/message")
-    public void message(ChatMessageDto message) {
+    @MessageMapping("/chat/message/{roomId}")
+    public void message(ChatMessageDto message, @DestinationVariable("roomId")Long roomId) {
 
         message.updateStatus(MessageStatus.UNREAD);
 
+        log.info("room name: {}", message.getRoomId());
         log.info("message : {}", message);
 
         ChatMessageDto chatMessageDto = chatMongoService.save(message);
-        chatService.sendChatMessage(chatMessageDto); // RedisPublisher 호출
+        chatService.sendChatMessage(chatMessageDto, roomId); // RedisPublisher 호출
     }
 
     /**

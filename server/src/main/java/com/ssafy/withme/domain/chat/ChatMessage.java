@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class ChatMessage {
 
     private MessageType type; // 메시지 타입
-    private String roomId; // 방 번호
+    private Long roomId; // 방 번호
     private Long userId; // 채팅 보낸 userId
     private String nickname;
     private String message; // 메시지

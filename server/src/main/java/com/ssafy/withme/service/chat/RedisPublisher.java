@@ -14,8 +14,16 @@ public class RedisPublisher {
     private final ChannelTopic channelTopic;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void publish(MessageSubDto message) {
-        log.info("RedisPublisher publishing : {}", message.getChatMessageDto().getMessage());
-        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+    private ChannelTopic getChannelTopic(Long roomId) {
+        return new ChannelTopic("chatroom:" + roomId); // 방별로 고유한 토픽 생성
+    }
+
+    public void publish(MessageSubDto message, Long roomId) {
+
+        ChannelTopic channelTopic = getChannelTopic(roomId); // 방의 토픽 가져오기
+
+        log.info("RedisPublisher publishing to room {}: {}", roomId, message.getChatMessageDto().getMessage());
+
+        redisTemplate.convertAndSend(channelTopic.getTopic(), message); // 해당 방으로 메시지 발행
     }
 }

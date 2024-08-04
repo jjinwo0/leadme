@@ -26,7 +26,7 @@ public class ChatService {
     /**
      * 채팅방에 메시지 발송
      */
-    public void sendChatMessage(ChatMessageDto chatMessage) {
+    public void sendChatMessage(ChatMessageDto chatMessage, Long roomId) {
         // 0. redis에 해당 채팅방 roomId(key)에 마지막 메시지(value)를 넣어준다.
         chatRoomRedisRepository.setLastChatMessage(chatMessage.getRoomId(), chatMessage);
 
@@ -66,13 +66,14 @@ public class ChatService {
         MessageSubDto messageSubDto = MessageSubDto.builder()
                 .userId(userId)
                 .partnerId(partnerId)
+                .roomId(roomId)
                 .chatMessageDto(chatMessage)
                 .list(chatRoomList)
                 .partnerList(partnerChatRoomList)
                 .build();
 
         log.info("messageSubDto : {}", messageSubDto);
-        redisPublisher.publish(messageSubDto);
+        redisPublisher.publish(messageSubDto, roomId);
 
     }
 

@@ -18,7 +18,7 @@ public class ChatMessageDto implements Serializable {
 
     // 메시지 타입 : 입장, 채팅, 퇴장
     private MessageType type; // 메시지 타입
-    private String roomId; // 방 번호
+    private Long roomId; // 방 번호
     private Long userId;
     private String nickname;
     private String message; // 메시지
